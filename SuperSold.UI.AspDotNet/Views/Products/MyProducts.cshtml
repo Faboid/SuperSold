@@ -1,0 +1,25 @@
+﻿@model IEnumerable<SuperSold.UI.AspDotNet.Models.Product>
+
+@{
+    ViewData["Title"] = "MyProducts";
+}
+
+<h1>MyProducts</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) {
+            <tr>
+                @Html.PartialAsync("Products/ProductRow", item);
+            </tr>
+        }
+    </tbody>
+</table>

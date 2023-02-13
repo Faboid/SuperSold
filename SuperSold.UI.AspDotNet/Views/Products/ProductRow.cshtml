@@ -1,0 +1,23 @@
+﻿@model SuperSold.UI.AspDotNet.Models.Product
+
+<div>
+
+    <!--image-->
+    <div style="float:left">
+        <img src="@Html.DisplayFor(x => x.UserImgUrl)" />
+    </div>
+
+    <!--Description-->
+    <div style="float:left">
+        <h2>@Html.DisplayFor(x => x.Title)</h2>
+        <p>@Html.DisplayFor(x => x.Description)</p>
+    </div>
+
+    <!--Price & Edit Button-->
+    <div style="float:right">
+        <p><b>@Html.DisplayFor(x => x.Price)</b></p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id });
+        @Html.ActionLink("Delete", "Delete", new { id = Model.Id });
+    </div>
+
+</div>
