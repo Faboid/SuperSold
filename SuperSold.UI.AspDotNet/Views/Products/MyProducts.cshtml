@@ -9,17 +9,9 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model) {
-            <tr>
-                @Html.PartialAsync("Products/ProductRow", item);
-            </tr>
-        }
-    </tbody>
-</table>
+
+@foreach (var item in Model) {
+    <div>
+        @await Html.PartialAsync("ProductRow", item);
+    </div>
+}
