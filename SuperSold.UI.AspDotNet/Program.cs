@@ -1,7 +1,12 @@
+using SuperSold.UI.AspDotNet.Constants;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication(Cookies.Auth).AddCookie(Cookies.Auth, options => {
+    options.Cookie.Name = Cookies.Auth;
+});
 
 var app = builder.Build();
 
@@ -17,6 +22,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
