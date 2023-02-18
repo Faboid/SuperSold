@@ -1,0 +1,6 @@
+﻿
+@if(User.Identity.IsAuthenticated) {
+    <a class="btn btn-link" asp-controller="Account" asp-action="Logout">Logout</a>
+} else {
+    <a class="btn btn-link" asp-controller="Account" asp-action="Login">Login</a>
+}
