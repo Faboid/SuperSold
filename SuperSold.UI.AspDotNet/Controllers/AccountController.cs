@@ -14,23 +14,22 @@ public class AccountController : Controller {
     [HttpPost]
     public async Task<IActionResult> Login(LoginModel login) {
 
-        if(login.UserName == "admin" && login.Password == "1234") {
-
-            var claims = new List<Claim> {
-                new(ClaimTypes.Name, login.UserName)
-            };
-
-            var claimsIdentity = new ClaimsIdentity(claims, "Login");
-            var authProps = new AuthenticationProperties() {
-                IsPersistent = login.RememberMe
-            };
-            
-            await HttpContext.SignInAsync(Cookies.Auth, new ClaimsPrincipal(claimsIdentity), authProps);
-
-            return Redirect("/Home");
+        if(login.Password != "12345678") {
+            return View();
         }
 
-        return View();
+        var claims = new List<Claim> {
+            new(ClaimTypes.Name, login.UserName)
+        };
+
+        var claimsIdentity = new ClaimsIdentity(claims, "Login");
+        var authProps = new AuthenticationProperties() {
+            IsPersistent = login.RememberMe //todo - even if remember me is false, the cookie remains through sessions
+        };
+
+        await HttpContext.SignInAsync(Cookies.Auth, new ClaimsPrincipal(claimsIdentity), authProps);
+
+        return Redirect("/Home");
 
     }
 
