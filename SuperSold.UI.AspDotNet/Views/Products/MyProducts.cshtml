@@ -4,14 +4,19 @@
     ViewData["Title"] = "MyProducts";
 }
 
-<h1>MyProducts</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-
-@foreach (var item in Model) {
-    <div>
-        @await Html.PartialAsync("ProductRow", item);
+<div>
+    <div class="col-2">
+        <h1><b>MyProducts</b></h1>
     </div>
-}
+    <div class="mr-2">
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    </div>
+</div>
+
+<div class="table">
+    @foreach(var item in Model) {
+        <div class="row" style="border:solid; border-width:2px; border-radius:5px;">
+            @await Html.PartialAsync("_ProductRowPartial", item)
+        </div>
+    }
+</div>
