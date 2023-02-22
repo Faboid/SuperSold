@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperSold.UI.AspDotNet", "SuperSold.UI.AspDotNet\SuperSold.UI.AspDotNet.csproj", "{B71D700A-AFD6-4F69-A584-6ED10971FBD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperSold.Data", "SuperSold.Data\SuperSold.Data.csproj", "{D64CAFB0-20C8-4DAE-A082-DE403FBFE361}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperSold.Data", "SuperSold.Data\SuperSold.Data.csproj", "{D64CAFB0-20C8-4DAE-A082-DE403FBFE361}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
