@@ -1,7 +1,7 @@
 ﻿using SuperSold.Data.Models;
 
 namespace SuperSold.Data.DBInteractions;
-internal interface IProductsHandler {
+public interface IProductsHandler {
 
     Task<IQueryable<ProductModel>> QueryAllProducts();
     Task<IQueryable<ProductModel>> QueryProductsBySellerUserName(string userName);
