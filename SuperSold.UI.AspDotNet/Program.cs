@@ -1,8 +1,10 @@
 using SuperSold.UI.AspDotNet.Constants;
+using SuperSold.UI.AspDotNet.HostBuilders;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddMemoryDatabase();
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(Cookies.Auth).AddCookie(Cookies.Auth, options => {
     options.Cookie.Name = Cookies.Auth;
