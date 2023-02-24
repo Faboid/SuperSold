@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SuperSold.Data.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SuperSold.UI.AspDotNet.Models;
 
@@ -11,5 +12,15 @@ public class Product {
     public required string Title { get; set; }
     public required string Description { get; set; }
     public required decimal Price { get; set; }
+
+    public static implicit operator Product(ProductModel model) {
+        return new Product() {
+            Id = model.IdProduct,
+            UserImgUrl = model.ImageUrl ?? "",
+            Title = model.Title,
+            Description = model.Description,
+            Price = model.Price
+        };
+    }
 
 }

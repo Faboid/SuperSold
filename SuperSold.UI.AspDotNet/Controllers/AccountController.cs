@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using SuperSold.Data.DBInteractions;
 using SuperSold.UI.AspDotNet.Constants;
 using SuperSold.UI.AspDotNet.Models;
 using System.Security.Claims;
@@ -9,13 +10,31 @@ using System.Security.Claims;
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class AccountController : Controller {
 
+    private readonly IAccountsHandler _accountsHandler;
+
+    public AccountController(IAccountsHandler accountsHandler) {
+        _accountsHandler = accountsHandler;
+    }
+
     public IActionResult Login() => View();
 
     [HttpPost]
     public async Task<IActionResult> Login(LoginModel login) {
 
-        if(login.Password != "12345678") {
+        if(!ModelState.IsValid) {
             return View();
+        }
+
+        //todo - implement encryption
+        login.Password = login.Password; //set up encryption
+
+        var accountOption = await _accountsHandler.GetAccountByUserName(login.UserName);
+        if(!accountOption.TryGetValue(out var account)) {
+            return View(); //implement error message for wrong credentials
+        }
+
+        if(login.Password != account!.HashedPassword) {
+            return View(); //implement error message for wrong credentials
         }
 
         var claims = new List<Claim> {

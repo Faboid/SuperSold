@@ -15,7 +15,7 @@
 
     <!--Price & Edit Button-->
     <div style="float:right">
-        <p><b>@Html.DisplayFor(x => x.Price)</b></p>
+        <p><b>@Html.DisplayFor(x => x.Price)€</b></p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
         @Html.ActionLink("Delete", "Delete", new { id = Model.Id })
     </div>
