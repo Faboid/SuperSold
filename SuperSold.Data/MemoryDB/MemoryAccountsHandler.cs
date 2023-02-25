@@ -1,7 +1,9 @@
-﻿using Monads.Core;
+﻿using OneOf;
+using OneOf.Types;
 using SuperSold.Data.DBInteractions;
+using SuperSold.Data.Extensions;
 using SuperSold.Data.Models;
-using System.Security.Principal;
+using static SuperSold.Data.DBInteractions.IAccountsHandler;
 
 namespace SuperSold.Data.MemoryDB;
 
@@ -10,14 +12,15 @@ namespace SuperSold.Data.MemoryDB;
 /// </summary>
 public class MemoryAccountsHandler : IAccountsHandler {
 
-    private MemoryDatabase _db { get; init; }
+    private readonly MemoryDatabase _db;
 
     public MemoryAccountsHandler() : this(new()) { }
     public MemoryAccountsHandler(MemoryDatabase db) {
         _db = db;
     }
 
-    public Task<Option<AccountModel>> GetAccountByUserName(string accountName) {
+    public Task<OneOf<AccountModel, NotFound>> GetAccountByUserName(string accountName) => InternalGetAccountByUserName(accountName).AsTask();
+    private OneOf<AccountModel, NotFound> InternalGetAccountByUserName(string accountName) {
 
         if(_db.AccountsTable.TryGetValue(accountName, out var account)) {
 
@@ -29,26 +32,29 @@ public class MemoryAccountsHandler : IAccountsHandler {
                 HashedPassword = account.HashedPassword,
             };
 
-            return Task.FromResult<Option<AccountModel>>(output);
+            return output;
         }
 
-        return Task.FromResult(Option.None<AccountModel>());
+        return new NotFound();
+
     }
 
-    public Task<bool> ChangeEmail(string accountName, string newEmail) {
+    public Task<OneOf<Success, NotFound>> ChangeEmail(string accountName, string newEmail) => InternalChangeEmail(accountName, newEmail).AsTask();
+    private OneOf<Success, NotFound> InternalChangeEmail(string accountName, string newEmail) {
 
         if(_db.AccountsTable.TryGetValue(accountName, out var account)) {
             account.Email = newEmail;
-            return Task.FromResult(true);
+            return new Success();
         }
 
-        return Task.FromResult(false);
+        return new NotFound();
     }
 
-    public Task<bool> CreateAccount(AccountModel model) {
+    public Task<OneOf<Success, AlreadyExists>> CreateAccount(AccountModel model) => InternalCreateAccount(model).AsTask();
+    public OneOf<Success, AlreadyExists> InternalCreateAccount(AccountModel model) {
         
         if(_db.AccountsTable.ContainsKey(model.UserName)) {
-            return Task.FromResult(false);
+            return new AlreadyExists();
         }
 
         //create defensive copy
@@ -60,24 +66,31 @@ public class MemoryAccountsHandler : IAccountsHandler {
         };
 
         _db.AccountsTable.Add(toCache.UserName, toCache);
-        return Task.FromResult(true);
+        return new Success();
 
     }
 
-    public Task<bool> DeleteAccount(string accountName) {
+    public Task<OneOf<Success, NotFound>> DeleteAccount(string accountName) => InternalDeleteAccount(accountName).AsTask();
+    private OneOf<Success, NotFound> InternalDeleteAccount(string accountName) {
         var result = _db.AccountsTable.Remove(accountName);
-        return Task.FromResult(result);
+        return result ? new Success() : new NotFound();
     }
 
-    public Task<bool> RenameAccount(string accountName, string newName) {
+    public Task<OneOf<Success, NotFound, AlreadyExists>> RenameAccount(string accountName, string newName) => InternalRenameAccount(accountName, newName).AsTask();
+    public OneOf<Success, NotFound, AlreadyExists> InternalRenameAccount(string accountName, string newName) {
         
         if(!_db.AccountsTable.Remove(accountName, out var account)) {
-            return Task.FromResult(false);
+            return new NotFound();
+        }
+
+        if(_db.AccountsTable.ContainsKey(newName)) {
+            return new AlreadyExists();
         }
 
         account.UserName = newName;
         _db.AccountsTable.Add(newName, account);
-        return Task.FromResult(true);
+        return new Success();
 
     }
+
 }
