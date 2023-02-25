@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperSold.UI.AspDotNet", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperSold.Data", "SuperSold.Data\SuperSold.Data.csproj", "{D64CAFB0-20C8-4DAE-A082-DE403FBFE361}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperSold.Identification", "SuperSold.Identification\SuperSold.Identification.csproj", "{B7854E7D-BA7A-4FB1-AA7F-17EA4F3F1154}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{D64CAFB0-20C8-4DAE-A082-DE403FBFE361}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D64CAFB0-20C8-4DAE-A082-DE403FBFE361}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D64CAFB0-20C8-4DAE-A082-DE403FBFE361}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7854E7D-BA7A-4FB1-AA7F-17EA4F3F1154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7854E7D-BA7A-4FB1-AA7F-17EA4F3F1154}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7854E7D-BA7A-4FB1-AA7F-17EA4F3F1154}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7854E7D-BA7A-4FB1-AA7F-17EA4F3F1154}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

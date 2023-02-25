@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SuperSold.Data\SuperSold.Data.csproj" />
+    <ProjectReference Include="..\SuperSold.Identification\SuperSold.Identification.csproj" />
   </ItemGroup>
 
 </Project>
