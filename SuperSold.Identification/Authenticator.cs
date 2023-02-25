@@ -37,6 +37,7 @@ public class Authenticator : IAuthenticator {
     private static ClaimsPrincipal BuildPrincipal(AccountModel account) {
         var builder = new ClaimsBuilder("Login");
         builder.AddClaim(new Claim(ClaimTypes.Name, account.UserName));
+        builder.AddClaim(new Claim(ClaimTypes.NameIdentifier, account.IdAccount.ToString()!));
         return builder.BuildPrincipal();
     }
 
