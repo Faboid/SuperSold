@@ -30,11 +30,13 @@ public class AccountController : Controller {
 
         var accountOption = await _accountsHandler.GetAccountByUserName(login.UserName);
         if(!accountOption.TryGetValue(out var account)) {
-            return View(); //implement error message for wrong credentials
+            ViewBag.Message = "The given username does not exist.";
+            return View();
         }
 
         if(login.Password != account!.HashedPassword) {
-            return View(); //implement error message for wrong credentials
+            ViewBag.Message = "The given password is incorrect.";
+            return View();
         }
 
         var claims = new List<Claim> {
