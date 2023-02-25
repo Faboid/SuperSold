@@ -18,8 +18,14 @@ public class ProductsController : Controller {
     public async Task<IActionResult> MyProducts(int? row) {
 
         var userName = User.Identity!.Name!;
-        var products = await _productsHandler.QueryProductsBySellerUserName(userName);
-        var listProducts = await products.Select(x => (Product)x).Skip((row ?? 0) * 10).Take(10).ToListAsyncSafe();
+
+        var listProducts = await _productsHandler
+            .QueryProductsBySellerUserName(userName)
+            .Select(x => (Product)x)
+            .Skip((row ?? 0) * 10)
+            .Take(10)
+            .ToListAsyncSafe();
+
         return View(listProducts);
 
     }

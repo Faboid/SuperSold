@@ -8,7 +8,7 @@ namespace SuperSold.Data.MemoryDB;
 /// </summary>
 public class MemoryProductsHandler : IProductsHandler {
 
-    private MemoryDatabase _db { get; init; }
+    private readonly MemoryDatabase _db;
 
     public MemoryProductsHandler() : this(new()) { }
     public MemoryProductsHandler(MemoryDatabase db) {
@@ -50,17 +50,17 @@ public class MemoryProductsHandler : IProductsHandler {
 
     }
 
-    public Task<IQueryable<ProductModel>> QueryAllProducts() {
-        return Task.FromResult(_db.ProductsTable.Values.AsQueryable());   
+    public IQueryable<ProductModel> QueryAllProducts() {
+        return _db.ProductsTable.Values.AsQueryable();   
     }
 
-    public Task<IQueryable<ProductModel>> QueryProductsBySellerUserName(string userName) {
+    public IQueryable<ProductModel> QueryProductsBySellerUserName(string userName) {
         
         if(!_db.AccountsTable.TryGetValue(userName, out var account)) {
-            return Task.FromResult(Enumerable.Empty<ProductModel>().AsQueryable());
+            return Enumerable.Empty<ProductModel>().AsQueryable();
         }
 
-        return Task.FromResult(_db.ProductsTable.Values.Where(x => x.IdSellerAccount == account.IdAccount).AsQueryable());        
+        return _db.ProductsTable.Values.Where(x => x.IdSellerAccount == account.IdAccount).AsQueryable();        
     }
 
 }
