@@ -3,7 +3,7 @@ using OneOf.Types;
 using SuperSold.Data.DBInteractions;
 using SuperSold.Data.Extensions;
 using SuperSold.Data.Models;
-using static SuperSold.Data.DBInteractions.IAccountsHandler;
+using SuperSold.Data.Models.ResponseTypes;
 
 namespace SuperSold.Data.MemoryDB;
 

@@ -1,11 +1,10 @@
 ﻿using OneOf;
 using OneOf.Types;
 using SuperSold.Data.Models;
+using SuperSold.Data.Models.ResponseTypes;
 
 namespace SuperSold.Data.DBInteractions;
 public interface IAccountsHandler {
-
-    record struct AlreadyExists();
 
     Task<OneOf<AccountModel, NotFound>> GetAccountByUserName(string accountName);
     Task<OneOf<Success, NotFound, AlreadyExists>> RenameAccount(string accountName, string newName);
