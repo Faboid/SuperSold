@@ -1,5 +1,9 @@
-﻿using SuperSold.Data.DBInteractions;
+﻿using OneOf.Types;
+using OneOf;
+using SuperSold.Data.DBInteractions;
 using SuperSold.Data.Models;
+using SuperSold.Data.Models.ResponseTypes;
+using SuperSold.Data.Extensions;
 
 namespace SuperSold.Data.MemoryDB;
 
@@ -15,7 +19,8 @@ public class MemoryProductsHandler : IProductsHandler {
         _db = db;
     }
 
-    public Task<bool> CreateProduct(ProductModel product, string sellerUserName) {
+    public Task<OneOf<Success, AlreadyExists>> CreateProduct(ProductModel product, string sellerUserName) => InternalCreateProduct(product, sellerUserName).AsTask();
+    private OneOf<Success, AlreadyExists> InternalCreateProduct(ProductModel product, string sellerUserName) {
 
         //deep copy to ensure it's not modified externally after saving it
         var toCache = new ProductModel() {
@@ -28,25 +33,27 @@ public class MemoryProductsHandler : IProductsHandler {
         };
 
         _db.ProductsTable.Add(toCache.IdProduct, toCache);
-        return Task.FromResult(true);
+        return new Success();
 
     }
 
-    public Task<bool> DeleteProduct(Guid productId) {
-        return Task.FromResult(_db.ProductsTable.Remove(productId));
+    public Task<OneOf<Success, NotFound>> DeleteProduct(Guid productId) => InternalDeleteProduct(productId).AsTask();
+    public OneOf<Success, NotFound> InternalDeleteProduct(Guid productId) {
+        return _db.ProductsTable.Remove(productId) ? new Success() : new NotFound();
     }
 
-    public Task<bool> EditProduct(Guid productId, ProductModel updatedValues) {
+    public Task<OneOf<Success, NotFound>> EditProduct(Guid productId, ProductModel updatedValues) => InternalEditProduct(productId, updatedValues).AsTask();
+    private OneOf<Success, NotFound> InternalEditProduct(Guid productId, ProductModel updatedValues) {
         
         if(!_db.ProductsTable.TryGetValue(productId, out var product)) {
-            return Task.FromResult(false);
+            return new NotFound();
         }
 
         product.Title = updatedValues.Title;
         product.Description = updatedValues.Description;
         product.ImageUrl = updatedValues.ImageUrl;
         product.Price = updatedValues.Price;
-        return Task.FromResult(true);
+        return new Success();
 
     }
 
