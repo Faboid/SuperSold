@@ -2,6 +2,7 @@
 using OneOf.Types;
 using SuperSold.Data.DBInteractions;
 using SuperSold.Data.Models;
+using SuperSold.Data.Models.ResponseTypes;
 using System.Security.Claims;
 
 namespace SuperSold.Identification;
@@ -14,6 +15,23 @@ public class Authenticator : IAuthenticator {
 
     public Authenticator(IAccountsHandler accountsHandler) {
         _accountsHandler = accountsHandler;
+    }
+
+    public async Task<OneOf<ClaimsPrincipal, AlreadyExists>> SignUp(string userName, string email, string password) {
+
+        var accountModel = new AccountModel() {
+            IdAccount = Guid.NewGuid(),
+            UserName = userName,
+            Email = email,
+            HashedPassword = password //todo - set up encryption
+        };
+
+        var result = await _accountsHandler.CreateAccount(accountModel);
+        return result.Match<OneOf<ClaimsPrincipal, AlreadyExists>>(
+            success => BuildPrincipal(accountModel),
+            alreadyExists => alreadyExists
+        );
+
     }
 
     public async Task<OneOf<ClaimsPrincipal, NotFound, WrongPassword>> Login(string userName, string password) {
