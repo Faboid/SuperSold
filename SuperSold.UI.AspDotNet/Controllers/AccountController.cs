@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using SuperSold.Data.DBInteractions;
 using SuperSold.Data.Extensions;
 using SuperSold.Identification;
 using SuperSold.UI.AspDotNet.Constants;
@@ -18,9 +15,36 @@ public class AccountController : Controller {
         _authenticator = authenticator;
     }
 
+    [HttpGet]
+    [RequireHttps]
+    public IActionResult SignUp() => View();
+
+    [HttpPost]
+    [RequireHttps]
+    public async Task<IActionResult> SignUp(SignUpModel model) {
+
+        if(!ModelState.IsValid) {
+            return View();
+        }
+
+        var result = await _authenticator.SignUp(model.UserName, model.Email, model.Password);
+        var authProps = new AuthenticationProperties() {
+            IsPersistent = model.RememberMe //todo - even if remember me is false, the cookie remains through sessions
+        };
+
+        return await result.Match(
+            async principal => await LoginAndRedirect(principal, authProps),
+            alreadyExists => ErrorMessageAndRetry("The given username is already in use.").AsTask()
+        );
+
+    }
+
+    [HttpGet]
+    [RequireHttps]
     public IActionResult Login() => View();
 
     [HttpPost]
+    [RequireHttps]
     public async Task<IActionResult> Login(LoginModel login) {
 
         if(!ModelState.IsValid) {
@@ -35,8 +59,8 @@ public class AccountController : Controller {
 
         return await result.Match(
             async principal => await LoginAndRedirect(principal, authProps),
-            notFound => ErrorMessageAndRetryLogin("The given username does not exist.").AsTask(),
-            wrongPass => ErrorMessageAndRetryLogin("The given password is incorrect.").AsTask()
+            notFound => ErrorMessageAndRetry("The given username does not exist.").AsTask(),
+            wrongPass => ErrorMessageAndRetry("The given password is incorrect.").AsTask()
         );
 
     }
@@ -46,7 +70,7 @@ public class AccountController : Controller {
         return Redirect("/Home");
     }
 
-    private IActionResult ErrorMessageAndRetryLogin(string message) {
+    private IActionResult ErrorMessageAndRetry(string message) {
         ViewBag.Message = message;
         return View();
     }
