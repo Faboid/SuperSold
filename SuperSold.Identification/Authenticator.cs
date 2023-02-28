@@ -4,6 +4,7 @@ using SuperSold.Data.DBInteractions;
 using SuperSold.Data.Models;
 using SuperSold.Data.Models.ResponseTypes;
 using System.Security.Claims;
+using BC = BCrypt.Net.BCrypt;
 
 namespace SuperSold.Identification;
 
@@ -18,12 +19,12 @@ public class Authenticator : IAuthenticator {
     }
 
     public async Task<OneOf<ClaimsPrincipal, AlreadyExists>> SignUp(string userName, string email, string password) {
-
+        
         var accountModel = new AccountModel() {
             IdAccount = Guid.NewGuid(),
             UserName = userName,
             Email = email,
-            HashedPassword = password //todo - set up encryption
+            HashedPassword = BC.EnhancedHashPassword(password)
         };
 
         var result = await _accountsHandler.CreateAccount(accountModel);
@@ -61,7 +62,7 @@ public class Authenticator : IAuthenticator {
 
     private static OneOf<Success, WrongPassword> VerifyAccount(AccountModel account, string password) {
 
-        if(account.HashedPassword != password) { //todo - validation with encryption
+        if(!BC.EnhancedVerify(password, account.HashedPassword)) {
             return new WrongPassword();
         }
 
