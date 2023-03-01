@@ -57,6 +57,17 @@ public class MemoryProductsHandler : IProductsHandler {
 
     }
 
+    public Task<OneOf<ProductModel, NotFound>> GetProduct(Guid productId) => InternalGetProduct(productId).AsTask();
+    private OneOf<ProductModel, NotFound> InternalGetProduct(Guid productId) {
+
+        if(!_db.ProductsTable.TryGetValue(productId, out var value)) {
+            return new NotFound();
+        }
+
+        return value;
+
+    }
+
     public IQueryable<ProductModel> QueryAllProducts() {
         return _db.ProductsTable.Values.AsQueryable();   
     }

@@ -11,5 +11,6 @@ public interface IProductsHandler {
     Task<OneOf<Success, NotFound>> EditProduct(Guid productId, ProductModel updatedValues);
     Task<OneOf<Success, NotFound>> DeleteProduct(Guid productId);
     Task<OneOf<Success, AlreadyExists>> CreateProduct(ProductModel product, string sellerUserName);
+    Task<OneOf<ProductModel, NotFound>> GetProduct(Guid productId);
 
 }
