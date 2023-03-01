@@ -16,8 +16,18 @@
     <!--Price & Edit Button-->
     <div style="float:right">
         <p><b>@Html.DisplayFor(x => x.Price)€</b></p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id })
-        @Html.ActionLink("Delete", "Delete", new { id = Model.Id })
+
+        <div style="float:left">
+            @using(Html.BeginForm("Edit", "Products", Model, FormMethod.Get)) {
+                <input type="submit" value="Edit" class="btn btn-primary" />
+            }
+        </div>
+        <div style="float:right">
+            @using(Html.BeginForm("Delete", "Products", Model, FormMethod.Post)) {
+                <input type="submit" value="Delete" class="btn btn-primary"/>
+            }
+        </div>
+
     </div>
 
 </div>

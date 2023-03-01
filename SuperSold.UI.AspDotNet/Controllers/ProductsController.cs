@@ -62,4 +62,26 @@ public class ProductsController : Controller {
 
     }
 
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Delete(Product model) {
+
+        if(!ModelState.IsValid) {
+            return RedirectToAction("MyProducts");
+        }
+
+        var userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+
+        if(userId != model.SellerId.ToString()) {
+            return new UnauthorizedResult();
+        }
+
+        var result = await _productsHandler.DeleteProduct(model.Id);
+        return result.Match<IActionResult>(
+            success => RedirectToAction("MyProducts"),
+            notFound => NotFound()
+        );
+
+    }
+
 }
