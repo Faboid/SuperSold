@@ -84,4 +84,44 @@ public class ProductsController : Controller {
 
     }
 
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Edit(Guid id) {
+
+        var product = await _productsHandler.GetProduct(id);
+
+        if(product.TryPickT1(out var notFound, out var model)) {
+            return NotFound();
+        }
+
+        var userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+        if(model.IdSellerAccount.ToString() != userId) {
+            return new UnauthorizedResult();
+        }
+
+        return View((Product)model);
+
+    }
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> Edit(Product model) {
+
+        if(!ModelState.IsValid) {
+            return View(model);
+        }
+
+        var userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+        if(model.SellerId.ToString() != userId) {
+            return new UnauthorizedResult();
+        }
+
+        var result = await _productsHandler.EditProduct(model.Id, model);
+        return result.Match<IActionResult>(
+            success => RedirectToAction("MyProducts"),
+            notFound => NotFound()
+        );
+
+    }
+
 }
