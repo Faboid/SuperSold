@@ -18,10 +18,10 @@ public class ProductsController : Controller {
     [Authorize]
     public async Task<IActionResult> MyProducts(int? row) {
 
-        var userName = User.Identity!.Name!;
+        var userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
         var listProducts = await _productsHandler
-            .QueryProductsBySellerUserName(userName)
+            .QueryProductsBySellerId(Guid.Parse(userId))
             .Select(x => (Product)x)
             .Skip((row ?? 0) * 10)
             .Take(10)

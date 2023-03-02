@@ -72,13 +72,8 @@ public class MemoryProductsHandler : IProductsHandler {
         return _db.ProductsTable.Values.AsQueryable();   
     }
 
-    public IQueryable<ProductModel> QueryProductsBySellerUserName(string userName) {
-        
-        if(!_db.AccountsTable.TryGetValue(userName, out var account)) {
-            return Enumerable.Empty<ProductModel>().AsQueryable();
-        }
-
-        return _db.ProductsTable.Values.Where(x => x.IdSellerAccount == account.IdAccount).AsQueryable();        
+    public IQueryable<ProductModel> QueryProductsBySellerId(Guid sellerId) {
+        return _db.ProductsTable.Values.Where(x => x.IdSellerAccount == sellerId).AsQueryable();        
     }
 
 }

@@ -7,7 +7,7 @@ namespace SuperSold.Data.DBInteractions;
 public interface IProductsHandler {
 
     IQueryable<ProductModel> QueryAllProducts();
-    IQueryable<ProductModel> QueryProductsBySellerUserName(string userName);
+    IQueryable<ProductModel> QueryProductsBySellerId(Guid sellerId);
     Task<OneOf<Success, NotFound>> EditProduct(Guid productId, ProductModel updatedValues);
     Task<OneOf<Success, NotFound>> DeleteProduct(Guid productId);
     Task<OneOf<Success, AlreadyExists>> CreateProduct(ProductModel product, string sellerUserName);
