@@ -12,7 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SuperSold.Data\SuperSold.Data.csproj" />
-    <ProjectReference Include="..\SuperSold.Identification\SuperSold.Identification.csproj" />
+      <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
+      <ProjectReference Include="..\SuperSold.Identification\SuperSold.Identification.csproj" />
   </ItemGroup>
 
 </Project>

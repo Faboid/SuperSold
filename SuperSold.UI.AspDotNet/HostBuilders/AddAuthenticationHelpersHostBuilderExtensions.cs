@@ -7,7 +7,7 @@ public static class AddAuthenticationHelpersHostBuilderExtensions {
 
     public static void AddAuthenticationHelpers(this IServiceCollection services) {
 
-        services.AddSingleton<IAuthenticator, Authenticator>();
+        services.AddScoped<IAuthenticator, Authenticator>();
 
     }
 

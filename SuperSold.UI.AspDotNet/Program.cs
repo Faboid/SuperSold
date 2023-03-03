@@ -2,9 +2,11 @@ using SuperSold.UI.AspDotNet.Constants;
 using SuperSold.UI.AspDotNet.HostBuilders;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("MySql") ?? throw new Exception("The connection string 'MySql' has not been provided in appsettings.json");
 
 // Add services to the container.
-builder.Services.AddMemoryDatabase();
+//builder.Services.AddMemoryDatabase();
+builder.Services.AddMySqlDatabase(connectionString);
 builder.Services.AddAuthenticationHelpers();
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(Cookies.Auth).AddCookie(Cookies.Auth, options => {

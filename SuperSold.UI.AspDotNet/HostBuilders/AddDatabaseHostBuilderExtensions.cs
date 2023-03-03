@@ -1,4 +1,6 @@
-﻿using SuperSold.Data.DBInteractions;
+﻿using Microsoft.EntityFrameworkCore;
+using SuperSold.Data.DBInteractions;
+using SuperSold.Data.EfCoreDB;
 using SuperSold.Data.MemoryDB;
 using SuperSold.Data.Models;
 
@@ -16,9 +18,15 @@ public static class AddDatabaseHostBuilderExtensions {
         memoryDB.ProductsTable.Add(product.IdProduct, product);
 
         services.AddSingleton(memoryDB);
-        services.AddSingleton<IAccountsHandler, MemoryAccountsHandler>();
-        services.AddSingleton<IProductsHandler, MemoryProductsHandler>();
+        services.AddScoped<IAccountsHandler, MemoryAccountsHandler>();
+        services.AddScoped<IProductsHandler, MemoryProductsHandler>();
 
+    }
+
+    public static void AddMySqlDatabase(this IServiceCollection services, string connectionString) {
+        services.AddMySql<EfCoreDBContext>(connectionString, ServerVersion.AutoDetect(connectionString));
+        services.AddScoped<IAccountsHandler, EfCoreAccountsHandler>();
+        services.AddScoped<IProductsHandler, EfCoreProductsHandler>();
     }
 
 }
