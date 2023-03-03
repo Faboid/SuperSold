@@ -59,7 +59,7 @@ public class EfCoreAccountsHandler : IAccountsHandler {
 
     public async Task<OneOf<AccountModel, NotFound>> GetAccountByUserName(string accountName) {
         
-        var account = await _context.Accounts.FirstAsync(x => x.UserName == accountName);
+        var account = await _context.Accounts.FirstOrDefaultAsync(x => x.UserName == accountName);
         if(account is null) {
             return new NotFound();
         }
