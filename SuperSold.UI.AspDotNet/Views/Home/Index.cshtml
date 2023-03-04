@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SuperSold.UI.AspDotNet.Models.Product>
+﻿@model ICollection<SuperSold.UI.AspDotNet.Models.Product>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -12,7 +12,17 @@
         <h1 class="display-4">Welcome</h1>
     }
 
+    <p>
+        This site has been made as a learning exercise. By using it, you understand that the products being sold aren't real.
+    </p>
+
 </div>
+
+@if((int)ViewBag.Page > 0) {
+    <div>
+        @Html.ActionLink("prev", "Index", "Home", new{ page = (int)ViewBag.Page - 1 })
+    </div>
+}
 
 <div class="table">
     @foreach(var item in Model) {
@@ -21,3 +31,9 @@
         </div>
     }
 </div>
+
+@if(Model.Count >= (int)ViewBag.PageLength) {
+    <div class="text-end">
+        @Html.ActionLink("next", "Index", "Home", new{ page = (int)ViewBag.Page + 1 })
+    </div>
+}

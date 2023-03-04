@@ -7,7 +7,7 @@ using System.Diagnostics;
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class HomeController : Controller {
 
-    private const int pageLength = 50;
+    private const int pageLength = 5;
     private readonly ILogger<HomeController> _logger;
     private readonly IProductsHandler _productsHandler;
 
@@ -20,11 +20,13 @@ public class HomeController : Controller {
     public async Task<IActionResult> Index(int? page) {
         var products = await _productsHandler
             .QueryAllProducts()
-            .Skip(page ?? 0 * pageLength)
+            .Skip((page ?? 0) * pageLength)
             .Take(pageLength)
             .Select(x => (Product)x)
             .ToListAsyncSafe();
 
+        ViewBag.PageLength = pageLength;
+        ViewBag.Page = page ?? 0;
         return View(products);
     }
 
