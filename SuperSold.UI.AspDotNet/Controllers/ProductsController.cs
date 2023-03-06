@@ -23,8 +23,7 @@ public class ProductsController : Controller {
         var listProducts = await _productsHandler
             .QueryProductsBySellerId(Guid.Parse(userId))
             .Select(x => (Product)x)
-            .Skip((row ?? 0) * 10)
-            .Take(10)
+            .SkipToPage(row, 10)
             .ToListAsyncSafe();
 
         return View(listProducts);
@@ -110,7 +109,7 @@ public class ProductsController : Controller {
         if(!ModelState.IsValid) {
             return View(model);
         }
-
+        
         var userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
         if(model.SellerId.ToString() != userId) {
             return new UnauthorizedResult();

@@ -24,4 +24,14 @@ public static class QueryableExtensions {
 
     }
 
+    /// <summary>
+    /// Shorthand to skip ((<paramref name="page"/> ?? 0) * <paramref name="pageLength"/>) elements and take up to the remaining <paramref name="pageLength"/> elements.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="queryable"></param>
+    /// <param name="page"></param>
+    /// <param name="pageLength"></param>
+    /// <returns></returns>
+    public static IQueryable<T> SkipToPage<T>(this IQueryable<T> queryable, int? page, int pageLength) => queryable.Skip((page ?? 0) * pageLength).Take(pageLength);
+
 }

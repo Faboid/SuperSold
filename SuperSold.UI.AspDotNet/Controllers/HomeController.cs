@@ -20,8 +20,7 @@ public class HomeController : Controller {
     public async Task<IActionResult> Index(int? page) {
         var products = await _productsHandler
             .QueryAllProducts()
-            .Skip((page ?? 0) * pageLength)
-            .Take(pageLength)
+            .SkipToPage(page, pageLength)
             .Select(x => (Product)x)
             .ToListAsyncSafe();
 
