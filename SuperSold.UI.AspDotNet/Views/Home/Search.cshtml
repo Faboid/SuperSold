@@ -1,0 +1,49 @@
+﻿@model ICollection<SuperSold.UI.AspDotNet.Models.Product>
+
+@{
+    ViewData["Title"] = "Search Page";
+}
+
+<h1>Searching for @ViewBag.SearchItem</h1>
+
+<div class="container">
+    <input type="text" id="searchTextBox" name="searchText" placeholder="search"/>
+    <a class="btn btn-primary" id="searchButton"></a>
+</div>
+
+<br />
+
+@if((int)ViewBag.Page > 0) {
+    <div>
+        @Html.ActionLink("prev", "Search", "Home", new{ page = (int)ViewBag.Page - 1, search = ViewBag.SearchItem })
+    </div>
+}
+
+@if(!Model.Any()) {
+    <div class="container">
+        <p>The search has found no results. <a href="@Url.Action("Index", "Home")">Go back.</a></p>
+    </div>
+}
+
+<div class="table">
+    @foreach(var item in Model) {
+        <div class="row" style="border:solid; border-width:2px; border-radius:5px;">
+            @await Html.PartialAsync("_BuyableProductRowPartial", item)
+        </div>
+    }
+</div>
+
+@if(Model.Count >= (int)ViewBag.PageLength) {
+    <div class="text-end">
+        @Html.ActionLink("next", "Search", "Home", new{ page = (int)ViewBag.Page + 1, search = ViewBag.SearchItem })
+    </div>
+}
+
+<script>
+
+    document.getElementById("searchButton").onclick = function () {
+        var search = $('#searchTextBox').val();
+        window.location = '@Url.Action("Search", "Home")?page=' + (@ViewBag.Page ?? "0") + '&search=' + search;
+    }
+
+</script>

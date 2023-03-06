@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SuperSold.Data.DBInteractions;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
@@ -7,7 +8,7 @@ using System.Diagnostics;
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class HomeController : Controller {
 
-    private const int pageLength = 5;
+    private const int pageLength = 6;
     private readonly ILogger<HomeController> _logger;
     private readonly IProductsHandler _productsHandler;
 
@@ -18,6 +19,7 @@ public class HomeController : Controller {
 
     [HttpGet]
     public async Task<IActionResult> Index(int? page) {
+
         var products = await _productsHandler
             .QueryAllProducts()
             .SkipToPage(page, pageLength)
@@ -26,6 +28,27 @@ public class HomeController : Controller {
 
         ViewBag.PageLength = pageLength;
         ViewBag.Page = page ?? 0;
+        return View(products);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Search(int? page, string? search) {
+        
+        if(string.IsNullOrWhiteSpace(search)) {
+            return RedirectToAction("Index");
+        }
+        
+        var searchExpression = $"%{search ?? ""}%";
+        var products = await _productsHandler
+            .QueryAllProducts()
+            .Where(x => EF.Functions.Like(x.Title, searchExpression))
+            .SkipToPage(page, pageLength)
+            .Select(x => (Product)x)
+            .ToListAsyncSafe();
+
+        ViewBag.PageLength = pageLength;
+        ViewBag.Page = page ?? 0;
+        ViewBag.SearchItem = search;
         return View(products);
     }
 

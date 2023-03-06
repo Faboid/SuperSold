@@ -18,6 +18,23 @@
 
 </div>
 
+<div class="container">
+    <input type="text" id="searchTextBox" name="searchText" placeholder="search"/>
+    <a class="btn btn-primary" id="searchButton"></a>
+</div>
+
+<br/>
+
+@if(!Model.Any()) {
+    <div class="container">
+        <p>
+            There are no more results. @Html.ActionLink("Go back.", "Index", "Home", new { page = (int)ViewBag.Page - 1 })
+        </p>
+    </div>
+
+    return;
+}
+
 @if((int)ViewBag.Page > 0) {
     <div>
         @Html.ActionLink("prev", "Index", "Home", new{ page = (int)ViewBag.Page - 1 })
@@ -37,3 +54,12 @@
         @Html.ActionLink("next", "Index", "Home", new{ page = (int)ViewBag.Page + 1 })
     </div>
 }
+
+<script>
+
+    document.getElementById("searchButton").onclick = function() {
+        var search = $('#searchTextBox').val();
+        window.location = '@Url.Action("Search", "Home")?page=0&search=' + search;
+    }
+
+</script>
