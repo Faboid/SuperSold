@@ -32,10 +32,15 @@
         </p>
     </div>
 
-    return;
+} else {
+    
+    <div>
+        @await Html.PartialAsync("ScrollableViewCollection", new ScrollableViewModel<Product>(Model.AsQueryable()))
+    </div>
+
 }
 
-@if((int)ViewBag.Page > 0) {
+@*@if((int)ViewBag.Page > 0) {
     <div>
         @Html.ActionLink("prev", "Index", "Home", new{ page = (int)ViewBag.Page - 1 })
     </div>
@@ -54,7 +59,7 @@
         @Html.ActionLink("next", "Index", "Home", new{ page = (int)ViewBag.Page + 1 })
     </div>
 }
-
+*@
 <script>
 
     document.getElementById("searchButton").onclick = function() {
