@@ -1,0 +1,39 @@
+﻿@model ScrollableViewModel<Product>
+
+@{
+    ArgumentNullException.ThrowIfNull(Model);
+    var products = await Model.NextAsync(2);
+}
+
+<div class="table" id="scrollContainer">
+
+</div>
+
+<div class="container align-content-center">
+    <button id="loadMoreBtn">Load More</button>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script type="text/javascript">
+
+    document.getElementById("loadMoreBtn").onclick = loadMore;
+
+    function loadMore() {
+        document.getElementById("scrollContainer").appendChild(document.createTextNode("test"));
+        console.log("starting");
+
+        var rowName = @Model.RowFormatPartialViewName;
+        
+        $.ajax({
+            url: '@Url.Action("RenderProductList", "Shared")',
+            type: 'GET',
+                data: { "rowPartialName": rowName, "products": products },
+            dataType: "json",
+            success: function(result) {
+                $("scrollContainer").html(result);
+            },
+        });
+
+    }
+
+</script>
