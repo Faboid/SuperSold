@@ -1,4 +1,5 @@
-﻿@model ScrollableViewModel<Product>
+﻿@using System.Web;
+@model ScrollableViewModel<Product>
 
 @{
     ArgumentNullException.ThrowIfNull(Model);
@@ -13,25 +14,27 @@
     <button id="loadMoreBtn">Load More</button>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="~/js/jQuery.js"></script>
 <script type="text/javascript">
 
     document.getElementById("loadMoreBtn").onclick = loadMore;
 
     function loadMore() {
-        document.getElementById("scrollContainer").appendChild(document.createTextNode("test"));
-        console.log("starting");
-
-        var rowName = @Model.RowFormatPartialViewName;
         
+        var rowName = "@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.RowFormatPartialViewName))";
+
         $.ajax({
-            url: '@Url.Action("RenderProductList", "Shared")',
+            url: '@Url.Action("RenderProductList", "Shared")/',
             type: 'GET',
-                data: { "rowPartialName": rowName, "products": products },
-            dataType: "json",
-            success: function(result) {
-                $("scrollContainer").html(result);
-            },
+                data: { "rowPartialName": rowName },
+            dataType: "html",
+            cache: false,
+        }).done(function(result) {
+            console.log("success");
+            document.getElementById("scrollContainer").innerHTML += result;
+        }).fail(function(error) {
+            console.log("failed");
+            console.log(error);
         });
 
     }
