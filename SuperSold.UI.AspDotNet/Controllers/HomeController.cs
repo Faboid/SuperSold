@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using SuperSold.Data.DBInteractions;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
+using SuperSold.UI.AspDotNet.ViewRouting;
 using System.Diagnostics;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class HomeController : Controller {
 
-    private const int pageLength = 6;
+    private const int pageLength = 2;
     private readonly ILogger<HomeController> _logger;
     private readonly IProductsHandler _productsHandler;
 
@@ -28,6 +29,11 @@ public class HomeController : Controller {
 
         ViewBag.PageLength = pageLength;
         ViewBag.Page = page ?? 0;
+
+        if(Request.IsAjaxRequest()) {
+            return this.ProductListPartialView("_BuyableProductRowPartial", products);
+        }
+
         return View(products);
     }
 

@@ -18,20 +18,20 @@
 <script type="text/javascript">
 
     document.getElementById("loadMoreBtn").onclick = loadMore;
+    let page = 0;
 
     function loadMore() {
-        
-        var rowName = "@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.RowFormatPartialViewName))";
 
         $.ajax({
-            url: '@Url.Action("RenderProductList", "Shared")/',
+            url: '@Url.Action("Index", "Home")',
             type: 'GET',
-                data: { "rowPartialName": rowName },
+            data: { page: page },
             dataType: "html",
             cache: false,
         }).done(function(result) {
             console.log("success");
             document.getElementById("scrollContainer").innerHTML += result;
+            page++;
         }).fail(function(error) {
             console.log("failed");
             console.log(error);
