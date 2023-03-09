@@ -4,6 +4,8 @@
     ViewData["Title"] = "Search Page";
 }
 
+
+
 <h1>Searching for @ViewBag.SearchItem</h1>
 
 <div class="container">
@@ -12,6 +14,23 @@
 </div>
 
 <br />
+
+<div>
+    @await Html.PartialAsync("_ListViewPagination", new ListViewModel<Product>(Model, new ListViewModel<Product>.RedirectInfo("Home", "Search"), "_BuyableProductRowPartial", ViewBag.PageLength, ViewBag.Page))
+</div>
+
+<script>
+
+    document.getElementById("searchButton").onclick = function () {
+        var search = $('#searchTextBox').val();
+        window.location = '@Url.Action("Search", "Home")?page=' + (@ViewBag.Page ?? "0") + '&search=' + search;
+    }
+
+</script>
+
+@{
+    return;
+}
 
 @if((int)ViewBag.Page > 0) {
     <div>
@@ -38,12 +57,3 @@
         @Html.ActionLink("next", "Search", "Home", new{ page = (int)ViewBag.Page + 1, search = ViewBag.SearchItem })
     </div>
 }
-
-<script>
-
-    document.getElementById("searchButton").onclick = function () {
-        var search = $('#searchTextBox').val();
-        window.location = '@Url.Action("Search", "Home")?page=' + (@ViewBag.Page ?? "0") + '&search=' + search;
-    }
-
-</script>
