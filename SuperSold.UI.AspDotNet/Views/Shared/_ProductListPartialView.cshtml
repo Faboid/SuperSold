@@ -1,5 +1,14 @@
 ﻿@model (string RowPartialName, IEnumerable<Product> Products)
 
+@if(!Model.Products.Any()) {
+
+    <div class="btn" id="endOfSectionHeader">
+        <h3>End Of Section.</h3>
+    </div>
+
+    return;
+}
+
 @foreach(var product in Model.Products) {
     <div class="row" style="border:solid; border-width:2px; border-radius:5px;">
         @await Html.PartialAsync(Model.RowPartialName, product)
