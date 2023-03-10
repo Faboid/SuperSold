@@ -1,4 +1,5 @@
-﻿@model ICollection<SuperSold.UI.AspDotNet.Models.Product>
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+@model ICollection<SuperSold.UI.AspDotNet.Models.Product>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -35,7 +36,7 @@
 } else {
 
     <div>
-        @await Html.PartialAsync("ScrollableViewCollection", new ScrollableViewModel("/Home/Index"))
+        @await Html.ScrollablePageOnly("/Home/Index");
     </div>
 
 }
