@@ -1,9 +1,8 @@
 ﻿@using System.Web;
-@model ScrollableViewModel<Product>
+@model ScrollableViewModel
 
 @{
     ArgumentNullException.ThrowIfNull(Model);
-    var products = await Model.NextAsync(2);
 }
 
 <div class="table" id="scrollContainer">
@@ -14,29 +13,16 @@
     <button id="loadMoreBtn">Load More</button>
 </div>
 
-<script src="~/js/jQuery.js"></script>
+<script src="~/js/productLoad.js"></script>
 <script type="text/javascript">
 
-    document.getElementById("loadMoreBtn").onclick = loadMore;
-    let page = 0;
+    document.getElementById("loadMoreBtn").onclick = pLoadMore;
+    window.onload = pLoadMore;
+    const scrollContainer = document.getElementById("scrollContainer");
+    const url = '@Model.Url';
 
-    function loadMore() {
-
-        $.ajax({
-            url: '@Url.Action("Index", "Home")',
-            type: 'GET',
-            data: { page: page },
-            dataType: "html",
-            cache: false,
-        }).done(function(result) {
-            console.log("success");
-            document.getElementById("scrollContainer").innerHTML += result;
-            page++;
-        }).fail(function(error) {
-            console.log("failed");
-            console.log(error);
-        });
-
+    function pLoadMore() {
+        loadMore(url, scrollContainer);
     }
 
 </script>

@@ -2,26 +2,12 @@
 
 namespace SuperSold.UI.AspDotNet.Models;
 
-public class ScrollableViewModel<T> {
+public class ScrollableViewModel {
 
-    public ScrollableViewModel(IQueryable<T> modelList) {
-        ModelList = modelList;
+    public ScrollableViewModel(string url) {
+        Url = url;
     }
 
-    public IQueryable<T> ModelList { get; set; }
-    public string RowFormatPartialViewName { get; set; } = "_BuyableProductRowPartial"; //temp hardcoded
-
-    public int Cursor { get; set; } = 0;
-    public async Task<List<T>> NextAsync(int amount) {
-
-        var output = await ModelList
-            .Skip(Cursor)
-            .Take(amount)
-            .ToListAsyncSafe();
-
-        Cursor += amount;
-        return output;
-
-    }
+    public string Url { get; set; }
 
 }

@@ -33,9 +33,9 @@
     </div>
 
 } else {
-    
+
     <div>
-        @await Html.PartialAsync("ScrollableViewCollection", new ScrollableViewModel<Product>(Model.AsQueryable()))
+        @await Html.PartialAsync("ScrollableViewCollection", new ScrollableViewModel("/Home/Index"))
     </div>
 
 }
