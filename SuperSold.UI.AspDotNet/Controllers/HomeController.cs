@@ -19,7 +19,13 @@ public class HomeController : Controller {
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(int? page) {
+    public IActionResult Index() => View();
+
+    [HttpGet]
+    public IActionResult Search(string search) => View(model: search);
+
+    [HttpGet]
+    public async Task<IActionResult> IndexPartial(int page) {
 
         var products = await _productsHandler
             .QueryAllProducts()
@@ -27,23 +33,16 @@ public class HomeController : Controller {
             .Select(x => (Product)x)
             .ToListAsyncSafe();
 
-        ViewBag.PageLength = pageLength;
-        ViewBag.Page = page ?? 0;
-
-        if(Request.IsAjaxRequest()) {
-            return this.ProductListPartialView("_BuyableProductRowPartial", products);
-        }
-
-        return View(products);
+        return this.ProductListPartialView(PartialViewNames.BuyableProductRowPartial, products);
     }
 
     [HttpGet]
-    public async Task<IActionResult> Search(int? page, string? search) {
+    public async Task<IActionResult> SearchPartial(int page, string search) {
         
         if(string.IsNullOrWhiteSpace(search)) {
-            return RedirectToAction("Index");
+            return RedirectToPage("Index");
         }
-        
+
         var searchExpression = $"%{search ?? ""}%";
         var products = await _productsHandler
             .QueryAllProducts()
@@ -52,10 +51,8 @@ public class HomeController : Controller {
             .Select(x => (Product)x)
             .ToListAsyncSafe();
 
-        ViewBag.PageLength = pageLength;
-        ViewBag.Page = page ?? 0;
         ViewBag.SearchItem = search;
-        return View(products);
+        return this.ProductListPartialView(PartialViewNames.BuyableProductRowPartial, products);
     }
 
     public IActionResult Privacy() {

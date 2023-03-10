@@ -1,5 +1,4 @@
 ﻿@using SuperSold.UI.AspDotNet.ViewRouting;
-@model ICollection<SuperSold.UI.AspDotNet.Models.Product>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -26,46 +25,15 @@
 
 <br/>
 
-@if(!Model.Any()) {
-    <div class="container">
-        <p>
-            There are no more results. @Html.ActionLink("Go back.", "Index", "Home", new { page = (int)ViewBag.Page - 1 })
-        </p>
-    </div>
-
-} else {
-
-    <div>
-        @await Html.ScrollablePageOnly("/Home/Index");
-    </div>
-
-}
-
-@*@if((int)ViewBag.Page > 0) {
-    <div>
-        @Html.ActionLink("prev", "Index", "Home", new{ page = (int)ViewBag.Page - 1 })
-    </div>
-}
-
-<div class="table">
-    @foreach(var item in Model) {
-        <div class="row" style="border:solid; border-width:2px; border-radius:5px;">
-            @await Html.PartialAsync("_BuyableProductRowPartial", item)
-        </div>
-    }
+<div>
+    @await Html.ScrollablePartialView("/Home/IndexPartial")
 </div>
 
-@if(Model.Count >= (int)ViewBag.PageLength) {
-    <div class="text-end">
-        @Html.ActionLink("next", "Index", "Home", new{ page = (int)ViewBag.Page + 1 })
-    </div>
-}
-*@
 <script>
 
     document.getElementById("searchButton").onclick = function() {
         var search = $('#searchTextBox').val();
-        window.location = '@Url.Action("Search", "Home")?page=0&search=' + search;
+        window.location = '@Url.Action("Search", "Home")?&search=' + search;
     }
 
 </script>

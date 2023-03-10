@@ -1,12 +1,11 @@
-﻿@model ICollection<SuperSold.UI.AspDotNet.Models.Product>
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+@model string
 
 @{
     ViewData["Title"] = "Search Page";
 }
 
-
-
-<h1>Searching for @ViewBag.SearchItem</h1>
+<h1>Searching for @Model</h1>
 
 <div class="container">
     <input type="text" id="searchTextBox" name="searchText" placeholder="search"/>
@@ -16,7 +15,7 @@
 <br />
 
 <div>
-    @await Html.PartialAsync("_ListViewPagination", new ListViewModel<Product>(Model, new ListViewModel<Product>.RedirectInfo("Home", "Search"), "_BuyableProductRowPartial", ViewBag.PageLength, ViewBag.Page))
+    @await Html.ScrollablePartialView(Url.Action("SearchPartial", "Home")!, Model)
 </div>
 
 <script>
@@ -27,33 +26,3 @@
     }
 
 </script>
-
-@{
-    return;
-}
-
-@if((int)ViewBag.Page > 0) {
-    <div>
-        @Html.ActionLink("prev", "Search", "Home", new{ page = (int)ViewBag.Page - 1, search = ViewBag.SearchItem })
-    </div>
-}
-
-@if(!Model.Any()) {
-    <div class="container">
-        <p>The search has found no results. <a href="@Url.Action("Index", "Home")">Go back.</a></p>
-    </div>
-}
-
-<div class="table">
-    @foreach(var item in Model) {
-        <div class="row" style="border:solid; border-width:2px; border-radius:5px;">
-            @await Html.PartialAsync("_BuyableProductRowPartial", item)
-        </div>
-    }
-</div>
-
-@if(Model.Count >= (int)ViewBag.PageLength) {
-    <div class="text-end">
-        @Html.ActionLink("next", "Search", "Home", new{ page = (int)ViewBag.Page + 1, search = ViewBag.SearchItem })
-    </div>
-}
