@@ -6,12 +6,12 @@ namespace SuperSold.UI.AspDotNet.ViewRouting;
 
 public static class Scrollable {
 
-    public static async Task<IHtmlContent> ScrollablePageOnly<T>(this IHtmlHelper<T> htmlHelper, string url) {
-        return await htmlHelper.PartialAsync("ScrollableViewCollection", new ScrollableViewModel(url));
+    public static async Task<IHtmlContent> ScrollablePartialView<T>(this IHtmlHelper<T> htmlHelper, string url) {
+        return await htmlHelper.PartialAsync("_ScrollablePageOnlyPartialView", new ScrollableViewModel(url));
     }
 
-    public static Task<IHtmlContent> ScrollablePageSearch(string search) {
-        throw new NotImplementedException();
+    public static async Task<IHtmlContent> ScrollablePartialView<T>(this IHtmlHelper<T> htmlHelper, string url, string search) {
+        return await htmlHelper.PartialAsync("_ScrollablePageSearchPartialView", new ScrollableViewModel(url, search));
     }
 
 }
