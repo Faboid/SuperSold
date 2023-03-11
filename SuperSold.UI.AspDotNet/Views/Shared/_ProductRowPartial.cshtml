@@ -1,31 +1,42 @@
 ﻿@model SuperSold.UI.AspDotNet.Models.Product
 
-<div>
+<head>
+    <link rel="stylesheet" href="~/css/productRow.css"/>
+</head>
+
+<div class="container-row">
 
     <!--image-->
-    <div style="float:left">
-        <img src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image"/>
+    <div class="image-row-container">
+        <img class="image-row" src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image"/>
     </div>
 
     <!--Description-->
-    <div style="float:left">
-        <h2>@Html.DisplayFor(x => x.Title)</h2>
-        <p>@Html.DisplayFor(x => x.Description)</p>
+    <div class="text-row">
+        <h2 class="title">@Html.DisplayFor(x => x.Title)</h2>
+        <p class="description">@Html.DisplayFor(x => x.Description)</p>
     </div>
 
     <!--Price & Edit Button-->
-    <div style="float:right">
-        <p><b>@Html.DisplayFor(x => x.Price)€</b></p>
+    <div class="price-buttons-container">
 
-        <div style="float:left">
-            @using(Html.BeginForm("Edit", "Products", Model, FormMethod.Get)) {
-                <input type="submit" value="Edit" class="btn btn-primary" />
-            }
+        <div class="price-row">
+            <p><b>@Html.DisplayFor(x => x.Price)€</b></p>
         </div>
-        <div style="float:right">
-            @using(Html.BeginForm("Delete", "Products", Model, FormMethod.Post)) {
-                <input type="submit" value="Delete" class="btn btn-primary"/>
-            }
+
+        <div class="buttons-container">
+
+            <div style="float:left">
+                @using(Html.BeginForm("Edit", "Products", Model, FormMethod.Get)) {
+                    <input type="submit" value="Edit" class="btn btn-primary" />
+                }
+            </div>
+            <div style="float:right">
+                @using(Html.BeginForm("Delete", "Products", Model, FormMethod.Post)) {
+                    <input type="submit" value="Delete" class="btn btn-primary" />
+                }
+            </div>
+
         </div>
 
     </div>

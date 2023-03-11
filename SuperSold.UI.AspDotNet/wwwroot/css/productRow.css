@@ -1,0 +1,46 @@
+﻿
+.container-row {
+    height:15vh;
+}
+
+.image-row-container {
+    float: left;
+    height: 100%;
+    width: 16%;
+}
+
+.image-row {
+    height:auto;
+    max-height:100%;
+    max-width:100%;
+}
+
+.text-row {
+    float: left;
+    height: 100%;
+    width: 60%;
+    overflow: hidden;
+    border-left:solid;
+}
+
+.title {
+
+}
+
+.description {
+
+}
+
+.price-buttons-container {
+    float:right;
+    height:100%;
+}
+
+.price {
+    width:100%;
+    text-align:end;
+}
+
+.buttons-container {
+    
+}
