@@ -3,12 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using SuperSold.Data.DBInteractions;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
+using SuperSold.UI.AspDotNet.ViewRouting;
 using System.Diagnostics;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class HomeController : Controller {
 
-    private const int pageLength = 6;
+    private const int pageLength = 2;
     private readonly ILogger<HomeController> _logger;
     private readonly IProductsHandler _productsHandler;
 
@@ -18,7 +19,13 @@ public class HomeController : Controller {
     }
 
     [HttpGet]
-    public async Task<IActionResult> Index(int? page) {
+    public IActionResult Index() => View();
+
+    [HttpGet]
+    public IActionResult Search(string search) => View(model: search);
+
+    [HttpGet]
+    public async Task<IActionResult> IndexPartial(int page) {
 
         var products = await _productsHandler
             .QueryAllProducts()
@@ -26,18 +33,16 @@ public class HomeController : Controller {
             .Select(x => (Product)x)
             .ToListAsyncSafe();
 
-        ViewBag.PageLength = pageLength;
-        ViewBag.Page = page ?? 0;
-        return View(products);
+        return this.ProductListPartialView(PartialViewNames.BuyableProductRowPartial, products);
     }
 
     [HttpGet]
-    public async Task<IActionResult> Search(int? page, string? search) {
+    public async Task<IActionResult> SearchPartial(int page, string search) {
         
         if(string.IsNullOrWhiteSpace(search)) {
-            return RedirectToAction("Index");
+            return RedirectToPage("Index");
         }
-        
+
         var searchExpression = $"%{search ?? ""}%";
         var products = await _productsHandler
             .QueryAllProducts()
@@ -46,10 +51,8 @@ public class HomeController : Controller {
             .Select(x => (Product)x)
             .ToListAsyncSafe();
 
-        ViewBag.PageLength = pageLength;
-        ViewBag.Page = page ?? 0;
         ViewBag.SearchItem = search;
-        return View(products);
+        return this.ProductListPartialView(PartialViewNames.BuyableProductRowPartial, products);
     }
 
     public IActionResult Privacy() {

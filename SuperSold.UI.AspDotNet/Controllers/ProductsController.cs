@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SuperSold.Data.DBInteractions;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
-using System.Security.Claims;
+using SuperSold.UI.AspDotNet.ViewRouting;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class ProductsController : Controller {
@@ -16,17 +16,21 @@ public class ProductsController : Controller {
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> MyProducts(int? row) {
+    public IActionResult MyProducts() => View();
 
-        var userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> MyProductsPartial(int page) {
+
+        var userId = User.GetIdentity();
 
         var listProducts = await _productsHandler
-            .QueryProductsBySellerId(Guid.Parse(userId))
+            .QueryProductsBySellerId(userId)
             .Select(x => (Product)x)
-            .SkipToPage(row, 10)
+            .SkipToPage(page, 10)
             .ToListAsyncSafe();
 
-        return View(listProducts);
+        return this.ProductListPartialView(PartialViewNames.ProductRowPartial, listProducts);
 
     }
 
@@ -43,10 +47,10 @@ public class ProductsController : Controller {
         }
 
         var user = User.Identity!.Name!;
-        var sellerId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+        var sellerId = User.GetIdentity();
 
         product.Id = Guid.NewGuid();
-        product.SellerId = Guid.Parse(sellerId);
+        product.SellerId = sellerId;
 
         var result = await _productsHandler.CreateProduct(product, user);
 
@@ -69,9 +73,9 @@ public class ProductsController : Controller {
             return RedirectToAction("MyProducts");
         }
 
-        var userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+        var userId = User.GetIdentity();
 
-        if(userId != model.SellerId.ToString()) {
+        if(userId != model.SellerId) {
             return new UnauthorizedResult();
         }
 
@@ -93,8 +97,8 @@ public class ProductsController : Controller {
             return NotFound();
         }
 
-        var userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
-        if(model.IdSellerAccount.ToString() != userId) {
+        var userId = User.GetIdentity();
+        if(model.IdSellerAccount != userId) {
             return new UnauthorizedResult();
         }
 
@@ -109,9 +113,9 @@ public class ProductsController : Controller {
         if(!ModelState.IsValid) {
             return View(model);
         }
-        
-        var userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
-        if(model.SellerId.ToString() != userId) {
+
+        var userId = User.GetIdentity();
+        if(model.SellerId != userId) {
             return new UnauthorizedResult();
         }
 
