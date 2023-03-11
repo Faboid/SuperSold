@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperSold.UI.AspDotNet", "SuperSold.UI.AspDotNet\SuperSold.UI.AspDotNet.csproj", "{B71D700A-AFD6-4F69-A584-6ED10971FBD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperSold.UI.AspDotNet", "SuperSold.UI.AspDotNet\SuperSold.UI.AspDotNet.csproj", "{B71D700A-AFD6-4F69-A584-6ED10971FBD4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SuperSold.Data", "SuperSold.Data\SuperSold.Data.csproj", "{D64CAFB0-20C8-4DAE-A082-DE403FBFE361}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperSold.Identification", "SuperSold.Identification\SuperSold.Identification.csproj", "{B7854E7D-BA7A-4FB1-AA7F-17EA4F3F1154}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{B71D700A-AFD6-4F69-A584-6ED10971FBD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B71D700A-AFD6-4F69-A584-6ED10971FBD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B71D700A-AFD6-4F69-A584-6ED10971FBD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D64CAFB0-20C8-4DAE-A082-DE403FBFE361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D64CAFB0-20C8-4DAE-A082-DE403FBFE361}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D64CAFB0-20C8-4DAE-A082-DE403FBFE361}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D64CAFB0-20C8-4DAE-A082-DE403FBFE361}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7854E7D-BA7A-4FB1-AA7F-17EA4F3F1154}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7854E7D-BA7A-4FB1-AA7F-17EA4F3F1154}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7854E7D-BA7A-4FB1-AA7F-17EA4F3F1154}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7854E7D-BA7A-4FB1-AA7F-17EA4F3F1154}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

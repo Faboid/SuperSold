@@ -1,0 +1,8 @@
+﻿
+@if(User.Identity!.IsAuthenticated) {
+    <a class="btn btn-primary" asp-controller="Products" asp-action="MyProducts">My Products</a>
+    <a class="btn btn-primary" asp-controller="Account" asp-action="Logout">Logout</a>
+} else {    
+    <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Login</a>
+    <a class="btn btn-primary" asp-controller="Account" asp-action="SignUp">Sign Up</a>
+}

@@ -1,0 +1,17 @@
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+@model IEnumerable<SuperSold.UI.AspDotNet.Models.Product>
+
+@{
+    ViewData["Title"] = "MyProducts";
+}
+
+<div>
+    <div class="col-2">
+        <h1><b>MyProducts</b></h1>
+    </div>
+    <div class="mr-2">
+        <a asp-action="Publish" class="btn btn-primary">Publish New</a>
+    </div>
+</div>
+
+@await Html.ScrollablePartialView(Url.Action("MyProductsPartial", "Products")!)

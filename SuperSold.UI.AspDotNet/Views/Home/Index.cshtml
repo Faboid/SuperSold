@@ -1,8 +1,39 @@
-﻿@{
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+
+    @if(User.Identity.IsAuthenticated) {
+        <h1 class="display-4">Welcome, @(User.Identity.Name)!</h1>
+    } else {
+        <h1 class="display-4">Welcome</h1>
+    }
+
+    <p>
+        This site has been made as a learning exercise. By using it, you understand that the products being sold aren't real.
+    </p>
+
 </div>
+
+<div class="container">
+    <input type="text" id="searchTextBox" name="searchText" placeholder="search"/>
+    <a class="btn btn-primary" id="searchButton"></a>
+</div>
+
+<br/>
+
+<div>
+    @await Html.ScrollablePartialView("/Home/IndexPartial")
+</div>
+
+<script>
+
+    document.getElementById("searchButton").onclick = function() {
+        var search = $('#searchTextBox').val();
+        window.location = '@Url.Action("Search", "Home")?&search=' + search;
+    }
+
+</script>

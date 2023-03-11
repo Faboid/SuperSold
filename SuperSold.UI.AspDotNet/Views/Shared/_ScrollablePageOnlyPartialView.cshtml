@@ -1,0 +1,28 @@
+﻿@using System.Web;
+@model ScrollableViewModel
+
+@{
+    ArgumentNullException.ThrowIfNull(Model);
+}
+
+<div class="table" id="scrollContainer">
+
+</div>
+
+<div class="container align-content-center">
+    <button id="loadMoreBtn">Load More</button>
+</div>
+
+<script src="~/js/productLoad.js"></script>
+<script type="text/javascript">
+
+    document.getElementById("loadMoreBtn").onclick = pLoadMore;
+    window.onload = pLoadMore;
+    const scrollContainer = document.getElementById("scrollContainer");
+    const url = '@Model.Url';
+
+    function pLoadMore() {
+        loadMorePageOnly(url, scrollContainer);
+    }
+
+</script>

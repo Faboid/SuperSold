@@ -1,0 +1,42 @@
+﻿@model SuperSold.UI.AspDotNet.Models.Product
+
+<head>
+    <link rel="stylesheet" href="~/css/productRow.css" />
+</head>
+
+<div class="container-row">
+
+    <!--image-->
+    <div class="image-row-container">
+        <img class="image-row" src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image" />
+    </div>
+
+    <!--Description-->
+    <div class="text-row">
+        <h2 class="title">@Html.DisplayFor(x => x.Title)</h2>
+        <p class="description">@Html.DisplayFor(x => x.Description)</p>
+    </div>
+
+    <!--Price & Edit Button-->
+    <div class="price-buttons-container">
+        <div class="price">
+            <p><b>@Html.DisplayFor(x => x.Price)€</b></p>
+        </div>
+        
+        <div class="buttons-container">
+            <div class="buttons-align">
+                @using(Html.BeginForm("AddToWishlist", "Cart", Model, FormMethod.Post)) {
+                    <input type="submit" value="Add To Wishlist" class="btn btn-primary" />
+                }
+            </div>
+            <div class="buttons-align">
+                @using(Html.BeginForm("AddToCart", "Cart", Model, FormMethod.Post)) {
+                    <input type="submit" value="Add To Cart" class="btn btn-primary" />
+                }
+            </div>
+        </div>
+
+
+    </div>
+
+</div>
