@@ -20,18 +20,18 @@
     <!--Price & Edit Button-->
     <div class="price-buttons-container">
 
-        <div class="price-row">
+        <div class="price">
             <p><b>@Html.DisplayFor(x => x.Price)€</b></p>
         </div>
 
         <div class="buttons-container">
 
-            <div style="float:left">
+            <div class="buttons-align">
                 @using(Html.BeginForm("Edit", "Products", Model, FormMethod.Get)) {
                     <input type="submit" value="Edit" class="btn btn-primary" />
                 }
             </div>
-            <div style="float:right">
+            <div class="buttons-align">
                 @using(Html.BeginForm("Delete", "Products", Model, FormMethod.Post)) {
                     <input type="submit" value="Delete" class="btn btn-primary" />
                 }

@@ -1,6 +1,9 @@
 ﻿
 .container-row {
+    min-height:150px;
     height:15vh;
+    padding:0;
+    overflow:clip;
 }
 
 .image-row-container {
@@ -18,7 +21,9 @@
 .text-row {
     float: left;
     height: 100%;
-    width: 60%;
+    min-width:30%;
+    width: auto;
+    max-width:56%;
     overflow: hidden;
     border-left:solid;
 }
@@ -34,6 +39,9 @@
 .price-buttons-container {
     float:right;
     height:100%;
+    max-width:30%;
+    width:auto;
+    position:relative;
 }
 
 .price {
@@ -42,5 +50,13 @@
 }
 
 .buttons-container {
-    
+    position: relative;
+    width: 100%;
+    bottom: -40%;
+    right:0;
+}
+
+.buttons-align {
+    display:inline-block;
+    position:relative;
 }
