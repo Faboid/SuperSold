@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SuperSold.Data.DBInteractions;
 using SuperSold.UI.AspDotNet.Models;
 
@@ -17,13 +16,19 @@ public class CartController : Controller {
     }
 
     [HttpGet]
-    public IActionResult WishList(int? page = 0) {
+    public IActionResult WishList() => View();
+
+    [HttpGet]
+    public IActionResult WishListPartial(int page = 0) {
         return View();
     }
 
     [HttpGet]
     [Route("/Cart/View")]
-    public IActionResult ViewCart(int? page = 0) {
+    public IActionResult ViewCart() => View();
+
+    [HttpGet]
+    public IActionResult ViewCartPartial(int page = 0) {
         return View();
     }
 
