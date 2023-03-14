@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SuperSold.Data.DBInteractions;
+using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
+using SuperSold.UI.AspDotNet.ViewRouting;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
 
@@ -9,18 +11,27 @@ namespace SuperSold.UI.AspDotNet.Controllers;
 [AutoValidateAntiforgeryToken]
 public class CartController : Controller {
 
-    private readonly IProductsHandler _productsHandler;
+    private readonly IWishlistHandler _wishlistHandler;
+    private readonly ICartHandler _cartHandler;
 
-    public CartController(IProductsHandler productsHandler) {
-        _productsHandler = productsHandler;
+    public CartController(IWishlistHandler wishlistHandler, ICartHandler cartHandler) {
+        _wishlistHandler = wishlistHandler;
+        _cartHandler = cartHandler;
     }
 
     [HttpGet]
     public IActionResult WishList() => View();
 
     [HttpGet]
-    public IActionResult WishListPartial(int page = 0) {
-        return View();
+    public async Task<IActionResult> WishListPartial(int page = 0) {
+
+        var userId = User.GetIdentity();
+        var products = await _wishlistHandler.QueryWishlistedProductsByUserId(userId)
+            .SkipToPage(page, 3)
+            .Select(x => (Product)x)
+            .ToListAsyncSafe();
+
+        return this.ProductListPartialView(PartialViewNames.WishlistProductRowPartial, products);
     }
 
     [HttpGet]
@@ -28,8 +39,15 @@ public class CartController : Controller {
     public IActionResult ViewCart() => View();
 
     [HttpGet]
-    public IActionResult ViewCartPartial(int page = 0) {
-        return View();
+    public async Task<IActionResult> ViewCartPartial(int page = 0) {
+
+        var userId = User.GetIdentity();
+        var products = await _cartHandler.QueryCartedProductsByUserId(userId)
+            .SkipToPage(page, 3)
+            .Select(x => (Product)x)
+            .ToListAsyncSafe();
+
+        return this.ProductListPartialView(PartialViewNames.CartProductRowPartial, products);
     }
 
     [HttpGet]
@@ -38,13 +56,28 @@ public class CartController : Controller {
     }
 
     [HttpPost]
-    public Task<IActionResult> AddToCart(Product product) {
-        throw new NotImplementedException();
+    public async Task<IActionResult> AddToCart(Guid productId) {
+
+        var userId = User.GetIdentity();
+        var result = await _cartHandler.AddToCart(userId, productId);
+
+        return result.Match<IActionResult>(
+            success => CreatedAtAction(nameof(AddToCart), null),
+            alreadyexists => Conflict()
+        );
     }
 
     [HttpPost]
-    public Task<IActionResult> AddToWishlist(Product product) {
-        throw new NotImplementedException();
+    public async Task<IActionResult> AddToWishlist(Guid productId) {
+
+        var userId = User.GetIdentity();
+        var result = await _wishlistHandler.WishlistProduct(userId, productId);
+
+        return result.Match<IActionResult>(
+            success => CreatedAtAction(nameof(AddToWishlist), null),
+            alreadyexists => BadRequest()
+        );
+        
     }
 
 }
