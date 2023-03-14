@@ -27,6 +27,8 @@ public static class AddDatabaseHostBuilderExtensions {
         services.AddMySql<EfCoreDBContext>(connectionString, ServerVersion.AutoDetect(connectionString));
         services.AddScoped<IAccountsHandler, EfCoreAccountsHandler>();
         services.AddScoped<IProductsHandler, EfCoreProductsHandler>();
+        services.AddScoped<IWishlistHandler, EfCoreWishlistHandler>();
+        services.AddScoped<ICartHandler, EFCoreCartHandler>();
     }
 
 }
