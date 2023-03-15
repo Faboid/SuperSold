@@ -30,7 +30,7 @@ public class ProductsController : Controller {
             .SkipToPage(page, 10)
             .ToListAsyncSafe();
 
-        return this.ProductListPartialView(PartialViewNames.ProductRowPartial, listProducts);
+        return this.ProductListPartialView(PartialViewNames.MyProductsRow, listProducts);
 
     }
 

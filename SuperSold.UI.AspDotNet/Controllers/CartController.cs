@@ -31,7 +31,7 @@ public class CartController : Controller {
             .Select(x => (Product)x)
             .ToListAsyncSafe();
 
-        return this.ProductListPartialView(PartialViewNames.WishlistProductRowPartial, products);
+        return this.ProductListPartialView(PartialViewNames.WishlistProductRow, products);
     }
 
     [HttpGet]
@@ -47,7 +47,7 @@ public class CartController : Controller {
             .Select(x => (Product)x)
             .ToListAsyncSafe();
 
-        return this.ProductListPartialView(PartialViewNames.CartProductRowPartial, products);
+        return this.ProductListPartialView(PartialViewNames.MyCartProductRow, products);
     }
 
     [HttpGet]
