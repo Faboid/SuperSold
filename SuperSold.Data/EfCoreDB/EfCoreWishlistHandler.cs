@@ -17,7 +17,7 @@ public class EfCoreWishlistHandler : IWishlistHandler {
 
         var products = _context.Products
             .AsNoTracking()
-            .GroupJoin(_context.Wishlists.Where(x => x.AccountId == userId), x => x.IdProduct, x => x.ProductId, (x, y) => x);
+            .GroupJoin(_context.Wishlists.Where(x => x.IdAccount == userId), x => x.IdProduct, x => x.IdProduct, (x, y) => x);
 
         return products;
 
@@ -25,7 +25,7 @@ public class EfCoreWishlistHandler : IWishlistHandler {
 
     public async Task<OneOf<Success, NotFound>> RemoveWishlistProduct(Guid userId, Guid productId) {
         
-        var wishlist = await _context.Wishlists.FirstOrDefaultAsync(x => x.AccountId == userId && x.ProductId == productId);
+        var wishlist = await _context.Wishlists.FirstOrDefaultAsync(x => x.IdAccount == userId && x.IdProduct == productId);
         if(wishlist is null) {
             return new NotFound();
         }
@@ -38,7 +38,7 @@ public class EfCoreWishlistHandler : IWishlistHandler {
 
     public async Task<OneOf<Success, Error>> WishlistProduct(Guid userId, Guid productId) {
 
-        var wishlist = new AccountWishlistModel() { AccountId = userId, ProductId = productId };
+        var wishlist = new AccountWishlistModel() { IdAccount = userId, IdProduct = productId };
         await _context.Wishlists.AddAsync(wishlist);
         var result = await _context.SaveChangesAsync();
 

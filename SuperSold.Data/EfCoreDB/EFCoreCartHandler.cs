@@ -18,14 +18,14 @@ public class EFCoreCartHandler : ICartHandler {
     public IQueryable<ProductModel> QueryCartedProductsByUserId(Guid userId) {
         var products = _context.Products
             .AsNoTracking()
-            .GroupJoin(_context.Cart.Where(x => x.AccountId == userId), x => x.IdProduct, x => x.ProductId, (x, y) => x);
+            .GroupJoin(_context.Cart.Where(x => x.IdAccount == userId), x => x.IdProduct, x => x.IdProduct, (x, y) => x);
 
         return products;
     }
 
     public async Task<OneOf<Success, AlreadyExists>> AddToCart(Guid userId, Guid productId) {
 
-        var cartItem = new AccountCartModel() { AccountId = userId, ProductId = productId };
+        var cartItem = new AccountCartModel() { IdAccount = userId, IdProduct = productId };
 
         //check if this item is already in the cart
         if(await _context.Cart.ContainsAsync(cartItem)) {
@@ -40,7 +40,7 @@ public class EFCoreCartHandler : ICartHandler {
 
     public async Task<OneOf<Success, NotFound>> RemoveFromCart(Guid userId, Guid productId) {
 
-        var cartItem = await _context.Cart.FirstOrDefaultAsync(x => x.AccountId == userId && x.ProductId == productId);
+        var cartItem = await _context.Cart.FirstOrDefaultAsync(x => x.IdAccount == userId && x.IdProduct == productId);
         if(cartItem is null) {
             return new NotFound();
         }

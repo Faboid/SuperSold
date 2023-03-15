@@ -7,9 +7,9 @@ namespace SuperSold.Data.Models;
 public class AccountCartModel {
 
     [ForeignKey(nameof(AccountModel.IdAccount))]
-    public Guid AccountId { get; set; }
+    public Guid IdAccount { get; set; }
 
     [ForeignKey(nameof(ProductModel.IdProduct))]
-    public Guid ProductId { get; set; }
+    public Guid IdProduct { get; set; }
 
 }
