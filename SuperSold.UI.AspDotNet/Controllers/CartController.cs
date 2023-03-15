@@ -20,10 +20,10 @@ public class CartController : Controller {
     }
 
     [HttpGet]
-    public IActionResult WishList() => View();
+    public IActionResult Wishlist() => View();
 
     [HttpGet]
-    public async Task<IActionResult> WishListPartial(int page = 0) {
+    public async Task<IActionResult> WishlistPartial(int page = 0) {
 
         var userId = User.GetIdentity();
         var products = await _wishlistHandler.QueryWishlistedProductsByUserId(userId)
@@ -62,8 +62,8 @@ public class CartController : Controller {
         var result = await _cartHandler.AddToCart(userId, productId);
 
         return result.Match<IActionResult>(
-            success => CreatedAtAction(nameof(AddToCart), null),
-            alreadyexists => Conflict()
+            success => RedirectToAction(nameof(ViewCart)),
+            alreadyexists => RedirectToAction(nameof(ViewCart))
         );
     }
 
@@ -74,8 +74,8 @@ public class CartController : Controller {
         var result = await _wishlistHandler.WishlistProduct(userId, productId);
 
         return result.Match<IActionResult>(
-            success => CreatedAtAction(nameof(AddToWishlist), null),
-            alreadyexists => BadRequest()
+            success => RedirectToAction(nameof(Wishlist)),
+            alreadyexists => RedirectToAction(nameof(Wishlist))
         );
         
     }
