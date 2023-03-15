@@ -13,7 +13,13 @@ public class EfCoreDBContext : DbContext {
     public EfCoreDBContext(DbContextOptions<EfCoreDBContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        modelBuilder
+            .Entity<AccountWishlistModel>()
+            .HasKey(x => new { x.IdAccount, x.IdProduct });
 
+        modelBuilder
+            .Entity<AccountCartModel>()
+            .HasKey(x => new { x.IdAccount, x.IdProduct });
     }
 }
 
