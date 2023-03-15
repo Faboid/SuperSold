@@ -25,12 +25,12 @@
         
         <div class="buttons-container">
             <div class="buttons-align">
-                @using(Html.BeginForm("AddToWishlist", "Cart", Model, FormMethod.Post)) {
+                @using(Html.BeginForm("AddToWishlist", "Cart", new { productId = Model.Id }, FormMethod.Post)) {
                     <input type="submit" value="Add To Wishlist" class="btn btn-primary" />
                 }
             </div>
             <div class="buttons-align">
-                @using(Html.BeginForm("AddToCart", "Cart", Model, FormMethod.Post)) {
+                @using(Html.BeginForm("AddToCart", "Cart", new { productId = Model.Id }, FormMethod.Post)) {
                     <input type="submit" value="Add To Cart" class="btn btn-primary" />
                 }
             </div>
