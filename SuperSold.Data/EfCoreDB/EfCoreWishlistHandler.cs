@@ -3,6 +3,7 @@ using OneOf;
 using OneOf.Types;
 using SuperSold.Data.DBInteractions;
 using SuperSold.Data.Models;
+using SuperSold.Data.Models.ResponseTypes;
 
 namespace SuperSold.Data.EfCoreDB;
 public class EfCoreWishlistHandler : IWishlistHandler {
@@ -36,17 +37,17 @@ public class EfCoreWishlistHandler : IWishlistHandler {
 
     }
 
-    public async Task<OneOf<Success, Error>> WishlistProduct(Guid userId, Guid productId) {
+    public async Task<OneOf<Success, AlreadyExists>> WishlistProduct(Guid userId, Guid productId) {
 
         var wishlist = new AccountWishlistModel() { IdAccount = userId, IdProduct = productId };
-        await _context.Wishlists.AddAsync(wishlist);
-        var result = await _context.SaveChangesAsync();
 
-        if(result == 1) {
-            return new Success();
-        } else {
-            return new Error();
+        if(await _context.Wishlists.ContainsAsync(wishlist)) {
+            return new AlreadyExists();
         }
+
+        await _context.Wishlists.AddAsync(wishlist);
+        await _context.SaveChangesAsync();
+        return new Success();
 
     }
 
