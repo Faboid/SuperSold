@@ -11,35 +11,17 @@ namespace SuperSold.UI.AspDotNet.Controllers;
 [AutoValidateAntiforgeryToken]
 public class CartController : Controller {
 
-    private readonly IWishlistHandler _wishlistHandler;
     private readonly ICartHandler _cartHandler;
 
-    public CartController(IWishlistHandler wishlistHandler, ICartHandler cartHandler) {
-        _wishlistHandler = wishlistHandler;
+    public CartController(ICartHandler cartHandler) {
         _cartHandler = cartHandler;
     }
 
     [HttpGet]
-    public IActionResult Wishlist() => View();
+    public IActionResult Index() => View();
 
     [HttpGet]
-    public async Task<IActionResult> WishlistPartial(int page = 0) {
-
-        var userId = User.GetIdentity();
-        var products = await _wishlistHandler.QueryWishlistedProductsByUserId(userId)
-            .SkipToPage(page, 3)
-            .Select(x => (Product)x)
-            .ToListAsyncSafe();
-
-        return this.ProductListPartialView(PartialViewNames.WishlistProductRow, products);
-    }
-
-    [HttpGet]
-    [Route("/Cart/View")]
-    public IActionResult ViewCart() => View();
-
-    [HttpGet]
-    public async Task<IActionResult> ViewCartPartial(int page = 0) {
+    public async Task<IActionResult> IndexPartial(int page = 0) {
 
         var userId = User.GetIdentity();
         var products = await _cartHandler.QueryCartedProductsByUserId(userId)
@@ -62,22 +44,9 @@ public class CartController : Controller {
         var result = await _cartHandler.AddToCart(userId, productId);
 
         return result.Match<IActionResult>(
-            success => RedirectToAction(nameof(ViewCart)),
-            alreadyexists => RedirectToAction(nameof(ViewCart))
+            success => RedirectToAction(nameof(Index)),
+            alreadyexists => RedirectToAction(nameof(Index))
         );
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> AddToWishlist(Guid productId) {
-
-        var userId = User.GetIdentity();
-        var result = await _wishlistHandler.WishlistProduct(userId, productId);
-
-        return result.Match<IActionResult>(
-            success => RedirectToAction(nameof(Wishlist)),
-            alreadyexists => RedirectToAction(nameof(Wishlist))
-        );
-        
     }
 
 }

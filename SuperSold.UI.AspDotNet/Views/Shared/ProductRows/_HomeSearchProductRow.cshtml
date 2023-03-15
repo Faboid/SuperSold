@@ -25,7 +25,7 @@
         
         <div class="buttons-container">
             <div class="buttons-align">
-                @using(Html.BeginForm("AddToWishlist", "Cart", new { productId = Model.Id }, FormMethod.Post)) {
+                @using(Html.BeginForm("AddToWishlist", "Wishlist", new { productId = Model.Id }, FormMethod.Post)) {
                     <input type="submit" value="Add To Wishlist" class="btn btn-primary" />
                 }
             </div>
