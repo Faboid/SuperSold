@@ -1,0 +1,17 @@
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+@model IEnumerable<SuperSold.UI.AspDotNet.Models.Product>
+
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<div>
+    <div class="col-2">
+        <h1><b>Cart</b></h1>
+    </div>
+    <div class="mr-2">
+        <a asp-action="Buy" class="btn btn-primary">Buy All</a>
+    </div>
+</div>
+
+@await Html.ScrollablePartialView(Url.Action("ViewCartPartial", "Cart")!)

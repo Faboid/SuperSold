@@ -1,0 +1,10 @@
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+@model IEnumerable<SuperSold.UI.AspDotNet.Models.Product>
+
+@{
+    ViewData["Title"] = "Wishlist";
+}
+
+<h1><b>Wishlisted products</b></h1>
+
+@await Html.ScrollablePartialView(Url.Action("WishlistPartial", "Cart")!)
