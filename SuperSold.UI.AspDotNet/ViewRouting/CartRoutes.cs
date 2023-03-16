@@ -2,11 +2,17 @@
 
 namespace SuperSold.UI.AspDotNet.ViewRouting;
 
-public static class CartRoutes {
+public class CartRoutes {
 
-    public static string? CartIndex(this IUrlHelper urlHelper) => urlHelper.Action("Index", "Cart");
-    public static string? CartIndexPartial(this IUrlHelper urlHelper) => urlHelper.Action("IndexPartial", "Cart");
-    public static string? CartAddToCart(this IUrlHelper urlHelper) => urlHelper.Action("AddToCart", "Cart");
-    public static string? CartBuy(this IUrlHelper urlHelper) => urlHelper.Action("Buy", "Cart");
+    private readonly IUrlHelper _urlHelper;
+
+    public CartRoutes(IUrlHelper urlHelper) {
+        _urlHelper = urlHelper;
+    }
+
+    public string? Index() => _urlHelper.Action("Index", "Cart");
+    public string? IndexPartial() => _urlHelper.Action("IndexPartial", "Cart");
+    public string? AddToCart() => _urlHelper.Action("AddToCart", "Cart");
+    public string? Buy() => _urlHelper.Action("Buy", "Cart");
 
 }
