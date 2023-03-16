@@ -16,14 +16,14 @@
 <br />
 
 <div>
-    @await Html.ScrollablePartialView(Url.Action("SearchPartial", "Home")!, Model)
+    @await Html.ScrollablePartialView(Url.Home().SearchPartial()!, Model)
 </div>
 
 <script>
 
     document.getElementById("searchButton").onclick = function () {
         var search = $('#searchTextBox').val();
-        window.location = '@Url.Action("Search", "Home")?page=' + (@ViewBag.Page ?? "0") + '&search=' + search;
+        window.location = '@Url.Home().Search()?page=' + (@ViewBag.Page ?? "0") + '&search=' + search;
     }
 
 </script>

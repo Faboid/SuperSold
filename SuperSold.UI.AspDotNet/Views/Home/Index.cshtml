@@ -26,14 +26,14 @@
 <br/>
 
 <div>
-    @await Html.ScrollablePartialView("/Home/IndexPartial")
+    @await Html.ScrollablePartialView(Url.Home().IndexPartial()!)
 </div>
 
 <script>
 
     document.getElementById("searchButton").onclick = function() {
         var search = $('#searchTextBox').val();
-        window.location = '@Url.Action("Search", "Home")?&search=' + search;
+        window.location = '@Url.Home().Search()?&search=' + search;
     }
 
 </script>
