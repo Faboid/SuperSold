@@ -1,13 +1,44 @@
 ﻿@model SuperSold.UI.AspDotNet.Models.Product
 
-@{
-    //todo - implement this view
-    throw new NotImplementedException();
-}
-
 <head>
     <link rel="stylesheet" href="~/css/productRow.css"/>
 </head>
+
+<style>
+
+    .mid-container {
+        display:flex;
+        flex-direction:column;
+        justify-content:space-between;
+        height:100%;
+        width:stretch;
+        border-left:solid;
+    }
+
+    .texts-row {
+        display:flex;
+        justify-content:space-between;
+        flex-direction:row;
+        height:stretch;
+    }
+
+    .buttons-row {
+        display:flex;
+        flex-direction:row;
+        justify-content:space-between;
+    }
+
+    .title{
+        min-width:40%;
+    }
+
+    .counterInput {
+        min-width:20%;
+        max-width:50%;
+        padding:0px 0px 0px 5px;
+    }
+
+</style>
 
 <div class="container-row">
 
@@ -16,34 +47,34 @@
         <img class="image-row" src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image"/>
     </div>
 
-    <!--Description-->
-    <div class="text-row">
-        <h2 class="title">@Html.DisplayFor(x => x.Title)</h2>
-        <p class="description">@Html.DisplayFor(x => x.Description)</p>
-    </div>
+    <!--Title and counter-->
+    <div class="mid-container">
 
-    <!--Price & Edit Button-->
-    <div class="price-buttons-container">
-
-        <div class="price">
-            <p><b>@Html.DisplayFor(x => x.Price)€</b></p>
+        <div class="texts-row">
+            <h2 class="title">@Html.DisplayFor(x => x.Title)</h2>
+            <p class="price"><b>@Html.DisplayFor(x => x.Price)€</b></p>
         </div>
 
-        <div class="buttons-container">
-
-            <div class="buttons-align">
-                @using(Html.BeginForm("MoveToCart", "Products", Model, FormMethod.Post)) {
-                    <input type="submit" value="Move To Cart" class="btn btn-primary" />
-                }
-            </div>
-            <div class="buttons-align">
-                @using(Html.BeginForm("Remove", "Products", Model, FormMethod.Post)) {
-                    <input type="submit" value="Remove" class="btn btn-primary" />
-                }
+        <!--Counter-->
+        <div class="buttons-row">
+            <div>
+                <input class="counterInput" type="number" id="counterTextInput" value="1" />
+                <button id="updateCounterBtn">Update</button>
             </div>
 
+            <div>
+                <button id="moveToWishlistBtn">Move To Wishlist</button>
+                <button id="removeBtn">Remove</button>
+            </div>
         </div>
 
     </div>
 
 </div>
+
+<script src="~/js/jQuery.js"></script>
+<script>
+
+    //todo - implement
+
+</script>
