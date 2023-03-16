@@ -1,9 +1,10 @@
-﻿
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+
 @if(User.Identity!.IsAuthenticated) {
-    <a class="btn btn-primary" asp-controller="Cart" asp-action="Index">Cart</a>
-    <a class="btn btn-primary" asp-controller="Products" asp-action="MyProducts">My Products</a>
-    <a class="btn btn-primary" asp-controller="Account" asp-action="Logout">Logout</a>
+    <a class="btn btn-primary" href="@Url.Cart().Index()">Cart</a>
+    <a class="btn btn-primary" href="@Url.Products().MyProducts()">My Products</a>
+    <a class="btn btn-primary" href="@Url.Account().Logout()">Logout</a>
 } else {    
-    <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Login</a>
-    <a class="btn btn-primary" asp-controller="Account" asp-action="SignUp">Sign Up</a>
+    <a class="btn btn-primary" href="@Url.Account().Login()">Login</a>
+    <a class="btn btn-primary" href="@Url.Account().SignUp()">Sign Up</a>
 }
