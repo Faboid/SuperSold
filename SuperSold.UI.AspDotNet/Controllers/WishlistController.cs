@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SuperSold.Data.DBInteractions;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
 using SuperSold.UI.AspDotNet.ViewRouting;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
+
+[Authorize]
 public class WishlistController : Controller {
 
     private readonly IWishlistHandler _wishlistHandler;
