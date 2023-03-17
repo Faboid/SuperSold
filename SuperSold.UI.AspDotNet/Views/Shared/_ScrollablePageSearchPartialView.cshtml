@@ -3,26 +3,26 @@
 
 @{
     ArgumentNullException.ThrowIfNull(Model);
+    string pageId = Model.ScrollableId;
 }
 
-<div class="table" id="scrollContainer">
+<div class="table" id="scrollContainer@(pageId)">
 </div>
 
 <div class="container align-content-center">
-    <button id="loadMoreBtn">Load More</button>
+    <button id="loadMoreBtn@(pageId)">Load More</button>
 </div>
 
-<script src="~/js/productLoad.js"></script>
 <script type="text/javascript">
 
-    document.getElementById("loadMoreBtn").onclick = pLoadMore;
-    window.onload = pLoadMore;
-    const scrollContainer = document.getElementById("scrollContainer");
-    const url = '@Model.Url';
-    const searchItem = '@Model.SearchItem';
+    window.addEventListener("load", pLoadMore);
+    document.getElementById("loadMoreBtn@(pageId)").onclick = pLoadMore;
+    const searchItem@(pageId) = '@Model.SearchItem';
+
+    const scrollInfo@(pageId) = new ScrollableObjectInfo('@Model.Url', document.getElementById("scrollContainer@(pageId)"));
 
     function pLoadMore() {
-        loadMoreWithSearch(url, searchItem, scrollContainer);
+        loadMoreWithSearch(scrollInfo@(pageId), searchItem@(pageId));
     }
 
 </script>

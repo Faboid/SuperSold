@@ -1,19 +1,26 @@
+class ScrollableObjectInfo {
+    constructor(url, scrollContainer) {
+        this.page = 0;
+        this.url = url;
+        this.scrollContainer = scrollContainer;
+    }
+}
 
 let page = 0;
 const logMessage = "Add additional scrollable page elements.";
 
-function loadMorePageOnly(url, scrollContainer) {
+function loadMorePageOnly(scrollableInfo) {
 
     $.ajax({
-        url: url,
+        url: scrollableInfo.url,
         type: 'GET',
-        data: { "page": page },
+        data: { "page": scrollableInfo.page },
         dataType: "html",
         cache: false,
     }).done(function (result) {
         console.log("Success: " + logMessage);
-        scrollContainer.innerHTML += result;
-        page++;
+        scrollableInfo.scrollContainer.innerHTML += result;
+        scrollableInfo.page++;
     }).fail(function (error) {
         console.log("Failed: " + logMessage);
         console.log(error);
@@ -21,18 +28,18 @@ function loadMorePageOnly(url, scrollContainer) {
 
 }
 
-function loadMoreWithSearch(url, search, scrollContainer) {
+function loadMoreWithSearch(scrollableInfo, search) {
 
     $.ajax({
-        url: url,
+        url: scrollableInfo.url,
         type: 'GET',
-        data: { "page": page, "search": search },
+        data: { "page": scrollableInfo.page, "search": search },
         dataType: "html",
         cache: false,
     }).done(function (result) {
         console.log("Success: " + logMessage);
-        scrollContainer.innerHTML += result;
-        page++;
+        scrollableInfo.scrollContainer.innerHTML += result;
+        scrollableInfo.page++;
     }).fail(function (error) {
         console.log("Failed: " + logMessage);
         console.log(error);

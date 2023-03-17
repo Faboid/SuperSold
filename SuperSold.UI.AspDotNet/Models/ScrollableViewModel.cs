@@ -12,4 +12,9 @@ public class ScrollableViewModel {
     public string Url { get; set; }
     public string? SearchItem { get; set; }
 
+    /// <summary>
+    /// Id generated on model creation to distinguish between multiple scrollable views in the same page.
+    /// </summary>
+    public string ScrollableId { get; } = Guid.NewGuid().ToString().Replace('-', 'a');
+
 }
