@@ -1,0 +1,86 @@
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+
+@{
+    ViewData["Title"] = "MyCart";
+}
+
+<style>
+
+    #cartContainer{
+
+    }
+
+    #cartHeaders {
+        display:flex;
+        flex-direction:row;
+        justify-content:space-between;
+    }
+
+    #buyButton {
+        width:100px;
+        height:40px;
+    }
+
+    #cartProductsContainer {
+
+    }
+
+    #cartProductsContainer::-webkit-scrollbar{
+        display:none;
+    }
+
+    .sectionContainer {
+        min-height: 40%;
+        height: auto;
+        max-height: 80%;
+        overflow: inherit;
+    }
+
+    .productContainer {
+        min-height: 80vh;
+        max-height: 100vh;
+        width: 100%;
+        left: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        border: solid;
+        border-radius: 5px;
+        padding: 2px;
+        overflow-x: visible;
+        overflow-y: scroll;
+    }
+
+</style>
+
+<div class="sectionContainer" id="cartContainer">
+
+    <div id="cartHeaders">
+
+        <h1><b>Cart</b></h1>
+
+        <button id="buyButton">Buy</button>
+
+    </div>
+
+    <div class="bg-body-secondary productContainer" id="cartProductsContainer">
+
+        @await Html.ScrollablePartialView(Url.Cart().IndexPartial()!)
+
+    </div>
+
+</div>
+
+<br />
+<br />
+
+<div class="sectionContainer" id="wishlistContainer">
+
+    <h2><b>Wishlist</b></h2>
+
+    <div class="bg-body-secondary productContainer" id="wishlistProductsContainer">
+        
+        @await Html.ScrollablePartialView(Url.Wishlist().IndexPartial()!)
+
+    </div>
+
+</div>
