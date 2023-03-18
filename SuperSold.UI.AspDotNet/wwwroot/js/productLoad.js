@@ -19,7 +19,7 @@ function loadMorePageOnly(scrollableInfo) {
         cache: false,
     }).done(function (result) {
         console.log("Success: " + logMessage);
-        scrollableInfo.scrollContainer.innerHTML += result;
+        scrollableInfo.scrollContainer.append(result);
         scrollableInfo.page++;
     }).fail(function (error) {
         console.log("Failed: " + logMessage);
@@ -38,7 +38,7 @@ function loadMoreWithSearch(scrollableInfo, search) {
         cache: false,
     }).done(function (result) {
         console.log("Success: " + logMessage);
-        scrollableInfo.scrollContainer.innerHTML += result;
+        scrollableInfo.scrollContainer.append(result);
         scrollableInfo.page++;
     }).fail(function (error) {
         console.log("Failed: " + logMessage);

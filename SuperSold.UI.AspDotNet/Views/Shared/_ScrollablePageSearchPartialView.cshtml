@@ -19,7 +19,7 @@
     document.getElementById("loadMoreBtn@(pageId)").onclick = pLoadMore;
     const searchItem@(pageId) = '@Model.SearchItem';
 
-    const scrollInfo@(pageId) = new ScrollableObjectInfo('@Model.Url', document.getElementById("scrollContainer@(pageId)"));
+    const scrollInfo@(pageId) = new ScrollableObjectInfo('@Model.Url', $("#scrollContainer@(pageId)"));
 
     function pLoadMore() {
         loadMoreWithSearch(scrollInfo@(pageId), searchItem@(pageId));

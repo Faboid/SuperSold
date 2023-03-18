@@ -24,7 +24,7 @@
 
     window.addEventListener("load", pLoadMore);
     document.getElementById("loadMoreBtn@(pageId)").onclick = pLoadMore;
-    const scrollInfo@(pageId) = new ScrollableObjectInfo('@Model.Url', document.getElementById("scrollContainer@(pageId)"));
+    const scrollInfo@(pageId) = new ScrollableObjectInfo('@Model.Url', $("#scrollContainer@(pageId)"));
 
     function pLoadMore() {
         loadMorePageOnly(scrollInfo@(pageId));
