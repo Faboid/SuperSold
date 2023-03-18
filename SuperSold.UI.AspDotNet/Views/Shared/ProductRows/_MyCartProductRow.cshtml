@@ -1,5 +1,9 @@
 ﻿@model SuperSold.UI.AspDotNet.Models.Product
 
+@{
+    string id = Model.Id.ToString().Replace('-', 'e');
+}
+
 <head>
     <link rel="stylesheet" href="~/css/productRow.css"/>
 </head>
@@ -40,7 +44,7 @@
 
 </style>
 
-<div class="container-row">
+<div class="container-row" id="@(id)">
 
     <!--image-->
     <div class="image-row-container">
@@ -59,12 +63,12 @@
         <div class="buttons-row">
             <div>
                 <input class="counterInput" type="number" id="counterTextInput" value="1" />
-                <button id="updateCounterBtn">Update</button>
+                <button type="button" id="updateCounterBtn">Update</button>
             </div>
 
             <div>
-                <button id="moveToWishlistBtn">Move To Wishlist</button>
-                <button id="removeBtn">Remove</button>
+                <button type="button" id="moveToWishlistBtn@(id)">Move To Wishlist</button>
+                <button type="button" id="removeBtn@(id)">Remove</button>
             </div>
         </div>
 
