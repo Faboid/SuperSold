@@ -30,7 +30,7 @@ public class WishlistController : Controller {
             .Select(x => (Product)x)
             .ToListAsyncSafe();
 
-        return this.ProductListPartialView(PartialViewNames.WishlistProductRow, products);
+        return this.ProductListPartialView(PartialViewNames.WishlistRow, products);
     }
 
     [HttpPost]

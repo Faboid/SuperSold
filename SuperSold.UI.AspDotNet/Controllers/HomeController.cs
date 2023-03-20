@@ -33,7 +33,7 @@ public class HomeController : Controller {
             .Select(x => (Product)x)
             .ToListAsyncSafe();
 
-        return this.ProductListPartialView(PartialViewNames.HomeSearchProductRow, products);
+        return this.ProductListPartialView(PartialViewNames.HomeSearchRow, products);
     }
 
     [HttpGet]
@@ -52,7 +52,7 @@ public class HomeController : Controller {
             .ToListAsyncSafe();
 
         ViewBag.SearchItem = search;
-        return this.ProductListPartialView(PartialViewNames.HomeSearchProductRow, products);
+        return this.ProductListPartialView(PartialViewNames.HomeSearchRow, products);
     }
 
     public IActionResult Privacy() {

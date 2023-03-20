@@ -18,6 +18,10 @@ public class CartController : Controller {
     }
 
     [HttpGet]
+    [Route("/Cart/View")]
+    public IActionResult MainRoute() => View("View");
+
+    [HttpGet]
     public IActionResult Index() => View();
 
     [HttpGet]
@@ -29,7 +33,7 @@ public class CartController : Controller {
             .Select(x => (Product)x)
             .ToListAsyncSafe();
 
-        return this.ProductListPartialView(PartialViewNames.MyCartProductRow, products);
+        return this.ProductListPartialView(PartialViewNames.MyCartRow, products);
     }
 
     [HttpGet]
