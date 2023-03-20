@@ -76,9 +76,11 @@
 
 </div>
 
-<script src="~/js/jQuery.js"></script>
-<script>
+<script type="text/javascript">
 
-    //todo - implement
+    $("#removeBtn@(id)").click(function() {
+        console.log("removing  @(id) from cart");
+        $("#@(id)").parent().animate({ height:'toggle', opacity: '0%' });
+    });
 
 </script>
