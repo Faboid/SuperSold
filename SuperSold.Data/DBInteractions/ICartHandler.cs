@@ -10,5 +10,6 @@ public interface ICartHandler {
     IQueryable<ProductModel> QueryCartedProductsByUserId(Guid userId);
     Task<OneOf<Success, AlreadyExists>> AddToCart(Guid userId, Guid productId);
     Task<OneOf<Success, NotFound>> RemoveFromCart(Guid userId, Guid productId);
+    Task<OneOf<Success, NotFound>> MoveToWishlist(Guid userId, Guid productId);
 
 }

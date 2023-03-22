@@ -54,6 +54,17 @@ public class CartController : Controller {
     }
 
     [HttpPost]
+    public async Task<IActionResult> MoveToWishlist(Guid productId) {
+
+        var userId = User.GetIdentity();
+        var result = await _cartHandler.MoveToWishlist(userId, productId);
+        return result.Match<IActionResult>(
+            success => Ok(),
+            notfound => NotFound()
+        );
+    }
+
+    [HttpPost]
     public async Task<IActionResult> Remove(Guid productId) {
 
         var userId = User.GetIdentity();
