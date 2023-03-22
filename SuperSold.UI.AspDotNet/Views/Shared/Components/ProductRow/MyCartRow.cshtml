@@ -1,7 +1,13 @@
-﻿@model SuperSold.UI.AspDotNet.Models.Product
+﻿@using Microsoft.AspNetCore.Html;
+@using SuperSold.UI.AspDotNet.ViewRouting;
+@using Microsoft.AspNetCore.Antiforgery;
+@inject IAntiforgery antiForgery;
+
+@model SuperSold.UI.AspDotNet.Models.Product
 
 @{
     string id = Model.Id.ToString().Replace('-', 'e');
+    var tokenset = antiForgery.GetAndStoreTokens(Context);
 }
 
 <head>
@@ -79,8 +85,33 @@
 <script type="text/javascript">
 
     $("#removeBtn@(id)").click(function() {
-        console.log("removing  @(id) from cart");
-        $("#@(id)").parent().animate({ height:'toggle', opacity: '0%' });
+
+        console.log("removing  @(Model.Id) from cart");
+        
+        $.ajax({
+            url: '@(Url.Cart().Remove())',
+            headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+            type: 'POST',
+            data: { "productId": "@(Model.Id)",  },
+            cache: false
+        }).done(function(result) {
+
+            console.log("successfully removed @(Model.Id) from cart");
+            $("#@(id)").parent().animate({ height: 'toggle', opacity: '0%' });
+
+            //somehow send up?
+
+        }).fail(function(error) {
+
+            if (error.status == 404) {
+                alert("This product has already been removed.");
+                $("#@(id)").parent().animate({ height: 'toggle', opacity: '0%' });
+            } else {
+                console.error(error);
+            }
+
+        });
+
     });
 
 </script>

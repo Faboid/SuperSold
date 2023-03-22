@@ -53,4 +53,16 @@ public class CartController : Controller {
         );
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Remove(Guid productId) {
+
+        var userId = User.GetIdentity();
+        var result = await _cartHandler.RemoveFromCart(userId, productId);
+        return result.Match<IActionResult>(
+            success => Ok(),
+            notfound => NotFound()
+        );
+
+    }
+
 }
