@@ -16,9 +16,11 @@ public class EFCoreCartHandler : ICartHandler {
     }
 
     public IQueryable<ProductModel> QueryCartedProductsByUserId(Guid userId) {
-        var products = _context.Products
+
+        var products = _context.Cart
             .AsNoTracking()
-            .GroupJoin(_context.Cart.Where(x => x.IdAccount == userId), x => x.IdProduct, x => x.IdProduct, (x, y) => x);
+            .Where(x => x.IdAccount == userId)
+            .Select(x => _context.Products.First(y => x.IdProduct == y.IdProduct));
 
         return products;
     }
