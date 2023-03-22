@@ -12,7 +12,7 @@
 
 @foreach(var product in Model.Products) {
     <div style="border:solid; border-width:2px; border-radius:5px;">
-
+        
         @await Component.InvokeAsync("ProductRow", new {
             rowTemplateName = Model.RowType, product = product
         })
