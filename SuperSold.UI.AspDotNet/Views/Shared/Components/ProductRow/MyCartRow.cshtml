@@ -50,7 +50,7 @@
 
 </style>
 
-<div class="container-row" id="@(id)">
+<div class="item-row container-row" id="cartRow@(id)">
 
     <!--image-->
     <div class="image-row-container">
@@ -97,15 +97,12 @@
         }).done(function(result) {
 
             console.log("successfully removed @(Model.Id) from cart");
-            $("#@(id)").parent().animate({ height: 'toggle', opacity: '0%' });
-
-            //somehow send up?
-
+            pullUp($("#cartRow@(id)").parent());
         }).fail(function(error) {
 
             if (error.status == 404) {
                 alert("This product has already been removed.");
-                $("#@(id)").parent().animate({ height: 'toggle', opacity: '0%' });
+                pullUp($("#cartRow@(id)").parent());
             } else {
                 console.error(error);
             }
