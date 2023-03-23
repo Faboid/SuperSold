@@ -127,4 +127,17 @@ public class ProductsController : Controller {
 
     }
 
+    [HttpGet]
+    public async Task<IActionResult> Get(Guid id, string itemRowFormat) {
+
+        var result = await _productsHandler.GetProduct(id);
+
+        if(result.TryPickT1(out var notFound, out var product)) {
+            return NotFound();
+        }
+
+        return this.ProductListPartialView(itemRowFormat, product);
+
+    }
+
 }
