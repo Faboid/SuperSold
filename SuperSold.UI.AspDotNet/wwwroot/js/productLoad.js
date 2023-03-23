@@ -21,6 +21,7 @@ function loadMorePageOnly(scrollableInfo) {
         console.log("Success: " + logMessage);
         scrollableInfo.scrollContainer.append(result);
         scrollableInfo.page++;
+        onScrollableChanged(scrollableInfo.scrollContainer);
     }).fail(function (error) {
         console.log("Failed: " + logMessage);
         console.log(error);
@@ -40,6 +41,7 @@ function loadMoreWithSearch(scrollableInfo, search) {
         console.log("Success: " + logMessage);
         scrollableInfo.scrollContainer.append(result);
         scrollableInfo.page++;
+        onScrollableChanged(scrollableInfo.scrollContainer);
     }).fail(function (error) {
         console.log("Failed: " + logMessage);
         console.log(error);
