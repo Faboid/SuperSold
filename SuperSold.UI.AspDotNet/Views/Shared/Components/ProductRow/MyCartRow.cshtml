@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Html;
+@using SuperSold.UI.AspDotNet.Extensions;
 @using SuperSold.UI.AspDotNet.ViewRouting;
 @using Microsoft.AspNetCore.Antiforgery;
 @inject IAntiforgery antiForgery;
@@ -6,7 +7,7 @@
 @model SuperSold.UI.AspDotNet.Models.Product
 
 @{
-    string id = Model.Id.ToString().Replace('-', 'e');
+    string id = Model.Id.ToValidHtml();
     var tokenset = antiForgery.GetAndStoreTokens(Context);
 }
 
@@ -50,7 +51,7 @@
 
 </style>
 
-<div class="item-row container-row" id="cartRow@(id)">
+<div class="container-row">
 
     <!--image-->
     <div class="image-row-container">
@@ -97,12 +98,12 @@
         }).done(function(result) {
 
             console.log("successfully removed @(Model.Id) from cart");
-            pullUp($("#cartRow@(id)").parent());
+            pullUp($("#@(id).item-row"));
         }).fail(function(error) {
 
             if (error.status == 404) {
                 alert("This product has already been removed.");
-                pullUp($("#cartRow@(id)").parent());
+                pullUp($("#@(id).item-row"));
             } else {
                 console.error(error);
             }
