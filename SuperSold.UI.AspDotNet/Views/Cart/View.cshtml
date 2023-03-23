@@ -43,3 +43,29 @@
     </div>
 
 </div>
+
+<script type="text/javascript">
+
+    const cartScrollable = $("#@(cartViewId).scroll-container");
+    const wishlistScrollable = $("#@(wishlistViewId).scroll-container");
+
+    cartScrollable.on('scrollableChanged', function (e, eventInfo) {
+        console.log(e);
+        console.log(eventInfo);
+        listenEvents();
+    });
+
+    wishlistScrollable.on('scrollableChanged', function (e, eventInfo) {
+        console.log(e);
+        console.log(eventInfo);
+    });
+
+    function listenEvents() {
+        $(document).off('moveToWishlist');
+        $(document).on('moveToWishlist', function (e, eventInfo) {
+            console.log(e);
+            console.log(eventInfo);
+        });
+    }
+
+</script>
