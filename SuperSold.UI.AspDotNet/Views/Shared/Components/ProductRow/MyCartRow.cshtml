@@ -85,6 +85,11 @@
 
 <script type="text/javascript">
 
+    $("#moveToWishlistBtn@(id)").click(function() {
+        console.log("moving @(Model.Id) from cart to wishlist");
+        $(document).trigger('moveToWishlist', ["@(Model.Id)"]);
+    });
+
     $("#removeBtn@(id)").click(function() {
 
         console.log("removing  @(Model.Id) from cart");
@@ -96,7 +101,6 @@
             data: { "productId": "@(Model.Id)",  },
             cache: false
         }).done(function(result) {
-
             console.log("successfully removed @(Model.Id) from cart");
             pullUp($("#@(id).item-row"));
         }).fail(function(error) {
