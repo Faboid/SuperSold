@@ -1,7 +1,10 @@
-﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+﻿@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewRouting;
 
 @{
     ViewData["Title"] = "MyCart";
+    var cartViewId = Guid.NewGuid().ToValidHtml();
+    var wishlistViewId = Guid.NewGuid().ToValidHtml();
 }
 
 <head>
@@ -20,7 +23,7 @@
 
     <div class="bg-body-secondary productContainer" id="cartProductsContainer">
 
-        @await Html.ScrollablePartialView(Url.Cart().IndexPartial()!)
+        @await Html.ScrollablePartialView(Url.Cart().IndexPartial()!, customId: cartViewId)
 
     </div>
 
@@ -35,7 +38,7 @@
 
     <div class="bg-body-secondary productContainer" id="wishlistProductsContainer">
         
-        @await Html.ScrollablePartialView(Url.Wishlist().IndexPartial()!)
+        @await Html.ScrollablePartialView(Url.Wishlist().IndexPartial()!, customId: wishlistViewId)
 
     </div>
 

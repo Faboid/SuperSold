@@ -1,4 +1,5 @@
-﻿@using SuperSold.UI.AspDotNet.ViewComponents;
+﻿@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewComponents;
 @model (string RowType, IEnumerable<Product> Products)
 
 @if(!Model.Products.Any()) {
@@ -11,7 +12,7 @@
 }
 
 @foreach(var product in Model.Products) {
-    <div style="border:solid; border-width:2px; border-radius:5px;">
+    <div class="item-row" id="@(product.Id.ToValidHtml())" style="border:solid; border-width:2px; border-radius:5px;">
         
         @await Component.InvokeAsync("ProductRow", new {
             rowTemplateName = Model.RowType, product = product
