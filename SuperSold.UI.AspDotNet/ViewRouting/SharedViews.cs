@@ -9,4 +9,8 @@ public static class SharedViews {
         return controller.PartialView("_ProductListPartialView", (rowType, products));
     }
 
+    public static IActionResult ProductListPartialView(this Controller controller, string rowType, Product product) {
+        return controller.ProductListPartialView(rowType, new Product[] { product });
+    }
+
 }
