@@ -9,6 +9,32 @@ class ScrollableObjectInfo {
 let page = 0;
 const logMessage = "Add additional scrollable page elements.";
 
+function loadProductInScrollable(productId, scrollable, itemRowFormat) {
+
+    $.ajax({
+        url: "/Products/Get",
+        type: 'GET',
+        data: { "id": productId, "itemRowFormat": itemRowFormat },
+        dataType: "html",
+        cache: true,
+    }).done(function (result) {
+
+        console.log("Successfully retrieved product id " + productId);
+        scrollable.append(result);
+        onScrollableChanged(scrollable);
+
+    }).fail(function (error) {
+
+        if (error.status == 404) {
+            console.log("The item " + productId + " is missing!");
+            return;
+        }
+
+        console.warn("Failed retrieving item id: " + productId + "\n" + error);
+    });
+
+}
+
 function loadMorePageOnly(scrollableInfo) {
 
     $.ajax({
