@@ -65,6 +65,7 @@
         $(document).on('moveToWishlist', function (e, eventInfo) {
             console.log(e);
             console.log(eventInfo);
+            loadProductInScrollable(eventInfo, wishlistScrollable, "@(PartialViewNames.WishlistRow)");
         });
     }
 
