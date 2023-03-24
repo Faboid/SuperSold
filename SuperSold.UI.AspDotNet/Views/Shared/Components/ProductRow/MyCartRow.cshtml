@@ -85,9 +85,26 @@
 
 <script type="text/javascript">
 
+    const itemRow@(id) = $("#@(id).item-row");
+
     $("#moveToWishlistBtn@(id)").click(function() {
         console.log("moving @(Model.Id) from cart to wishlist");
-        $(document).trigger('moveToWishlist', ["@(Model.Id)"]);
+
+        $.ajax({
+            url: '@Url.Cart().MoveToWishlist()',
+            headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+            type: 'POST',
+            data: { "productId": "@(Model.Id)" },
+            cache: false,
+        }).done(function(result) {
+            console.log("Moved @(Model.Id) product to wishlist." + result);
+            pullUp(itemRow@(id));
+            $(document).trigger('moveToWishlist', ["@(Model.Id)"]);
+        }).fail(function(error) {
+            console.warn(error);
+            notifyUser("Moving @(Model.Title) to the wishlist has failed. Error code: " + error.status);
+        });
+
     });
 
     $("#removeBtn@(id)").click(function() {
@@ -102,12 +119,12 @@
             cache: false
         }).done(function(result) {
             console.log("successfully removed @(Model.Id) from cart");
-            pullUp($("#@(id).item-row"));
+            pullUp(itemRow@(id));
         }).fail(function(error) {
 
             if (error.status == 404) {
                 alert("This product has already been removed.");
-                pullUp($("#@(id).item-row"));
+                pullUp(itemRow@(id));
             } else {
                 console.error(error);
             }
