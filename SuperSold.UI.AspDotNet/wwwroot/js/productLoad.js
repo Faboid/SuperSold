@@ -36,16 +36,26 @@ function loadProductInScrollable(productId, scrollable, itemRowFormat) {
 }
 
 function loadMorePageOnly(scrollableInfo) {
+    var data = { "page": scrollableInfo.page };
+    loadMore(scrollableInfo, data);
+}
+
+function loadMoreWithSearch(scrollableInfo, search) {
+    var data = { "page": scrollableInfo.page, "search": search };
+    loadMore(scrollableInfo, data);
+}
+
+function loadMore(scrollableInfo, data) {
 
     $.ajax({
         url: scrollableInfo.url,
         type: 'GET',
-        data: { "page": scrollableInfo.page },
+        data: data,
         dataType: "html",
         cache: false,
     }).done(function (result) {
         console.log("Success: " + logMessage);
-        scrollableInfo.scrollContainer.append(result);
+        addResultToScrollable(scrollableInfo.scrollContainer, result);
         scrollableInfo.page++;
         onScrollableChanged(scrollableInfo.scrollContainer);
     }).fail(function (error) {
@@ -55,22 +65,22 @@ function loadMorePageOnly(scrollableInfo) {
 
 }
 
-function loadMoreWithSearch(scrollableInfo, search) {
+function addResultToScrollable(scrollable, result) {
 
-    $.ajax({
-        url: scrollableInfo.url,
-        type: 'GET',
-        data: { "page": scrollableInfo.page, "search": search },
-        dataType: "html",
-        cache: false,
-    }).done(function (result) {
-        console.log("Success: " + logMessage);
-        scrollableInfo.scrollContainer.append(result);
-        scrollableInfo.page++;
-        onScrollableChanged(scrollableInfo.scrollContainer);
-    }).fail(function (error) {
-        console.log("Failed: " + logMessage);
-        console.log(error);
+    $(result).map(function () {
+        return $('<div>').append(this).html();
+    }).each(function (index, element) {
+        addItemToScrollable(scrollable, index, element);
     });
+
+}
+
+function addItemToScrollable(scrollable, index, item) {
+
+    var adjustedIndex = index + 1;
+    var data = $(item);
+    data.hide();
+    scrollable.append(data);
+    data.slideDown(adjustedIndex * 200 + (200 / adjustedIndex));
 
 }
