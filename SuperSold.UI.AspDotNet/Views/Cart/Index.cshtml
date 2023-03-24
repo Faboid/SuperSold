@@ -1,16 +1,72 @@
-﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+﻿@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewRouting;
 
 @{
-    ViewData["Title"] = "Cart";
+    ViewData["Title"] = "MyCart";
+    var cartViewId = Guid.NewGuid().ToValidHtml();
+    var wishlistViewId = Guid.NewGuid().ToValidHtml();
 }
 
-<div>
-    <div class="col-2">
+<head>
+    <link rel="stylesheet" href="~/css/cartview.css" />
+</head>
+
+<div class="sectionContainer" id="cartContainer">
+
+    <div id="cartHeaders">
+
         <h1><b>Cart</b></h1>
+
+        <button id="buyButton">Buy</button>
+
     </div>
-    <div class="mr-2">
-        <a asp-action="Buy" class="btn btn-primary">Buy All</a>
+
+    <div class="bg-body-secondary productContainer" id="cartProductsContainer">
+
+        @await Html.ScrollablePartialView(Url.Cart().IndexPartial()!, customId: cartViewId)
+
     </div>
+
 </div>
 
-@await Html.ScrollablePartialView(Url.Cart().IndexPartial()!)
+<br />
+<br />
+
+<div class="sectionContainer" id="wishlistContainer">
+
+    <h2><b>Wishlist</b></h2>
+
+    <div class="bg-body-secondary productContainer" id="wishlistProductsContainer">
+
+        @await Html.ScrollablePartialView(Url.Wishlist().IndexPartial()!, customId: wishlistViewId)
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    const cartScrollable = $("#@(cartViewId).scroll-container");
+    const wishlistScrollable = $("#@(wishlistViewId).scroll-container");
+
+    cartScrollable.on('scrollableChanged', function (e, eventInfo) {
+        console.log(e);
+        console.log(eventInfo);
+        listenEvents();
+    });
+
+    wishlistScrollable.on('scrollableChanged', function (e, eventInfo) {
+        console.log(e);
+        console.log(eventInfo);
+    });
+
+    function listenEvents() {
+        $(document).off('moveToWishlist');
+        $(document).on('moveToWishlist', function (e, eventInfo) {
+            console.log(e);
+            console.log(eventInfo);
+            loadProductInScrollable(eventInfo, wishlistScrollable, "@(PartialViewNames.WishlistRow)");
+        });
+    }
+
+</script>
