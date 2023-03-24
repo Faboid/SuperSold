@@ -46,4 +46,16 @@ public class WishlistController : Controller {
 
     }
 
+    [HttpPost]
+    public async Task<IActionResult> Remove(Guid productId) {
+
+        var userId = User.GetIdentity();
+        var result = await _wishlistHandler.RemoveWishlistProduct(userId, productId);
+        return result.Match<IActionResult>(
+            success => Ok(),
+            notfound => NotFound()
+        );
+
+    }
+
 }
