@@ -27,12 +27,12 @@
         <div class="buttons-container">
 
             <div class="buttons-align">
-                @using(Html.BeginForm("MoveToCart", "Products", Model, FormMethod.Post)) {
+                @using(Html.BeginForm("MoveToCart", "Wishlist", new { productId = Model.Id }, FormMethod.Post)) {
                     <input type="submit" value="Move To Cart" class="btn btn-primary" />
                 }
             </div>
             <div class="buttons-align">
-                @using(Html.BeginForm("Remove", "Products", Model, FormMethod.Post)) {
+                @using(Html.BeginForm("Remove", "Wishlist", new { productId = Model.Id }, FormMethod.Post)) {
                     <input type="submit" value="Remove" class="btn btn-primary" />
                 }
             </div>
