@@ -16,9 +16,10 @@ public class EfCoreWishlistHandler : IWishlistHandler {
 
     public IQueryable<ProductModel> QueryWishlistedProductsByUserId(Guid userId) {
 
-        var products = _context.Products
+        var products = _context.Wishlists
             .AsNoTracking()
-            .GroupJoin(_context.Wishlists.Where(x => x.IdAccount == userId), x => x.IdProduct, x => x.IdProduct, (x, y) => x);
+            .Where(x => x.IdAccount == userId)
+            .Select(x => _context.Products.First(y => x.IdProduct == y.IdProduct));
 
         return products;
 
