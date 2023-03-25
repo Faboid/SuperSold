@@ -3,6 +3,7 @@
     min-height: 150px;
     height: 15vh;
     padding: 0;
+    overflow:clip;
 }
 
 .counter-container {
@@ -29,90 +30,3 @@
     overflow:clip;
     border-radius: 10px 1px 1px 1px;
 }
-
-/*
-.container-row {
-    min-height:150px;
-    height:15vh;
-    overflow:clip;
-}
-
-.image-row-container {
-    float: left;
-    height: 100%;
-    width: 16%;
-    padding:5px;
-}
-
-.image-row {
-    height:auto;
-    max-height:100%;
-    max-width:100%;
-}
-
-.text-row {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row;
-    height: stretch;
-    float: left;
-    min-width: 30%;
-    width: auto;
-    max-width: 56%;
-    overflow: hidden;
-    border-left: solid;
-}
-
-.title {
-    min-width: 40%;
-}
-
-.description {
-
-}
-
-.price-buttons-container {
-    float:right;
-    height:100%;
-    max-width:30%;
-    width:auto;
-    position:relative;
-}
-
-.price {
-    width:100%;
-    text-align:end;
-}
-
-.buttons-container {
-    position: relative;
-    width: 100%;
-    bottom: -40%;
-    right:0;
-}
-
-.buttons-align {
-    display:inline-block;
-    position:relative;
-}
-
-.mid-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    width: stretch;
-    border-left: solid;
-}
-
-.buttons-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.counterInput {
-    min-width: 20%;
-    max-width: 50%;
-    padding: 0px 0px 0px 5px;
-}*/
