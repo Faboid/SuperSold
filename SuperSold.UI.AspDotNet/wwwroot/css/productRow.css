@@ -1,4 +1,36 @@
 ﻿
+.item-row-container {
+    min-height: 150px;
+    height: 15vh;
+    padding: 0;
+}
+
+.counter-container {
+    display:flex;
+    background:white;
+    flex-direction:row;
+    border:1px solid gray;
+}
+
+.counter-container:focus-within {
+    outline: 1px solid black;
+}
+
+.counter-text {
+    flex-grow:2;
+    border:none;
+}
+
+.counter-text:focus{
+    outline:none;
+}
+
+.counter-button {
+    overflow:clip;
+    border-radius: 10px 1px 1px 1px;
+}
+
+/*
 .container-row {
     min-height:150px;
     height:15vh;
@@ -19,17 +51,20 @@
 }
 
 .text-row {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    height: stretch;
     float: left;
-    height: 100%;
-    min-width:30%;
+    min-width: 30%;
     width: auto;
-    max-width:56%;
+    max-width: 56%;
     overflow: hidden;
-    border-left:solid;
+    border-left: solid;
 }
 
 .title {
-
+    min-width: 40%;
 }
 
 .description {
@@ -60,3 +95,24 @@
     display:inline-block;
     position:relative;
 }
+
+.mid-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: stretch;
+    border-left: solid;
+}
+
+.buttons-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.counterInput {
+    min-width: 20%;
+    max-width: 50%;
+    padding: 0px 0px 0px 5px;
+}*/
