@@ -1,44 +1,40 @@
 ﻿@model SuperSold.UI.AspDotNet.Models.Product
+@using Microsoft.AspNetCore.Antiforgery;
+@using SuperSold.UI.AspDotNet.Extensions;
+@inject IAntiforgery antiForgery;
+
+@{
+    string id = Model.Id.ToValidHtml();
+    var tokenset = antiForgery.GetAndStoreTokens(Context);
+}
 
 <head>
     <link rel="stylesheet" href="~/css/productRow.css"/>
 </head>
 
-<div class="container-row">
+<div class="container-fluid item-row-container horizontal-container">
 
-    <!--image-->
-    <div class="image-row-container">
-        <img class="image-row" src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image"/>
+    <!--image column-->
+    <div class="col-2 padding-tiny">
+        <img class="left-flex no-overflow" src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image" />
     </div>
 
     <!--Description-->
-    <div class="text-row">
-        <h2 class="title">@Html.DisplayFor(x => x.Title)</h2>
-        <p class="description">@Html.DisplayFor(x => x.Description)</p>
+    <div class="col-8 space-children no-overflow border-left-line padding-small">
+        <h2 class="">@Html.DisplayFor(x => x.Title)</h2>
+        <p class="">@Html.DisplayFor(x => x.Description)</p>
     </div>
 
-    <!--Price & Edit Button-->
-    <div class="price-buttons-container">
+    <!--Buttons & Price-->
+    <div class="col-2 vertical-container space-children padding-tiny">
 
-        <div class="price">
-            <p><b>@Html.DisplayFor(x => x.Price)€</b></p>
+        <p class="text-end"><b>@Html.DisplayFor(x => x.Price)€</b></p>
+
+        <div class="vertical-container no-overflow">
+            <button type="button" id="moveToCart@(id)">Move To Cart</button>
+            <button class="space-top-tiny round-right-down-corner" type="button" id="removeBtn@(id)">Remove</button>
         </div>
-
-        <div class="buttons-container">
-
-            <div class="buttons-align">
-                @using(Html.BeginForm("MoveToCart", "Wishlist", new { productId = Model.Id }, FormMethod.Post)) {
-                    <input type="submit" value="Move To Cart" class="btn btn-primary" />
-                }
-            </div>
-            <div class="buttons-align">
-                @using(Html.BeginForm("Remove", "Wishlist", new { productId = Model.Id }, FormMethod.Post)) {
-                    <input type="submit" value="Remove" class="btn btn-primary" />
-                }
-            </div>
-
-        </div>
-
+        
     </div>
 
 </div>

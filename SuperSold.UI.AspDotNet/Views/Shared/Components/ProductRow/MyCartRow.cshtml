@@ -15,67 +15,33 @@
     <link rel="stylesheet" href="~/css/productRow.css"/>
 </head>
 
-<style>
-
-    .mid-container {
-        display:flex;
-        flex-direction:column;
-        justify-content:space-between;
-        height:100%;
-        width:stretch;
-        border-left:solid;
-    }
-
-    .texts-row {
-        display:flex;
-        justify-content:space-between;
-        flex-direction:row;
-        height:stretch;
-    }
-
-    .buttons-row {
-        display:flex;
-        flex-direction:row;
-        justify-content:space-between;
-    }
-
-    .title{
-        min-width:40%;
-    }
-
-    .counterInput {
-        min-width:20%;
-        max-width:50%;
-        padding:0px 0px 0px 5px;
-    }
-
-</style>
-
-<div class="container-row">
+<div class="container-fluid item-row-container horizontal-container">
 
     <!--image-->
-    <div class="image-row-container">
-        <img class="image-row" src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image"/>
+    <div class="col-2 padding-tiny">
+        <img class="left-flex no-overflow" src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image"/>
     </div>
 
-    <!--Title and counter-->
-    <div class="mid-container">
+    <div class="col-10 border-left-line padding-tiny vertical-container space-children no-overflow">
 
-        <div class="texts-row">
-            <h2 class="title">@Html.DisplayFor(x => x.Title)</h2>
-            <p class="price"><b>@Html.DisplayFor(x => x.Price)€</b></p>
+        <!--Title and price-->
+        <div class="horizontal-container">
+            <h2 class="col-8">@Html.DisplayFor(x => x.Title)</h2>
+            <p class="col-4 text-end"><b>@Html.DisplayFor(x => x.Price)€</b></p>
         </div>
 
-        <!--Counter-->
-        <div class="buttons-row">
-            <div>
-                <input class="counterInput" type="number" id="counterTextInput" value="1" />
-                <button type="button" id="updateCounterBtn">Update</button>
+        <!--Interactable buttons-->
+        <div class="space-children horizontal-container">
+            <div class="col-6">
+                <div class="counter-container">
+                    <input class="counter-text" type="number" id="counterTextInput" value="1" />
+                    <button class="counter-button" type="button" id="updateCounterBtn">Update</button>
+                </div>
             </div>
 
-            <div>
+            <div class="col-6 no-padding move-content-end" style="">
                 <button type="button" id="moveToWishlistBtn@(id)">Move To Wishlist</button>
-                <button type="button" id="removeBtn@(id)">Remove</button>
+                <button class="space-left-tiny round-right-down-corner" type="button" id="removeBtn@(id)">Remove</button>
             </div>
         </div>
 
