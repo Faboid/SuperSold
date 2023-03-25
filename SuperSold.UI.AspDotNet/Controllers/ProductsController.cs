@@ -70,7 +70,7 @@ public class ProductsController : Controller {
     public async Task<IActionResult> Delete(Product model) {
 
         if(!ModelState.IsValid) {
-            return RedirectToAction("MyProducts");
+            return BadRequest("The given model is not valid.");
         }
 
         var userId = User.GetIdentity();
@@ -81,7 +81,7 @@ public class ProductsController : Controller {
 
         var result = await _productsHandler.DeleteProduct(model.Id);
         return result.Match<IActionResult>(
-            success => RedirectToAction("MyProducts"),
+            success => Ok(),
             notFound => NotFound()
         );
 
