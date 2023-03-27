@@ -52,5 +52,22 @@ public class EfCoreWishlistHandler : IWishlistHandler {
 
     }
 
+    public async Task<OneOf<Success, NotFound>> MoveToCart(Guid userId, Guid productId) {
+
+        var wishlist = await _context.Wishlists.FirstOrDefaultAsync(x => x.IdAccount == userId && x.IdProduct == productId);
+        if(wishlist is null) {
+            return new NotFound();
+        }
+
+        _context.Wishlists.Remove(wishlist);
+
+        var cartItem = new AccountCartModel() { IdAccount = wishlist.IdAccount, IdProduct = wishlist.IdProduct };
+        await _context.Cart.AddAsync(cartItem);
+
+        await _context.SaveChangesAsync();
+        return new Success();
+
+    }
+
 
 }
