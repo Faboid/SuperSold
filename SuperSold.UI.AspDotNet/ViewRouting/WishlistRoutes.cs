@@ -15,5 +15,6 @@ public class WishlistRoutes {
     public string? IndexPartial() => _urlHelper.Action("IndexPartial", _controllerName);
     public string? AddToWishlist() => _urlHelper.Action("AddToWishlist", _controllerName);
     public string? Remove() => _urlHelper.Action("Remove", _controllerName);
+    public string? MoveToCart() => _urlHelper.Action("MoveToCart", _controllerName);
 
 }
