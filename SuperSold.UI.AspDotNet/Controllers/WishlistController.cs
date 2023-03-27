@@ -46,11 +46,23 @@ public class WishlistController : Controller {
 
     }
 
-    [HttpPost]
+    [HttpDelete]
     public async Task<IActionResult> Remove(Guid productId) {
 
         var userId = User.GetIdentity();
         var result = await _wishlistHandler.RemoveWishlistProduct(userId, productId);
+        return result.Match<IActionResult>(
+            success => Ok(),
+            notfound => NotFound()
+        );
+
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> MoveToCart(Guid productId) {
+
+        var userId = User.GetIdentity();
+        var result = await _wishlistHandler.MoveToCart(userId, productId);
         return result.Match<IActionResult>(
             success => Ok(),
             notfound => NotFound()
