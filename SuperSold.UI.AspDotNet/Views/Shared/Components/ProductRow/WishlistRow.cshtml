@@ -1,5 +1,6 @@
 ﻿@model SuperSold.UI.AspDotNet.Models.Product
 @using Microsoft.AspNetCore.Antiforgery;
+@using SuperSold.UI.AspDotNet.ViewRouting;
 @using SuperSold.UI.AspDotNet.Extensions;
 @inject IAntiforgery antiForgery;
 
@@ -38,3 +39,61 @@
     </div>
 
 </div>
+
+<script type="text/javascript">
+
+    const wishlistRow@(id) = $("#@(id).item-row");
+
+    $("#moveToCart@(id)").click(function() {
+
+        console.log("Moving @(Model.Id) to cart");
+
+        $.ajax({
+            url:'@Url.Wishlist().MoveToCart()',
+            headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+            type: 'POST',
+            data: { "productId" : "@(Model.Id)" },
+            cache:false,
+        }).done(function(response) {
+
+            console.log("Moved @(Model.Id) from wishlist to cart successfully.");
+            pullUp(wishlistRow@(id));
+            $(document).trigger('moveToCart', ["@(Model.Id)"]);
+
+        }).fail(function(response) {
+
+            console.warn(response);
+            notifyUser("Moving @(Model.Title) to the cart has failed. Error code: " + response.status);
+
+        })
+
+    });
+
+    $("#removeBtn@(id)").click(function () {
+
+        console.log("Deleting @(Model.Id) from wishlist");
+
+        $.ajax({
+            url:'@Url.Wishlist().Remove()',
+            headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+            type: 'DELETE',
+            data: { "productId": "@(Model.Id)" },
+            cache:false,
+        }).done(function(data) {
+            console.log("Deleted @(Model.Id) successfully from the wishlist.");
+            pullUp(wishlistRow@(id));
+        }).fail(function(error) {
+
+            if(error.status == 404) {
+                notifyUser("This product has already been removed.");
+                pullUp(wishlistRow@(id));
+            } else {
+                console.error(error);
+                notifyUser("There has been an error removing the item.");
+            }
+
+        });
+
+    });
+
+</script>
