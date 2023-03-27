@@ -51,7 +51,7 @@
 
 <script type="text/javascript">
 
-    const itemRow@(id) = $("#@(id).item-row");
+    const myCartRow@(id) = $("#@(id).item-row");
 
     $("#moveToWishlistBtn@(id)").click(function() {
         console.log("moving @(Model.Id) from cart to wishlist");
@@ -64,7 +64,7 @@
             cache: false,
         }).done(function(result) {
             console.log("Moved @(Model.Id) product to wishlist." + result);
-            pullUp(itemRow@(id));
+            pullUp(myCartRow@(id));
             $(document).trigger('moveToWishlist', ["@(Model.Id)"]);
         }).fail(function(error) {
             console.warn(error);
@@ -85,12 +85,12 @@
             cache: false
         }).done(function(result) {
             console.log("successfully removed @(Model.Id) from cart");
-            pullUp(itemRow@(id));
+            pullUp(myCartRow@(id));
         }).fail(function(error) {
 
             if (error.status == 404) {
-                alert("This product has already been removed.");
-                pullUp(itemRow@(id));
+                notifyUser("This product has already been removed.");
+                pullUp(myCartRow@(id));
             } else {
                 console.error(error);
             }
