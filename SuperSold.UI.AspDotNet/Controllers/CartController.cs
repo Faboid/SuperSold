@@ -18,10 +18,6 @@ public class CartController : Controller {
     }
 
     [HttpGet]
-    [Route("/Cart/View")]
-    public IActionResult MainRoute() => View("View");
-
-    [HttpGet]
     public IActionResult Index() => View();
 
     [HttpGet]
