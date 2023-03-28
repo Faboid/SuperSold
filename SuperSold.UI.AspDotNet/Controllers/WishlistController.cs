@@ -17,11 +17,6 @@ public class WishlistController : Controller {
     }
 
     [HttpGet]
-    public IActionResult Index() {
-        return View();
-    }
-
-    [HttpGet]
     public async Task<IActionResult> IndexPartial(int page = 0) {
 
         var userId = User.GetIdentity();
