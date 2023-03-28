@@ -42,8 +42,6 @@
 
 <script type="text/javascript">
 
-    const wishlistRow@(id) = $("#@(id).item-row");
-
     $("#moveToCart@(id)").click(function() {
 
         console.log("Moving @(Model.Id) to cart");
@@ -57,7 +55,7 @@
         }).done(function(response) {
 
             console.log("Moved @(Model.Id) from wishlist to cart successfully.");
-            pullUp(wishlistRow@(id));
+            pullUp($("#@(id).item-row"));
             $(document).trigger('moveToCart', ["@(Model.Id)"]);
 
         }).fail(function(response) {
@@ -81,12 +79,12 @@
             cache:false,
         }).done(function(data) {
             console.log("Deleted @(Model.Id) successfully from the wishlist.");
-            pullUp(wishlistRow@(id));
+            pullUp($("#@(id).item-row"));
         }).fail(function(error) {
 
             if(error.status == 404) {
                 notifyUser("This product has already been removed.");
-                pullUp(wishlistRow@(id));
+                pullUp($("#@(id).item-row"));
             } else {
                 console.error(error);
                 notifyUser("There has been an error removing the item.");
