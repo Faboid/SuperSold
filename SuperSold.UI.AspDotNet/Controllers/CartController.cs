@@ -44,8 +44,8 @@ public class CartController : Controller {
         var result = await _cartHandler.AddToCart(userId, productId);
 
         return result.Match<IActionResult>(
-            success => Ok(),
-            alreadyexists => Conflict() //todo - consider whether to add number instead of returning conflict
+            success => StatusCode(StatusCodes.Status201Created),
+            error => StatusCode(StatusCodes.Status500InternalServerError)
         );
     }
 

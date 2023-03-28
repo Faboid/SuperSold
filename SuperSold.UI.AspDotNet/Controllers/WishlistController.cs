@@ -35,8 +35,8 @@ public class WishlistController : Controller {
         var result = await _wishlistHandler.WishlistProduct(userId, productId);
 
         return result.Match<IActionResult>(
-            success => RedirectToAction(nameof(Index)),
-            alreadyexists => RedirectToAction(nameof(Index))
+            success => StatusCode(StatusCodes.Status201Created),
+            error => StatusCode(StatusCodes.Status500InternalServerError)
         );
 
     }
