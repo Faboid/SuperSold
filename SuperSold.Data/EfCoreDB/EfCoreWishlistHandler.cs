@@ -32,7 +32,7 @@ public class EfCoreWishlistHandler : IWishlistHandler {
     }
 
     public async Task<OneOf<Success, NotFound>> MoveToCart(Guid userId, Guid productId) {
-        return await _relationships.UpdateRelationshipType(userId, productId, RelationshipType.Wishlist);
+        return await _relationships.UpdateRelationshipType(userId, productId, RelationshipType.Cart);
     }
 
 }
