@@ -7,19 +7,12 @@ public class EfCoreDBContext : DbContext {
 
     public DbSet<AccountModel> Accounts { get; set; }
     public DbSet<ProductModel> Products { get; set; }
-    public DbSet<AccountWishlistModel> Wishlists { get; set; }
-    public DbSet<AccountCartModel> Cart { get; set; }
+    public DbSet<SavedRelationshipModel> SavedRelationships { get; set; }
 
     public EfCoreDBContext(DbContextOptions<EfCoreDBContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder
-            .Entity<AccountWishlistModel>()
-            .HasKey(x => new { x.IdAccount, x.IdProduct });
 
-        modelBuilder
-            .Entity<AccountCartModel>()
-            .HasKey(x => new { x.IdAccount, x.IdProduct });
     }
 }
 

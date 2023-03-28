@@ -2,72 +2,37 @@
 using OneOf;
 using OneOf.Types;
 using SuperSold.Data.DBInteractions;
+using SuperSold.Data.Extensions;
 using SuperSold.Data.Models;
-using SuperSold.Data.Models.ResponseTypes;
 
 namespace SuperSold.Data.EfCoreDB;
 public class EfCoreWishlistHandler : IWishlistHandler {
 
     private readonly EfCoreDBContext _context;
+    private readonly ISavedRelationshipsHandler _relationships;
 
-    public EfCoreWishlistHandler(EfCoreDBContext context) {
+    public EfCoreWishlistHandler(EfCoreDBContext context, ISavedRelationshipsHandler relationships) {
         _context = context;
+        _relationships = relationships;
     }
 
     public IQueryable<ProductModel> QueryWishlistedProductsByUserId(Guid userId) {
-
-        var products = _context.Wishlists
-            .AsNoTracking()
-            .Where(x => x.IdAccount == userId)
+        return _relationships
+            .QuerySavedRelationshipsByUserId(userId)
+            .WhereIs(RelationshipType.Wishlist)
             .Select(x => _context.Products.First(y => x.IdProduct == y.IdProduct));
+    }
 
-        return products;
-
+    public async Task<OneOf<Success, Error>> WishlistProduct(Guid userId, Guid productId) {
+        return await _relationships.AddRelationship(new(userId, productId, RelationshipType.Wishlist));
     }
 
     public async Task<OneOf<Success, NotFound>> RemoveWishlistProduct(Guid userId, Guid productId) {
-        
-        var wishlist = await _context.Wishlists.FirstOrDefaultAsync(x => x.IdAccount == userId && x.IdProduct == productId);
-        if(wishlist is null) {
-            return new NotFound();
-        }
-
-        _context.Wishlists.Remove(wishlist);
-        await _context.SaveChangesAsync();
-        return new Success();
-
-    }
-
-    public async Task<OneOf<Success, AlreadyExists>> WishlistProduct(Guid userId, Guid productId) {
-
-        var wishlist = new AccountWishlistModel() { IdAccount = userId, IdProduct = productId };
-
-        if(await _context.Wishlists.ContainsAsync(wishlist)) {
-            return new AlreadyExists();
-        }
-
-        await _context.Wishlists.AddAsync(wishlist);
-        await _context.SaveChangesAsync();
-        return new Success();
-
+        return await _relationships.RemoveRelationship(userId, productId);
     }
 
     public async Task<OneOf<Success, NotFound>> MoveToCart(Guid userId, Guid productId) {
-
-        var wishlist = await _context.Wishlists.FirstOrDefaultAsync(x => x.IdAccount == userId && x.IdProduct == productId);
-        if(wishlist is null) {
-            return new NotFound();
-        }
-
-        _context.Wishlists.Remove(wishlist);
-
-        var cartItem = new AccountCartModel() { IdAccount = wishlist.IdAccount, IdProduct = wishlist.IdProduct };
-        await _context.Cart.AddAsync(cartItem);
-
-        await _context.SaveChangesAsync();
-        return new Success();
-
+        return await _relationships.UpdateRelationshipType(userId, productId, RelationshipType.Wishlist);
     }
-
 
 }
