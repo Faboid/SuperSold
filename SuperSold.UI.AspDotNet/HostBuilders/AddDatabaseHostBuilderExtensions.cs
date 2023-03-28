@@ -28,6 +28,7 @@ public static class AddDatabaseHostBuilderExtensions {
         services.AddScoped<IAccountsHandler, EfCoreAccountsHandler>();
         services.AddScoped<IProductsHandler, EfCoreProductsHandler>();
         services.AddScoped<IWishlistHandler, EfCoreWishlistHandler>();
+        services.AddScoped<ISavedRelationshipsHandler, EfCoreSavedRelationshipsHandler>();
         services.AddScoped<ICartHandler, EFCoreCartHandler>();
     }
 
