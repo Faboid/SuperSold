@@ -2,7 +2,9 @@
 
 public static class PartialViewNames {
 
-    public const string BuyableProductRowPartial = "_BuyableProductRowPartial";
-    public const string ProductRowPartial = "_ProductRowPartial";
+    public const string HomeSearchRow = "HomeSearchRow";
+    public const string MyCartRow = "MyCartRow";
+    public const string WishlistRow = "WishlistRow";
+    public const string OnSaleRow = "OnSaleRow";
 
 }

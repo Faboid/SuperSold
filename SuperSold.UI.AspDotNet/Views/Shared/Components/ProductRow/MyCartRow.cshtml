@@ -1,0 +1,100 @@
+﻿@using Microsoft.AspNetCore.Html;
+@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewRouting;
+@using Microsoft.AspNetCore.Antiforgery;
+@inject IAntiforgery antiForgery;
+
+@model SuperSold.UI.AspDotNet.Models.Product
+
+@{
+    string id = Model.Id.ToValidHtml();
+    var tokenset = antiForgery.GetAndStoreTokens(Context);
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/productRow.css"/>
+</head>
+
+<div class="container-fluid item-row-container horizontal-container">
+
+    <!--image-->
+    <div class="col-2 padding-tiny">
+        <img class="left-flex no-overflow" src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image"/>
+    </div>
+
+    <div class="col-10 border-left-line padding-tiny vertical-container space-children no-overflow">
+
+        <!--Title and price-->
+        <div class="horizontal-container">
+            <h2 class="col-8">@Html.DisplayFor(x => x.Title)</h2>
+            <p class="col-4 text-end"><b>@Html.DisplayFor(x => x.Price)€</b></p>
+        </div>
+
+        <!--Interactable buttons-->
+        <div class="space-children horizontal-container">
+            <div class="col-6">
+                <div class="counter-container">
+                    <input class="counter-text" type="number" id="counterTextInput" value="1" />
+                    <button class="counter-button" type="button" id="updateCounterBtn">Update</button>
+                </div>
+            </div>
+
+            <div class="col-6 no-padding move-content-end" style="">
+                <button type="button" id="moveToWishlistBtn@(id)">Move To Wishlist</button>
+                <button class="space-left-tiny round-right-down-corner" type="button" id="removeBtn@(id)">Remove</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    $("#moveToWishlistBtn@(id)").click(function() {
+        console.log("moving @(Model.Id) from cart to wishlist");
+
+        $.ajax({
+            url: '@Url.Cart().MoveToWishlist()',
+            headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+            type: 'POST',
+            data: { "productId": "@(Model.Id)" },
+            cache: false,
+        }).done(function(result) {
+            console.log("Moved @(Model.Id) product to wishlist." + result);
+            pullUp($("#@(id).item-row"));
+            $(document).trigger('moveToWishlist', ["@(Model.Id)"]);
+        }).fail(function(error) {
+            console.warn(error);
+            notifyUser("Moving @(Model.Title) to the wishlist has failed. Error code: " + error.status);
+        });
+
+    });
+
+    $("#removeBtn@(id)").click(function() {
+
+        console.log("removing  @(Model.Id) from cart");
+        
+        $.ajax({
+            url: '@(Url.Cart().Remove())',
+            headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+            type: 'POST',
+            data: { "productId": "@(Model.Id)",  },
+            cache: false
+        }).done(function(result) {
+            console.log("successfully removed @(Model.Id) from cart");
+            pullUp($("#@(id).item-row"));
+        }).fail(function(error) {
+
+            if (error.status == 404) {
+                notifyUser("This product has already been removed.");
+                pullUp($("#@(id).item-row"));
+            } else {
+                console.error(error);
+            }
+
+        });
+
+    });
+
+</script>

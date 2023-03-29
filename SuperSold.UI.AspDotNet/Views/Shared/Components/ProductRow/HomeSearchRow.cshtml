@@ -1,0 +1,72 @@
+﻿@model SuperSold.UI.AspDotNet.Models.Product
+@using Microsoft.AspNetCore.Antiforgery;
+@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewRouting;
+@inject IAntiforgery antiForgery;
+
+@{
+    string id = Model.Id.ToValidHtml();
+    var tokenset = antiForgery.GetAndStoreTokens(Context);
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/productRow.css" />
+</head>
+
+<div class="container-fluid item-row-container horizontal-container">
+
+    <!--image column-->
+    <div class="col-2 padding-tiny">
+        <img class="left-flex no-overflow" src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image" />
+    </div>
+
+    <!--Description-->
+    <div class="col-8 space-children no-overflow border-left-line padding-small">
+        <h2 class="">@Html.DisplayFor(x => x.Title)</h2>
+        <p class="">@Html.DisplayFor(x => x.Description)</p>
+    </div>
+
+    <!--Buttons & Price-->
+    <div class="col-2 vertical-container space-children padding-tiny">
+
+        <p class="text-end"><b>@Html.DisplayFor(x => x.Price)€</b></p>
+
+        <div class="vertical-container no-overflow">
+            <button class="space-top-tiny round-right-down-corner" type="button" id="addToCart@(id)">Add To Cart</button>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    $("#addToCart@(id)").click(function () {
+
+            $.ajax({
+                url: '@(Url.Cart().AddToCart())',
+                type: 'POST',
+                headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+                data: { "productId": "@(Model.Id)" },
+                cache: false,
+            }).done(function (data) {
+                console.log("added product to cart @(Model.Id)");
+                pullUp($("#@(id).item-row"));
+                notifyUser("Added product to cart!");
+            }).fail(function (error) {
+                
+                if(error.status == 409) {
+                    console.log("Tried to add product in cart, but it's already there.");
+                    notifyUser("The product @(Model.Title) is already in the cart.");
+                    return;
+                }
+                
+                console.error("failed to delete @(Model.Id). Reason:");
+                console.error(error);
+                notifyUser("There has been an error trying to add @(Model.Title) to the cart.");
+            });
+
+
+    });
+
+</script>

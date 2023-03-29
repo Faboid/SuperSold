@@ -8,63 +8,56 @@ using SuperSold.UI.AspDotNet.ViewRouting;
 namespace SuperSold.UI.AspDotNet.Controllers;
 
 [Authorize]
-[AutoValidateAntiforgeryToken]
-public class CartController : Controller {
+public class WishlistController : Controller {
 
-    private readonly ICartHandler _cartHandler;
+    private readonly IWishlistHandler _wishlistHandler;
 
-    public CartController(ICartHandler cartHandler) {
-        _cartHandler = cartHandler;
+    public WishlistController(IWishlistHandler wishlistHandler) {
+        _wishlistHandler = wishlistHandler;
     }
-
-    [HttpGet]
-    public IActionResult Index() => View();
 
     [HttpGet]
     public async Task<IActionResult> IndexPartial(int page = 0) {
 
         var userId = User.GetIdentity();
-        var products = await _cartHandler.QueryCartedProductsByUserId(userId)
+        var products = await _wishlistHandler.QueryWishlistedProductsByUserId(userId)
             .SkipToPage(page, 3)
             .Select(x => (Product)x)
             .ToListAsyncSafe();
 
-        return this.ProductListPartialView(PartialViewNames.MyCartRow, products);
-    }
-
-    [HttpGet]
-    public IActionResult Buy() {
-        return View();
+        return this.ProductListPartialView(PartialViewNames.WishlistRow, products);
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddToCart(Guid productId) {
+    public async Task<IActionResult> AddToWishlist(Guid productId) {
 
         var userId = User.GetIdentity();
-        var result = await _cartHandler.AddToCart(userId, productId);
+        var result = await _wishlistHandler.WishlistProduct(userId, productId);
 
         return result.Match<IActionResult>(
             success => StatusCode(StatusCodes.Status201Created),
             error => StatusCode(StatusCodes.Status500InternalServerError)
         );
+
     }
 
-    [HttpPost]
-    public async Task<IActionResult> MoveToWishlist(Guid productId) {
+    [HttpDelete]
+    public async Task<IActionResult> Remove(Guid productId) {
 
         var userId = User.GetIdentity();
-        var result = await _cartHandler.MoveToWishlist(userId, productId);
+        var result = await _wishlistHandler.RemoveWishlistProduct(userId, productId);
         return result.Match<IActionResult>(
             success => Ok(),
             notfound => NotFound()
         );
+
     }
 
     [HttpPost]
-    public async Task<IActionResult> Remove(Guid productId) {
+    public async Task<IActionResult> MoveToCart(Guid productId) {
 
         var userId = User.GetIdentity();
-        var result = await _cartHandler.RemoveFromCart(userId, productId);
+        var result = await _wishlistHandler.MoveToCart(userId, productId);
         return result.Match<IActionResult>(
             success => Ok(),
             notfound => NotFound()

@@ -30,7 +30,7 @@ public class ProductsController : Controller {
             .SkipToPage(page, 10)
             .ToListAsyncSafe();
 
-        return this.ProductListPartialView(PartialViewNames.ProductRowPartial, listProducts);
+        return this.ProductListPartialView(PartialViewNames.OnSaleRow, listProducts);
 
     }
 
@@ -70,7 +70,7 @@ public class ProductsController : Controller {
     public async Task<IActionResult> Delete(Product model) {
 
         if(!ModelState.IsValid) {
-            return RedirectToAction("MyProducts");
+            return BadRequest("The given model is not valid.");
         }
 
         var userId = User.GetIdentity();
@@ -81,7 +81,7 @@ public class ProductsController : Controller {
 
         var result = await _productsHandler.DeleteProduct(model.Id);
         return result.Match<IActionResult>(
-            success => RedirectToAction("MyProducts"),
+            success => Ok(),
             notFound => NotFound()
         );
 
@@ -124,6 +124,19 @@ public class ProductsController : Controller {
             success => RedirectToAction("MyProducts"),
             notFound => NotFound()
         );
+
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Get(Guid id, string itemRowFormat) {
+
+        var result = await _productsHandler.GetProduct(id);
+
+        if(result.TryPickT1(out var notFound, out var product)) {
+            return NotFound();
+        }
+
+        return this.ProductListPartialView(itemRowFormat, product);
 
     }
 
