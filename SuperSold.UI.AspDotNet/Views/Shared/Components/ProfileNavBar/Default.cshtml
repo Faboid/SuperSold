@@ -1,5 +1,99 @@
 ﻿@using SuperSold.UI.AspDotNet.ViewRouting;
 
+@{
+    var name = User.Identity!.Name;
+}
+
+<style>
+
+    .profile-dropdown{
+        position: relative;
+        display: inline-block;
+        border: 1px solid;
+        width:13rem;
+        margin:2px;
+    }
+
+    .profile-dropdown-header:hover {
+        background-image: linear-gradient(to bottom right, gray, transparent);
+    }
+
+    .profile-dropdown-header{
+        height:2rem;
+        padding: 0px 5px 0px 5px;
+        width:stretch;
+        box-shadow: 0 0 5px -1px rgba(0,0,0,0,2);
+    }
+
+    .profile-dropdown-content{
+        display:none;
+        position:absolute;
+        top:45px;
+        right:0px;
+        height:4rem;
+        width:13rem;
+        box-shadow: 0 0 5px -1px rgba(0,0,0,0,2);
+    }
+
+    .profile-img {
+        margin:3px;
+    }
+
+    .profile-dropdown-line {
+        height:2rem;
+        width:100%;
+    }
+
+    .profile-dropdown-line:hover {
+        background-image: linear-gradient(to bottom right, gray, transparent);
+    }
+
+    .clickable {
+        cursor:pointer;
+    }
+
+</style>
+
 <a class="btn btn-primary" href="@Url.Cart().Index()">Cart</a>
 <a class="btn btn-primary" href="@Url.Products().MyProducts()">My Products</a>
 <a class="btn btn-primary" href="@Url.Account().Logout()">Logout</a>
+
+<div class="profile-dropdown default-container" id="profileDropdown">
+
+    <div class="profile-dropdown-header hover-gray-gradient horizontal-container space-children clickable" id="profileDropdownBtn">
+        <div class="no-overflow padding-tiny">
+            <img class="no-overflow" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Windows_10_Default_Profile_Picture.svg/1200px-Windows_10_Default_Profile_Picture.svg.png" />
+            <span>@name</span>
+        </div>
+        <span class="">⌄</span>
+    </div>
+
+    <div class="profile-dropdown-content vertical-container" id="profileDropdownContent">
+        <button class="profile-dropdown-line" type="button">Profile</button>
+        <button class="profile-dropdown-line" type="button">Logout</button>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    const profileDropdown = $("#profileDropdown");
+    const profileDropdownBtn = $("#profileDropdownBtn");
+    const profileDropdownContent = $("#profileDropdownContent");
+
+    $(document).click(function(e) {
+
+        console.log("click on document");
+
+        if (!profileDropdown.is(e.target) && profileDropdown.has(e.target).length === 0) {
+            $(profileDropdownContent).slideUp("slow", "swing");
+        }
+
+    });
+
+    profileDropdownBtn.click(function () {
+        console.log("click profile dropdown btn");
+        $(profileDropdownContent).slideToggle("slow", "swing");
+    });
+
+</script>
