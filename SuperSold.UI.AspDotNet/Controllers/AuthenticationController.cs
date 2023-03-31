@@ -7,11 +7,11 @@ using SuperSold.UI.AspDotNet.Models;
 using System.Security.Claims;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
-public class AccountController : Controller {
+public class AuthenticationController : Controller {
 
     private readonly IAuthenticator _authenticator;
 
-    public AccountController(IAuthenticator authenticator) {
+    public AuthenticationController(IAuthenticator authenticator) {
         _authenticator = authenticator;
     }
 
