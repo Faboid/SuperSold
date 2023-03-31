@@ -30,7 +30,6 @@
         position:absolute;
         top:45px;
         right:0px;
-        height:4rem;
         width:13rem;
         box-shadow: 0 0 5px -1px rgba(0,0,0,0,2);
     }
@@ -54,10 +53,6 @@
 
 </style>
 
-<a class="btn btn-primary" href="@Url.Cart().Index()">Cart</a>
-<a class="btn btn-primary" href="@Url.Products().MyProducts()">My Products</a>
-<a class="btn btn-primary" href="@Url.Account().Logout()">Logout</a>
-
 <div class="profile-dropdown default-container" id="profileDropdown">
 
     <div class="profile-dropdown-header hover-gray-gradient horizontal-container space-children clickable" id="profileDropdownBtn">
@@ -69,8 +64,10 @@
     </div>
 
     <div class="profile-dropdown-content vertical-container" id="profileDropdownContent">
-        <button class="profile-dropdown-line" type="button">Profile</button>
-        <button class="profile-dropdown-line" type="button">Logout</button>
+        <button class="profile-dropdown-line" type="button" id="profileNavBtn">Profile</button>
+        <button class="profile-dropdown-line" type="button" id="cartNavBtn">Cart</button>
+        <button class="profile-dropdown-line" type="button" id="myProductsNavBtn">My Products</button>
+        <button class="profile-dropdown-line" type="button" id="logoutNavBtn">Logout</button>
     </div>
 
 </div>
@@ -94,6 +91,22 @@
     profileDropdownBtn.click(function () {
         console.log("click profile dropdown btn");
         $(profileDropdownContent).slideToggle("slow", "swing");
+    });
+
+    $("#profileNavBtn").click(function () {
+        window.location.href = '@(Url.Profile().Index())';
+    });
+
+    $("#cartNavBtn").click(function () {
+        window.location.href = '@(Url.Cart().Index())';
+    });
+
+    $("#myProductsNavBtn").click(function () {
+        window.location.href = '@(Url.Products().MyProducts())';
+    });
+
+    $("#logoutNavBtn").click(function () {
+        window.location.href = '@(Url.Authentication().Logout())';
     });
 
 </script>
