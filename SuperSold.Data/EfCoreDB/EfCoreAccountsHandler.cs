@@ -68,6 +68,19 @@ public class EfCoreAccountsHandler : IAccountsHandler {
         
     }
 
+    public async Task<bool> UserNameExists(string accountName) {
+        return await _context.Accounts.AnyAsync(x => x.UserName == accountName);
+    }
+
+    public async Task<OneOf<AccountModel, NotFound>> GetAccountById(Guid guid) {
+        var result = await _context.Accounts.FindAsync(guid);
+        if(result is null) {
+            return new NotFound();
+        }
+
+        return result;
+    }
+
     public async Task<OneOf<Success, NotFound, AlreadyExists>> RenameAccount(string accountName, string newName) {
         
         var account = await _context

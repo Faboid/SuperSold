@@ -7,6 +7,8 @@ namespace SuperSold.Data.DBInteractions;
 public interface IAccountsHandler {
 
     Task<OneOf<AccountModel, NotFound>> GetAccountByUserName(string accountName);
+    Task<OneOf<AccountModel, NotFound>> GetAccountById(Guid accountId);
+    Task<bool> UserNameExists(string userName);
     Task<OneOf<Success, NotFound, AlreadyExists>> RenameAccount(string accountName, string newName);
     Task<OneOf<Success, NotFound>> ChangeEmail(string accountName, string newEmail);
     Task<OneOf<Success, NotFound>> DeleteAccount(string accountName);
