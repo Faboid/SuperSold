@@ -17,11 +17,14 @@ public static class RoutesBuilder {
 public class ProfileRoutes {
 
     private readonly IUrlHelper _urlHelper;
+    private const string _controllerName = "Profile";
 
     public ProfileRoutes(IUrlHelper urlHelper) {
         _urlHelper = urlHelper;
     }
 
-    public string? Index() => _urlHelper.Action("Index", "Profile");
+    public string? Index() => _urlHelper.Action("Index", _controllerName);
+    public string? IsUsernameUnique() => _urlHelper.Action("IsUsernameUnique", _controllerName);
+    public string? RenameAccount() => _urlHelper.Action("RenameAccount", _controllerName);
 
 }
