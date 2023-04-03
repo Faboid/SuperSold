@@ -76,7 +76,7 @@ public class MemoryAccountsHandler : IAccountsHandler {
         return result ? new Success() : new NotFound();
     }
 
-    public Task<OneOf<Success, NotFound, AlreadyExists>> RenameAccount(string accountName, string newName) => InternalRenameAccount(accountName, newName).AsTask();
+    public Task<OneOf<Success, NotFound, AlreadyExists>> RenameAccount(Guid accountId, string newName) => throw new NotImplementedException();
     public OneOf<Success, NotFound, AlreadyExists> InternalRenameAccount(string accountName, string newName) {
         
         if(!_db.AccountsTable.Remove(accountName, out var account)) {
