@@ -29,7 +29,7 @@ public class AuthenticationController : Controller {
 
         var result = await _authenticator.SignUp(model.UserName, model.Email, model.Password);
         var authProps = new AuthenticationProperties() {
-            IsPersistent = model.RememberMe //todo - even if remember me is false, the cookie remains through sessions
+            IsPersistent = model.RememberMe
         };
 
         return await result.Match(
@@ -54,7 +54,7 @@ public class AuthenticationController : Controller {
         var result = await _authenticator.Login(login.UserName, login.Password);
 
         var authProps = new AuthenticationProperties() {
-            IsPersistent = login.RememberMe //todo - even if remember me is false, the cookie remains through sessions
+            IsPersistent = login.RememberMe
         };
 
         return await result.Match(
