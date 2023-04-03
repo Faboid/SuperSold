@@ -18,6 +18,20 @@ public class Authenticator : IAuthenticator {
         _accountsHandler = accountsHandler;
     }
 
+    public async Task<OneOf<Success, NotFound, WrongPassword>> Verify(Guid userId, string password) {
+
+        var query = await _accountsHandler.GetAccountById(userId);
+        return query.Match(
+            account => VerifyAccount(account, password)
+                .Match<OneOf<Success, NotFound, WrongPassword>>(
+                    success => success, 
+                    wrongpassword => wrongpassword
+                ),
+            notfound => notfound
+        );
+
+    }
+
     public async Task<OneOf<ClaimsPrincipal, AlreadyExists>> SignUp(string userName, string email, string password) {
         
         var accountModel = new AccountModel() {
@@ -28,10 +42,7 @@ public class Authenticator : IAuthenticator {
         };
 
         var result = await _accountsHandler.CreateAccount(accountModel);
-        return result.Match<OneOf<ClaimsPrincipal, AlreadyExists>>(
-            success => BuildPrincipal(accountModel),
-            alreadyExists => alreadyExists
-        );
+        return result.MapT0(success => BuildPrincipal(accountModel));
 
     }
 
