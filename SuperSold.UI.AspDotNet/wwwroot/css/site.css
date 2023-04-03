@@ -50,6 +50,14 @@ body {
     width:stretch;
 }
 
+.stretch-width{
+    width:stretch;
+}
+
+.text-align-center{
+    text-align:center;
+}
+
 .space-children {
     justify-content: space-between;
 }
@@ -57,6 +65,10 @@ body {
 .no-overflow {
     max-width: 100%;
     max-height: 100%;
+}
+
+.margin-auto{
+    margin:auto;
 }
 
 .no-margin{
