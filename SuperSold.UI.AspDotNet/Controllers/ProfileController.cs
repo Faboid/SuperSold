@@ -60,6 +60,50 @@ public class ProfileController : Controller {
 
     }
 
+    [HttpPost]
+    public async Task<IActionResult> ChangeEmail(string email, string password) {
+        //todo - consider sending an email to old email with some sort of temporary "rollback link"
+
+        var accountId = User.GetIdentity();
+        var passwordCheck = await _authenticator.Verify(accountId, password);
+
+        if(!passwordCheck.TryPickT0(out var _, out var remainder)) {
+            return remainder.Match<IActionResult>(
+                notfound => NotFound(),
+                wrongpassword => BadRequest("The given password is wrong.")
+            );
+        }
+
+        var result = await _accountsHandler.ChangeEmail(accountId, email);
+        return result.Match<IActionResult>(
+            success => Ok(),
+            notFound => NotFound()
+        );
+
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ChangePassword(string newPassword, string password) {
+
+        var accountId = User.GetIdentity();
+        var passwordCheck = await _authenticator.Verify(accountId, password);
+
+        if(!passwordCheck.TryPickT0(out var _, out var remainder)) {
+            return remainder.Match<IActionResult>(
+                notfound => NotFound(),
+                wrongpassword => BadRequest("The given password is wrong.")
+            );
+        }
+
+        var hashPassword = _authenticator.HashPassword(newPassword);
+        var result = await _accountsHandler.ChangePassword(accountId, hashPassword);
+        return result.Match<IActionResult>(
+            success => Ok(),
+            notfound => NotFound()
+        );
+
+    }
+
     private async Task<IActionResult> RefreshAuthCookiesAndReturnOk(ClaimsPrincipal principal, string newname) {
 
         var features = HttpContext.Features.Get<IAuthenticateResultFeature>()?.AuthenticateResult?.Properties;
