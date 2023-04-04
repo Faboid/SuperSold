@@ -95,4 +95,6 @@ public class MemoryAccountsHandler : IAccountsHandler {
 
     public Task<OneOf<AccountModel, NotFound>> GetAccountById(Guid accountId) => throw new NotImplementedException();
     public Task<bool> UserNameExists(string userName) => throw new NotImplementedException();
+    public Task<OneOf<Success, NotFound>> ChangeEmail(Guid accountId, string newEmail) => throw new NotImplementedException();
+    public Task<OneOf<Success, NotFound>> ChangePassword(Guid accountId, string newPassword) => throw new NotImplementedException();
 }

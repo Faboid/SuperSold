@@ -100,5 +100,37 @@ public class EfCoreAccountsHandler : IAccountsHandler {
         return new Success();
     }
 
+    public async Task<OneOf<Success, NotFound>> ChangeEmail(Guid accountId, string newEmail) {
+
+        var account = await _context
+            .Accounts
+            .FindAsync(accountId);
+
+        if(account is null) {
+            return new NotFound();
+        }
+
+        account.Email = newEmail;
+        await _context.SaveChangesAsync();
+        return new Success();
+
+    }
+
+    public async Task<OneOf<Success, NotFound>> ChangePassword(Guid accountId, string newHashedPassword) {
+
+        var account = await _context
+            .Accounts
+            .FindAsync(accountId);
+
+        if(account is null) {
+            return new NotFound();
+        }
+
+        account.HashedPassword = newHashedPassword;
+        await _context.SaveChangesAsync();
+        return new Success();
+
+    }
+
 }
 
