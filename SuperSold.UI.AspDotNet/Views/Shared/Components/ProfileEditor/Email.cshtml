@@ -1,5 +1,91 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+@model string
+
+<div>
+
+    <div>
+        <label>Email: </label>
+        <span class="emailTextPresenter">@Model</span>
+        <button type="button" id="updateEmailBtn">Update</button>
+    </div>
+
+    <div class="hide" id="emailEditorContainer">
+
+        <form action="#" id="emailForm">
+
+            <div class="form-group">
+                <label for="email">New Email: </label>
+                <input type="email" name="email" id="emailInputText" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password: </label>
+                <input type="password" name="password" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <button type="submit" id="emailUpdateSubmitBtn">Confirm Update</button>
+            </div>
+
+        </form>
+
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    $("#updateEmailBtn").click(function () {
+        $("#emailEditorContainer").slideToggle();
+    });
+
+    $("#emailUpdateSubmitBtn").click(function () {
+
+        $("#emailForm").validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 8
+                }
+            },
+            messages: {
+                email: {
+                    required: "Please insert the new username.",
+                    email: "Must give a valid email address."
+                },
+                password: {
+                    required: "Please insert your password to confirm the change.",
+                    minlength: "Passwords have a minimum length of 8 characters."
+                }
+            },
+            submitHandler: function (form) { submitEmailChangeForm(form); }
+        });
+
+    });
+
+    function submitEmailChangeForm(form) {
+
+        var values = $(form).serialize();
+        $.ajax({
+            url: '@(Url.Profile().ChangeEmail())',
+            data: values,
+            type: 'POST',
+            cache: false
+        }).done(function (success) {
+            console.log("change email address");
+            notifyUser("The email has been changed.");
+            var newEmail = $("#emailInputText").val();
+            onEmailChanged(newEmail);
+        }).fail(function (error) {
+            console.log(error);
+            notifyUser("There has been an error changing email.");
+        });
+
+    }
+
+</script>
