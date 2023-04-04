@@ -19,3 +19,14 @@ function onUsernameChanged(newName) {
     });
 
 }
+
+//refreshes all fields that use the email
+function onEmailChanged(newEmail) {
+
+    elements = $(document).find('.emailTextPresenter');
+
+    $.map(elements, function (element) {
+        $(element).text(newEmail);
+    });
+
+}
