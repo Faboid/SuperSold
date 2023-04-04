@@ -13,7 +13,7 @@
 
     <div>
         <label>Username: </label>
-        <span>@Model</span>
+        <span class="usernameTextPresenter">@Model</span>
         <button type="button" id="updateUsernameBtn">Update</button>
     </div>
 
@@ -23,7 +23,7 @@
 
             <div class="form-group">
                 <label for="username">New Username: </label>
-                <input type="text" name="username" class="form-control" />
+                <input type="text" name="username" id="usernameInputText" class="form-control" />
             </div>
 
             <div class="form-group">
@@ -85,7 +85,8 @@
         }).done(function(success) {
             console.log("renamed account");
             notifyUser("The account has been renamed.");
-            location.reload();
+            var newUsername = $("#usernameInputText").val();
+            onUsernameChanged(newUsername);
         }).fail(function(error) {
             console.log(error);
             notifyUser("There has been an error renaming the account.");
