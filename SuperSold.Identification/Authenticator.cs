@@ -38,7 +38,7 @@ public class Authenticator : IAuthenticator {
             IdAccount = Guid.NewGuid(),
             UserName = userName,
             Email = email,
-            HashedPassword = BC.EnhancedHashPassword(password)
+            HashedPassword = HashPassword(password)
         };
 
         var result = await _accountsHandler.CreateAccount(accountModel);
@@ -50,6 +50,8 @@ public class Authenticator : IAuthenticator {
         var account = await _accountsHandler.GetAccountByUserName(userName);
         return Login(account, password);
     }
+
+    public string HashPassword(string password) => BC.EnhancedHashPassword(password);
 
     private static OneOf<ClaimsPrincipal, NotFound, WrongPassword> Login(OneOf<AccountModel, NotFound> queryResult, string password) {
 
