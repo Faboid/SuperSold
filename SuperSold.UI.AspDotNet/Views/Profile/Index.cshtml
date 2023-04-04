@@ -1,36 +1,13 @@
 ﻿@model AccountInfoModel
 
 <div class="">
-    <h1 class="text-align-center">@Model.Username</h1>
+    <h1 class="usernameTextPresenter text-align-center">@Model.Username</h1>
 </div>
 
 <h2>Profile Information:</h2>
-<!--Edit container-->
+
 <div>
-
     @await Component.InvokeAsync("ProfileEditor", new { editType = "UserName", model = Model.Username })
-
-    <!--Edit password area-->
-    <div>
-        <label>Password: </label>
-        <span>*********</span>
-        <button>Update</button>
-    </div>
-
-    <!--Edit email area-->
-    <div>
-        <label>Email: </label>
-        <span>@Model.Email</span>
-        <button>Update</button>
-    </div>
-
-    <!--Confirm password-->
-    <div>
-
-    </div>
-
-    <div>
-
-    </div>
-
+    @await Component.InvokeAsync("ProfileEditor", new { editType = "Password", model = ""})
+    @await Component.InvokeAsync("ProfileEditor", new { editType = "Email", model = Model.Email })
 </div>
