@@ -6,6 +6,7 @@ using SuperSold.Identification;
 using SuperSold.UI.AspDotNet.Constants;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
+using System.Net;
 using System.Security.Claims;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
@@ -100,6 +101,31 @@ public class ProfileController : Controller {
         return result.Match<IActionResult>(
             success => Ok(),
             notfound => NotFound()
+        );
+
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteAccount(string password) {
+
+        var accountId = User.GetIdentity();
+        var passwordCheck = await _authenticator.Verify(accountId, password);
+
+        if(!passwordCheck.TryPickT0(out var _, out var remainder)) {
+            return remainder.Match<IActionResult>(
+                notfound => NotFound(),
+                wrongpassword => BadRequest("The given password is wrong.")
+            );
+        }
+
+        var result = await _accountsHandler.DeleteAccount(accountId);
+
+        return await result.Match<Task<IActionResult>>(
+            async success => {
+                await HttpContext.SignOutAsync(Cookies.Auth);
+                return Ok();
+            },
+            async notfound => await NotFound("There has been an error retrieving the account information for deletion.").AsTask()
         );
 
     }

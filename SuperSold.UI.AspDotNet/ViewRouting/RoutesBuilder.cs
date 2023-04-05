@@ -28,5 +28,6 @@ public class ProfileRoutes {
     public string? RenameAccount() => _urlHelper.Action("RenameAccount", _controllerName);
     public string? ChangeEmail() => _urlHelper.Action("ChangeEmail", _controllerName);
     public string? ChangePassword() => _urlHelper.Action("ChangePassword", _controllerName);
+    public string? DeleteAccount() => _urlHelper.Action("DeleteAccount", _controllerName);
 
 }
