@@ -6,8 +6,18 @@
 
 <h2>Profile Information:</h2>
 
+<!--Edit info section-->
 <div>
     @await Component.InvokeAsync("ProfileEditor", new { editType = "UserName", model = Model.Username })
     @await Component.InvokeAsync("ProfileEditor", new { editType = "Password", model = ""})
     @await Component.InvokeAsync("ProfileEditor", new { editType = "Email", model = Model.Email })
+</div>
+
+<br/>
+
+<!--Danger section-->
+<h2>Danger Section:</h2>
+
+<div>
+    @await Component.InvokeAsync("ProfileEditor", new { editType = "DeleteAccount", model = ""})
 </div>
