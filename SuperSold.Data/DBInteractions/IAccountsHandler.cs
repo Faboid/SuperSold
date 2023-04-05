@@ -12,7 +12,7 @@ public interface IAccountsHandler {
     Task<OneOf<Success, NotFound, AlreadyExists>> RenameAccount(Guid accountId, string newName);
     Task<OneOf<Success, NotFound>> ChangeEmail(Guid accountId, string newEmail);
     Task<OneOf<Success, NotFound>> ChangePassword(Guid accountId, string newPassword);
-    Task<OneOf<Success, NotFound>> DeleteAccount(string accountName);
+    Task<OneOf<Success, NotFound>> DeleteAccount(Guid accountId);
     Task<OneOf<Success, AlreadyExists>> CreateAccount(AccountModel model);
 
 }

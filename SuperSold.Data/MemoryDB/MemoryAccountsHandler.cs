@@ -70,7 +70,7 @@ public class MemoryAccountsHandler : IAccountsHandler {
 
     }
 
-    public Task<OneOf<Success, NotFound>> DeleteAccount(string accountName) => InternalDeleteAccount(accountName).AsTask();
+    public Task<OneOf<Success, NotFound>> DeleteAccount(Guid accountId) => throw new NotImplementedException();
     private OneOf<Success, NotFound> InternalDeleteAccount(string accountName) {
         var result = _db.AccountsTable.Remove(accountName);
         return result ? new Success() : new NotFound();

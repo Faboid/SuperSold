@@ -44,11 +44,11 @@ public class EfCoreAccountsHandler : IAccountsHandler {
 
     }
 
-    public async Task<OneOf<Success, NotFound>> DeleteAccount(string accountName) {
+    public async Task<OneOf<Success, NotFound>> DeleteAccount(Guid accountId) {
 
-        var get = await GetAccountByUserName(accountName);
-        if(get.TryPickT1(out var notFound, out var account)) {
-            return notFound;
+        var account = await _context.Accounts.FindAsync(accountId);
+        if(account is null) {
+            return new NotFound();
         }
 
         _context.Accounts.Remove(account);
