@@ -1,3 +1,8 @@
+
+/*
+    Default Style
+*/
+
 html {
   font-size: 14px;
 }
@@ -19,4 +24,108 @@ html {
 
 body {
   margin-bottom: 60px;
+}
+
+
+/*
+    Custom Classes
+*/
+
+.default-container {
+    display:flex;
+}
+
+.horizontal-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.vertical-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.stretch-size {
+    height:stretch;
+    width:stretch;
+}
+
+.stretch-width{
+    width:stretch;
+}
+
+.text-align-center{
+    text-align:center;
+}
+
+.space-children {
+    justify-content: space-between;
+}
+
+.no-overflow {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.margin-auto{
+    margin:auto;
+}
+
+.no-margin{
+    margin:0;
+}
+
+.no-padding{
+    padding:0;
+}
+
+.left-flex {
+    margin: 0 0 0 auto;
+}
+
+.right-flex {
+    margin: 0 auto 0 0;
+}
+
+.center-flex {
+    margin: auto;
+}
+
+.border-left-line {
+    border-left: solid 2px black;
+}
+
+.padding-small {
+    padding: 0.5rem;
+}
+
+.padding-tiny {
+    padding: 0.2rem;
+}
+
+.round-right-down-corner {
+    border-bottom-right-radius: 5px;
+}
+
+.small-line-break {
+    display: block;
+    margin: 10px 0px;
+    content: close-quote;
+}
+
+.space-top-tiny {
+    margin-top:0.2rem;
+}
+
+.space-left-tiny {
+    margin-left:0.2rem;
+}
+
+.move-content-end {
+    display: flex;
+    justify-content: end;
+}
+
+.hide {
+    display:none;
 }

@@ -1,4 +1,6 @@
-﻿@model (string RowPartialName, IEnumerable<Product> Products)
+﻿@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewComponents;
+@model (string RowType, IEnumerable<Product> Products)
 
 @if(!Model.Products.Any()) {
 
@@ -10,7 +12,11 @@
 }
 
 @foreach(var product in Model.Products) {
-    <div class="row" style="border:solid; border-width:2px; border-radius:5px;">
-        @await Html.PartialAsync(Model.RowPartialName, product)
+    <div class="item-row" id="@(product.Id.ToValidHtml())" style="border:solid; border-width:2px; border-radius:5px;">
+        
+        @await Component.InvokeAsync("ProductRow", new {
+            rowTemplateName = Model.RowType, product = product
+        })
+
     </div>
 }

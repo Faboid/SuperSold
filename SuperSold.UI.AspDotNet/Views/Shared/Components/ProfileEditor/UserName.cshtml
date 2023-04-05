@@ -1,0 +1,89 @@
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+@model string
+
+<div>
+
+    <div>
+        <label>Username: </label>
+        <span class="usernameTextPresenter">@Model</span>
+        <button type="button" id="updateUsernameBtn">Update</button>
+    </div>
+
+    <div class="hide" id="usernameEditorContainer">
+
+        <form action="#" id="usernameForm">
+
+            <div class="form-group">
+                <label for="username">New Username: </label>
+                <input type="text" name="username" id="usernameInputText" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password: </label>
+                <input type="password" name="password" class="form-control" />
+            </div>
+
+            <div class="form-group">
+                <button type="submit" id="userNameUpdateSubmitBtn">Confirm Update</button>
+            </div>
+
+        </form>
+
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    $("#updateUsernameBtn").click(function () {
+        $("#usernameEditorContainer").slideToggle();
+    });
+
+    $("#userNameUpdateSubmitBtn").click(function () {
+
+        $("#usernameForm").validate({
+            rules: {
+                username: {
+                    required: true
+                },
+                password: {
+                    required: true,
+                    minlength: 8
+                }
+            },
+            messages: {
+                username: {
+                    required: "Please insert the new username"
+                },
+                password: {
+                    required: "Please insert your password to confirm the change.",
+                    minlength: "Passwords have a minimum length of 8 characters."
+                }
+            },
+            submitHandler: function(form) { submitUserNameChangeForm(form); }
+        });
+
+    });
+
+    function submitUserNameChangeForm(form) {
+
+        var values = $(form).serialize();
+        $.ajax({
+            url: '@(Url.Profile().RenameAccount())',
+            data: values,
+            type: 'POST',
+            cache: false
+        }).done(function(success) {
+            console.log("renamed account");
+            notifyUser("The account has been renamed.");
+            var newUsername = $("#usernameInputText").val();
+            onUsernameChanged(newUsername);
+        }).fail(function(error) {
+            console.log(error);
+            notifyUser("There has been an error renaming the account.");
+        });
+
+    }
+
+</script>

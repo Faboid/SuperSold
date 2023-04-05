@@ -70,13 +70,13 @@ public class MemoryAccountsHandler : IAccountsHandler {
 
     }
 
-    public Task<OneOf<Success, NotFound>> DeleteAccount(string accountName) => InternalDeleteAccount(accountName).AsTask();
+    public Task<OneOf<Success, NotFound>> DeleteAccount(Guid accountId) => throw new NotImplementedException();
     private OneOf<Success, NotFound> InternalDeleteAccount(string accountName) {
         var result = _db.AccountsTable.Remove(accountName);
         return result ? new Success() : new NotFound();
     }
 
-    public Task<OneOf<Success, NotFound, AlreadyExists>> RenameAccount(string accountName, string newName) => InternalRenameAccount(accountName, newName).AsTask();
+    public Task<OneOf<Success, NotFound, AlreadyExists>> RenameAccount(Guid accountId, string newName) => throw new NotImplementedException();
     public OneOf<Success, NotFound, AlreadyExists> InternalRenameAccount(string accountName, string newName) {
         
         if(!_db.AccountsTable.Remove(accountName, out var account)) {
@@ -93,4 +93,8 @@ public class MemoryAccountsHandler : IAccountsHandler {
 
     }
 
+    public Task<OneOf<AccountModel, NotFound>> GetAccountById(Guid accountId) => throw new NotImplementedException();
+    public Task<bool> UserNameExists(string userName) => throw new NotImplementedException();
+    public Task<OneOf<Success, NotFound>> ChangeEmail(Guid accountId, string newEmail) => throw new NotImplementedException();
+    public Task<OneOf<Success, NotFound>> ChangePassword(Guid accountId, string newPassword) => throw new NotImplementedException();
 }

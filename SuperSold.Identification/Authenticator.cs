@@ -18,20 +18,31 @@ public class Authenticator : IAuthenticator {
         _accountsHandler = accountsHandler;
     }
 
+    public async Task<OneOf<Success, NotFound, WrongPassword>> Verify(Guid userId, string password) {
+
+        var query = await _accountsHandler.GetAccountById(userId);
+        return query.Match(
+            account => VerifyAccount(account, password)
+                .Match<OneOf<Success, NotFound, WrongPassword>>(
+                    success => success, 
+                    wrongpassword => wrongpassword
+                ),
+            notfound => notfound
+        );
+
+    }
+
     public async Task<OneOf<ClaimsPrincipal, AlreadyExists>> SignUp(string userName, string email, string password) {
         
         var accountModel = new AccountModel() {
             IdAccount = Guid.NewGuid(),
             UserName = userName,
             Email = email,
-            HashedPassword = BC.EnhancedHashPassword(password)
+            HashedPassword = HashPassword(password)
         };
 
         var result = await _accountsHandler.CreateAccount(accountModel);
-        return result.Match<OneOf<ClaimsPrincipal, AlreadyExists>>(
-            success => BuildPrincipal(accountModel),
-            alreadyExists => alreadyExists
-        );
+        return result.MapT0(success => BuildPrincipal(accountModel));
 
     }
 
@@ -39,6 +50,8 @@ public class Authenticator : IAuthenticator {
         var account = await _accountsHandler.GetAccountByUserName(userName);
         return Login(account, password);
     }
+
+    public string HashPassword(string password) => BC.EnhancedHashPassword(password);
 
     private static OneOf<ClaimsPrincipal, NotFound, WrongPassword> Login(OneOf<AccountModel, NotFound> queryResult, string password) {
 

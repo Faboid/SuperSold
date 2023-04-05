@@ -1,0 +1,97 @@
+﻿@model SuperSold.UI.AspDotNet.Models.Product
+@using Microsoft.AspNetCore.Antiforgery;
+@using SuperSold.UI.AspDotNet.ViewRouting;
+@using SuperSold.UI.AspDotNet.Extensions;
+@inject IAntiforgery antiForgery;
+
+@{
+    string id = Model.Id.ToValidHtml();
+    var tokenset = antiForgery.GetAndStoreTokens(Context);
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/productRow.css"/>
+</head>
+
+<div class="container-fluid item-row-container horizontal-container">
+
+    <!--image column-->
+    <div class="col-2 padding-tiny">
+        <img class="left-flex no-overflow" src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image" />
+    </div>
+
+    <!--Description-->
+    <div class="col-8 space-children no-overflow border-left-line padding-small">
+        <h2 class="">@Html.DisplayFor(x => x.Title)</h2>
+        <p class="">@Html.DisplayFor(x => x.Description)</p>
+    </div>
+
+    <!--Buttons & Price-->
+    <div class="col-2 vertical-container space-children padding-tiny">
+
+        <p class="text-end"><b>@Html.DisplayFor(x => x.Price)€</b></p>
+
+        <div class="vertical-container no-overflow">
+            <button type="button" id="moveToCart@(id)">Move To Cart</button>
+            <button class="space-top-tiny round-right-down-corner" type="button" id="removeBtn@(id)">Remove</button>
+        </div>
+        
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    $("#moveToCart@(id)").click(function() {
+
+        console.log("Moving @(Model.Id) to cart");
+
+        $.ajax({
+            url:'@Url.Wishlist().MoveToCart()',
+            headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+            type: 'POST',
+            data: { "productId" : "@(Model.Id)" },
+            cache:false,
+        }).done(function(response) {
+
+            console.log("Moved @(Model.Id) from wishlist to cart successfully.");
+            pullUp($("#@(id).item-row"));
+            $(document).trigger('moveToCart', ["@(Model.Id)"]);
+
+        }).fail(function(response) {
+
+            console.warn(response);
+            notifyUser("Moving @(Model.Title) to the cart has failed. Error code: " + response.status);
+
+        })
+
+    });
+
+    $("#removeBtn@(id)").click(function () {
+
+        console.log("Deleting @(Model.Id) from wishlist");
+
+        $.ajax({
+            url:'@Url.Wishlist().Remove()',
+            headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+            type: 'DELETE',
+            data: { "productId": "@(Model.Id)" },
+            cache:false,
+        }).done(function(data) {
+            console.log("Deleted @(Model.Id) successfully from the wishlist.");
+            pullUp($("#@(id).item-row"));
+        }).fail(function(error) {
+
+            if(error.status == 404) {
+                notifyUser("This product has already been removed.");
+                pullUp($("#@(id).item-row"));
+            } else {
+                console.error(error);
+                notifyUser("There has been an error removing the item.");
+            }
+
+        });
+
+    });
+
+</script>

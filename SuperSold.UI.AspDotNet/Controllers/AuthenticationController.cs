@@ -7,11 +7,11 @@ using SuperSold.UI.AspDotNet.Models;
 using System.Security.Claims;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
-public class AccountController : Controller {
+public class AuthenticationController : Controller {
 
     private readonly IAuthenticator _authenticator;
 
-    public AccountController(IAuthenticator authenticator) {
+    public AuthenticationController(IAuthenticator authenticator) {
         _authenticator = authenticator;
     }
 
@@ -29,7 +29,7 @@ public class AccountController : Controller {
 
         var result = await _authenticator.SignUp(model.UserName, model.Email, model.Password);
         var authProps = new AuthenticationProperties() {
-            IsPersistent = model.RememberMe //todo - even if remember me is false, the cookie remains through sessions
+            IsPersistent = model.RememberMe
         };
 
         return await result.Match(
@@ -54,7 +54,7 @@ public class AccountController : Controller {
         var result = await _authenticator.Login(login.UserName, login.Password);
 
         var authProps = new AuthenticationProperties() {
-            IsPersistent = login.RememberMe //todo - even if remember me is false, the cookie remains through sessions
+            IsPersistent = login.RememberMe
         };
 
         return await result.Match(
