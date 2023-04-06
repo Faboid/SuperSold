@@ -3,5 +3,9 @@
 
 //sends a message to the user. Currently uses alert, but will implement a partial view in the future
 function notifyUser(message) {
-    alert(message);
+
+    console.log("User message: " + message);
+    $(".notifyUserTextPresenter").text(message);
+    $(".notifyUserContainer").slideDown("swing");
+
 }
