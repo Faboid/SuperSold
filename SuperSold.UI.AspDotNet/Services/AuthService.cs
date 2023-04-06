@@ -5,6 +5,7 @@ using OneOf.Types;
 using SuperSold.Data.Models.ResponseTypes;
 using SuperSold.Identification;
 using SuperSold.UI.AspDotNet.Constants;
+using System.Security.Claims;
 using static SuperSold.Identification.Authenticator;
 
 namespace SuperSold.UI.AspDotNet.Services;
@@ -14,6 +15,7 @@ public interface IAuthService {
     Task<OneOf<Success, AlreadyExists>> SignUp(string username, string email, string password, bool rememberMe);
     Task<OneOf<Success, NotFound, WrongPassword>> Login(string username, string password, bool rememberMe);
     Task Logout();
+    Task RefreshAuthCookieWithNewUserName(string username);
 
 }
 
@@ -56,6 +58,29 @@ public class AuthService : IAuthService {
     }
 
     public async Task Logout() => await _http.HttpContext!.SignOutAsync(Cookies.Auth);
+
+    public async Task RefreshAuthCookieWithNewUserName(string username) {
+
+        var features = _http.HttpContext!.Features.Get<IAuthenticateResultFeature>()?.AuthenticateResult?.Properties;
+        var principal = _http.HttpContext.User;
+        
+        await Logout();
+
+        if(principal.Identity is not ClaimsIdentity identity) {
+            throw new Exception();
+        }
+
+        var oldName = identity.FindFirst(ClaimTypes.Name);
+        if(oldName != null) {
+            identity.RemoveClaim(oldName);
+        }
+
+        var newClaim = new Claim(ClaimTypes.Name, username);
+        identity.AddClaim(newClaim);
+
+        await _http.HttpContext.SignInAsync(Cookies.Auth, principal, features ?? new());
+
+    }
 
     private static AuthenticationProperties BuildAuthProps(bool rememberMe) {
         return new AuthenticationProperties() {
