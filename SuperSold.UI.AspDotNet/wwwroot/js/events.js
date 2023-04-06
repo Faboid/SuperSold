@@ -1,4 +1,9 @@
 ﻿
+/**
+ * Executes 'scrollableChanged' event and gives the items '.item-row' as arguments. To be used after modifying a scrollable's state.
+ * 
+ * @param {any} scrollable
+ */
 function onScrollableChanged(scrollable) {
 
     //get list of item rows
@@ -9,7 +14,11 @@ function onScrollableChanged(scrollable) {
 
 }
 
-//refreshes all fields that use the username
+/**
+ *Refreshes all fields that use the username with the new username.
+ *Meant for use on renaming user accounts.
+ * @param {string} newName
+ */
 function onUsernameChanged(newName) {
 
     elements = $(document).find('.usernameTextPresenter');
@@ -21,6 +30,12 @@ function onUsernameChanged(newName) {
 }
 
 //refreshes all fields that use the email
+
+/**
+ * Refreshes all fields that display the email with the new given email.
+ * 
+ * @param {string} newEmail
+ */
 function onEmailChanged(newEmail) {
 
     elements = $(document).find('.emailTextPresenter');

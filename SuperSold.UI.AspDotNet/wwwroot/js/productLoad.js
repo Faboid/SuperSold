@@ -9,6 +9,13 @@ class ScrollableObjectInfo {
 let page = 0;
 const logMessage = "Add additional scrollable page elements.";
 
+/**
+ * Loads product item row with the given format in the scrollable.
+ * 
+ * @param {GUID} productId
+ * @param {ScrollableObjectInfo} scrollable
+ * @param {string} itemRowFormat
+ */
 function loadProductInScrollable(productId, scrollable, itemRowFormat) {
 
     $.ajax({
@@ -35,16 +42,33 @@ function loadProductInScrollable(productId, scrollable, itemRowFormat) {
 
 }
 
+/**
+ * Loads an additional page for the given scrollable.
+ * 
+ * @param {any} scrollableInfo
+ */
 function loadMorePageOnly(scrollableInfo) {
     var data = { "page": scrollableInfo.page };
     loadMore(scrollableInfo, data);
 }
 
+/**
+ * Loads an additional page using search results based on given search parameter for the given scrollable.
+ * 
+ * @param {any} scrollableInfo
+ * @param {any} search
+ */
 function loadMoreWithSearch(scrollableInfo, search) {
     var data = { "page": scrollableInfo.page, "search": search };
     loadMore(scrollableInfo, data);
 }
 
+/**
+ * Loads an additional page for the given scrollable by using the given data.
+ * 
+ * @param {any} scrollableInfo
+ * @param {any} data
+ */
 function loadMore(scrollableInfo, data) {
 
     $.ajax({
@@ -65,6 +89,12 @@ function loadMore(scrollableInfo, data) {
 
 }
 
+/**
+ * Appends the given result(intended to be used after an ajax query) to the scrollable.
+ * 
+ * @param {any} scrollable
+ * @param {any} result
+ */
 function addResultToScrollable(scrollable, result) {
 
     $(result).map(function () {
@@ -75,6 +105,13 @@ function addResultToScrollable(scrollable, result) {
 
 }
 
+/**
+ * Appends a single item to the scrollable.
+ * 
+ * @param {any} scrollable
+ * @param {any} index
+ * @param {any} item
+ */
 function addItemToScrollable(scrollable, index, item) {
 
     var adjustedIndex = index + 1;
