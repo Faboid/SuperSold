@@ -38,7 +38,10 @@
                 </div>
             </nav>
         </header>
+        
         <div class="container">
+            @await Html.PartialAsync("_NotifyUserPartialView")
+
             <main role="main" class="pb-3">
                 @RenderBody()
             </main>

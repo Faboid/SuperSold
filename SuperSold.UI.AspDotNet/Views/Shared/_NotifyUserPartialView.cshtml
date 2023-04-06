@@ -1,0 +1,55 @@
+﻿
+<style>
+
+    .notifyUserContainer {
+        position: absolute;
+        top: 0;
+        min-height: 4rem;
+        min-width:20rem;
+        height:auto;
+        left:50%;
+        transform:translateX(-50%);
+        background:white;
+        border: solid 1px black;
+    }
+
+    .internalNotifyUserContainer {
+        padding:0.7rem;
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    .notifyUserTextPresenter {
+        text-align: center;
+    }
+
+    .closeUserNotificationDisplayBtnContainer {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    #closeUserNotificationDisplayBtn {
+        width:5rem;
+    }
+
+</style>
+
+<div class="notifyUserContainer">
+
+    <div class="internalNotifyUserContainer">
+
+        <p class="notifyUserTextPresenter">Default text here.</p>
+        <div class="closeUserNotificationDisplayBtnContainer">
+            <button type="button" id="closeUserNotificationDisplayBtn">Ok</button>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    $("#closeUserNotificationDisplayBtn").click(function() {
+        $(".notifyUserContainer").css('min-height', 0).slideUp('swing');
+    });
+
+</script>
