@@ -16,11 +16,11 @@ public class EfCoreWishlistHandler : IWishlistHandler {
         _relationships = relationships;
     }
 
-    public IQueryable<ProductModel> QueryWishlistedProductsByUserId(Guid userId) {
+    public IQueryable<SavedRelationshipWithProduct> QueryWishlistedProductsByUserId(Guid userId) {
         return _relationships
             .QuerySavedRelationshipsByUserId(userId)
             .WhereIs(RelationshipType.Wishlist)
-            .Select(x => _context.Products.First(y => x.IdProduct == y.IdProduct));
+            .Select(x => new SavedRelationshipWithProduct(_context.Products.First(y => x.IdProduct == y.IdProduct), x));
     }
 
     public async Task<OneOf<Success, Error>> WishlistProduct(Guid userId, Guid productId) {

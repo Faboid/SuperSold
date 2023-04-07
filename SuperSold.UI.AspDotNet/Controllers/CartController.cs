@@ -26,7 +26,7 @@ public class CartController : Controller {
         var userId = User.GetIdentity();
         var products = await _cartHandler.QueryCartedProductsByUserId(userId)
             .SkipToPage(page, 3)
-            .Select(x => (Product)x)
+            .Select(x => (Product)x.Product)
             .ToListAsyncSafe();
 
         return this.ProductListPartialView(PartialViewNames.MyCartRow, products);
