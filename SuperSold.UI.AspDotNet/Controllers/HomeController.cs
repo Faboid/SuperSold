@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuperSold.Data.DBInteractions;
 using SuperSold.UI.AspDotNet.Extensions;
@@ -12,10 +14,12 @@ public class HomeController : Controller {
     private const int pageLength = 2;
     private readonly ILogger<HomeController> _logger;
     private readonly IProductsHandler _productsHandler;
+    private readonly IMapper _mapper;
 
-    public HomeController(ILogger<HomeController> logger, IProductsHandler productsHandler) {
+    public HomeController(ILogger<HomeController> logger, IProductsHandler productsHandler, IMapper mapper) {
         _logger = logger;
         _productsHandler = productsHandler;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -30,7 +34,7 @@ public class HomeController : Controller {
         var products = await _productsHandler
             .QueryAllProducts()
             .SkipToPage(page, pageLength)
-            .Select(x => (Product)x)
+            .ProjectTo<Product>(_mapper.ConfigurationProvider)
             .ToListAsyncSafe();
 
         return this.ProductListPartialView(PartialViewNames.HomeSearchRow, products);
@@ -48,7 +52,7 @@ public class HomeController : Controller {
             .QueryAllProducts()
             .Where(x => EF.Functions.Like(x.Title, searchExpression))
             .SkipToPage(page, pageLength)
-            .Select(x => (Product)x)
+            .ProjectTo<Product>(_mapper.ConfigurationProvider)
             .ToListAsyncSafe();
 
         ViewBag.SearchItem = search;

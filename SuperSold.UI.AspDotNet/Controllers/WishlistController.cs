@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using SuperSold.Data.DBInteractions;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
@@ -11,9 +14,11 @@ namespace SuperSold.UI.AspDotNet.Controllers;
 public class WishlistController : Controller {
 
     private readonly IWishlistHandler _wishlistHandler;
+    private readonly IMapper _mapper;
 
-    public WishlistController(IWishlistHandler wishlistHandler) {
+    public WishlistController(IWishlistHandler wishlistHandler, IMapper mapper) {
         _wishlistHandler = wishlistHandler;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -22,7 +27,8 @@ public class WishlistController : Controller {
         var userId = User.GetIdentity();
         var products = await _wishlistHandler.QueryWishlistedProductsByUserId(userId)
             .SkipToPage(page, 3)
-            .Select(x => (Product)x.Product)
+            .Select(x => x.Product)
+            .ProjectTo<Product>(_mapper.ConfigurationProvider)
             .ToListAsyncSafe();
 
         return this.ProductListPartialView(PartialViewNames.WishlistRow, products);
