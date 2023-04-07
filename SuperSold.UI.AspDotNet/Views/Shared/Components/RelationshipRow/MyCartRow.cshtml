@@ -4,10 +4,10 @@
 @using Microsoft.AspNetCore.Antiforgery;
 @inject IAntiforgery antiForgery;
 
-@model SuperSold.UI.AspDotNet.Models.Product
+@model SuperSold.UI.AspDotNet.Models.ProductWithSavedRelationship
 
 @{
-    string id = Model.Id.ToValidHtml();
+    string id = Model.Product.Id.ToValidHtml();
     var tokenset = antiForgery.GetAndStoreTokens(Context);
 }
 
@@ -19,22 +19,22 @@
 
     <!--image-->
     <div class="col-2 padding-tiny">
-        <img class="left-flex no-overflow" src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image"/>
+        <img class="left-flex no-overflow" src="@Html.DisplayFor(x => x.Product.UserImgUrl)" alt="Product image"/>
     </div>
 
     <div class="col-10 border-left-line padding-tiny vertical-container space-children no-overflow">
 
         <!--Title and price-->
         <div class="horizontal-container">
-            <h2 class="col-8">@Html.DisplayFor(x => x.Title)</h2>
-            <p class="col-4 text-end"><b>@Html.DisplayFor(x => x.Price)€</b></p>
+            <h2 class="col-8">@Html.DisplayFor(x => x.Product.Title)</h2>
+            <p class="col-4 text-end"><b>@Html.DisplayFor(x => x.Product.Price)€</b></p>
         </div>
 
         <!--Interactable buttons-->
         <div class="space-children horizontal-container">
             <div class="col-6">
                 <div class="counter-container">
-                    <input class="counter-text" type="number" id="counterTextInput@(id)" value="1" />
+                    <input class="counter-text" type="number" id="counterTextInput@(id)" value="@(Model.SavedRelationship.Quantity)" />
                     <button class="counter-button" type="button" id="updateCounterBtn@(id)">Update</button>
                 </div>
             </div>
@@ -51,62 +51,61 @@
 
 <script type="text/javascript">
 
-    $("updateCounterBtn@(id)").click(function() {
-
-        return; //not implemented yet
+    $("#updateCounterBtn@(id)").click(function() {
 
         var quantity = $("#counterTextInput@(id)").val();
-        console.log("Editing quantity of item '@(Model.Title)' to " + quantity);
+        console.log("Editing quantity of item '@(Model.Product.Title)' to " + quantity);
 
         $.ajax({
             url: '@(Url.SavedRelationships().ModifyQuantity())',
-            data: { "relationshipId" : "@(Model.Id)" }
-
-
+            type: 'POST',
+            headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+            data: { "relationshipId" : "@(Model.SavedRelationship.IdRelationship)", "quantity": quantity },
+            cache: false,
         }).done(function(data) {
 
-            notifyUser("Updated quantity of @(Model.Title) to " + quantity + " successfully.");
-            console.log("Updated quantity of @(Model.Title) to " + quantity + " successfully.");
+            notifyUser("Updated quantity of @(Model.Product.Title) to " + quantity + " successfully.");
+            console.log("Updated quantity of @(Model.Product.Title) to " + quantity + " successfully.");
 
         }).fail(function(error){
-            notifyUser('Failed to modify number of "@(Model.Title)"');
+            notifyUser('Failed to modify number of "@(Model.Product.Title)"');
             console.error(error);
         });
 
     });
 
     $("#moveToWishlistBtn@(id)").click(function() {
-        console.log("moving @(Model.Id) from cart to wishlist");
+        console.log("moving @(Model.Product.Id) from cart to wishlist");
 
         $.ajax({
             url: '@Url.Cart().MoveToWishlist()',
             headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
             type: 'POST',
-            data: { "productId": "@(Model.Id)" },
+            data: { "productId": "@(Model.Product.Id)" },
             cache: false,
         }).done(function(result) {
-            console.log("Moved @(Model.Id) product to wishlist." + result);
+            console.log("Moved @(Model.Product.Id) product to wishlist." + result);
             pullUp($("#@(id).item-row"));
-            $(document).trigger('moveToWishlist', ["@(Model.Id)"]);
+            $(document).trigger('moveToWishlist', ["@(Model.Product.Id)"]);
         }).fail(function(error) {
             console.warn(error);
-            notifyUser("Moving @(Model.Title) to the wishlist has failed. Error code: " + error.status);
+            notifyUser("Moving @(Model.Product.Title) to the wishlist has failed. Error code: " + error.status);
         });
 
     });
 
     $("#removeBtn@(id)").click(function() {
 
-        console.log("removing  @(Model.Id) from cart");
+        console.log("removing  @(Model.Product.Id) from cart");
         
         $.ajax({
             url: '@(Url.Cart().Remove())',
             headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
             type: 'POST',
-            data: { "productId": "@(Model.Id)",  },
+            data: { "productId": "@(Model.Product.Id)",  },
             cache: false
         }).done(function(result) {
-            console.log("successfully removed @(Model.Id) from cart");
+            console.log("successfully removed @(Model.Product.Id) from cart");
             pullUp($("#@(id).item-row"));
         }).fail(function(error) {
 

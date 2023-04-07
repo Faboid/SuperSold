@@ -1,0 +1,22 @@
+﻿@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewComponents;
+@model (string RowType, IEnumerable<ProductWithSavedRelationship> Relationships)
+
+@if(!Model.Relationships.Any()) {
+
+    <div class="btn" id="endOfSectionHeader">
+        <h3>End Of Section.</h3>
+    </div>
+
+    return;
+}
+
+@foreach(var relationship in Model.Relationships) {
+    <div class="item-row" id="@(relationship.Product.Id.ToValidHtml())" style="border:solid; border-width:2px; border-radius:5px;">
+        
+        @await Component.InvokeAsync("RelationshipRow", new {
+            rowTemplateName = Model.RowType, relationship = relationship
+        })
+
+    </div>
+}
