@@ -1,32 +1,21 @@
 ﻿using Microsoft.AspNetCore.Authentication;
-using NuGet.Protocol.Plugins;
 using OneOf;
 using OneOf.Types;
 using SuperSold.Data.Models.ResponseTypes;
 using SuperSold.Identification;
-using SuperSold.UI.AspDotNet.Constants;
 using System.Security.Claims;
 using static SuperSold.Identification.Authenticator;
 
 namespace SuperSold.UI.AspDotNet.Services;
 
-public interface IAuthService {
-
-    Task<OneOf<Success, AlreadyExists>> SignUp(string username, string email, string password, bool rememberMe);
-    Task<OneOf<Success, NotFound, WrongPassword>> Login(string username, string password, bool rememberMe);
-    Task Logout();
-    Task RefreshAuthCookieWithNewUserName(string username);
-
-}
-
 public class AuthService : IAuthService {
 
-    private readonly IHttpContextAccessor _http;
+    private readonly IAuthCookieService _authCookies;
     private readonly IAuthenticator _authenticator;
 
-    public AuthService(IAuthenticator authenticator, IHttpContextAccessor http) {
+    public AuthService(IAuthenticator authenticator, IAuthCookieService authCookies) {
         _authenticator = authenticator;
-        _http = http;
+        _authCookies = authCookies;
     }
 
     public async Task<OneOf<Success, NotFound, WrongPassword>> Login(string username, string password, bool rememberMe) {
@@ -38,7 +27,7 @@ public class AuthService : IAuthService {
         }
 
         var authProps = BuildAuthProps(rememberMe);
-        await _http.HttpContext!.SignInAsync(Cookies.Auth, principal, authProps);
+        await _authCookies.Login(principal, authProps);
         return new Success();
 
     }
@@ -52,17 +41,17 @@ public class AuthService : IAuthService {
         }
 
         var authProps = BuildAuthProps(rememberMe);
-        await _http.HttpContext!.SignInAsync(Cookies.Auth, principal, authProps);
+        await _authCookies.Login(principal, authProps);
         return new Success();
 
     }
 
-    public async Task Logout() => await _http.HttpContext!.SignOutAsync(Cookies.Auth);
+    public async Task Logout() => await _authCookies.Logout();
 
     public async Task RefreshAuthCookieWithNewUserName(string username) {
 
-        var features = _http.HttpContext!.Features.Get<IAuthenticateResultFeature>()?.AuthenticateResult?.Properties;
-        var principal = _http.HttpContext.User;
+        var features = _authCookies.GetProperties();
+        var principal = _authCookies.GetPrincipal();
         
         await Logout();
 
@@ -78,7 +67,7 @@ public class AuthService : IAuthService {
         var newClaim = new Claim(ClaimTypes.Name, username);
         identity.AddClaim(newClaim);
 
-        await _http.HttpContext.SignInAsync(Cookies.Auth, principal, features ?? new());
+        await _authCookies.Login(principal, features);
 
     }
 

@@ -8,6 +8,7 @@ public static class AddAuthenticationHelpersHostBuilderExtensions {
 
     public static void AddAuthenticationHelpers(this IServiceCollection services) {
 
+        services.AddScoped<IAuthCookieService, AuthCookieService>();
         services.AddScoped<IAuthenticator, Authenticator>();
         services.AddScoped<IAuthService, AuthService>();
 
