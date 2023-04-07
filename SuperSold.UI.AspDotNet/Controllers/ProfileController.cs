@@ -9,9 +9,6 @@ using SuperSold.UI.AspDotNet.Constants;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
 using SuperSold.UI.AspDotNet.Services;
-using System.Net;
-using System.Security.Claims;
-using static SuperSold.Identification.Authenticator;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class ProfileController : Controller {
