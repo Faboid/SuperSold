@@ -34,8 +34,8 @@
         <div class="space-children horizontal-container">
             <div class="col-6">
                 <div class="counter-container">
-                    <input class="counter-text" type="number" id="counterTextInput" value="1" />
-                    <button class="counter-button" type="button" id="updateCounterBtn">Update</button>
+                    <input class="counter-text" type="number" id="counterTextInput@(id)" value="1" />
+                    <button class="counter-button" type="button" id="updateCounterBtn@(id)">Update</button>
                 </div>
             </div>
 
@@ -50,6 +50,30 @@
 </div>
 
 <script type="text/javascript">
+
+    $("updateCounterBtn@(id)").click(function() {
+
+        return; //not implemented yet
+
+        var quantity = $("#counterTextInput@(id)").val();
+        console.log("Editing quantity of item '@(Model.Title)' to " + quantity);
+
+        $.ajax({
+            url: '@(Url.SavedRelationships().ModifyQuantity())',
+            data: { "relationshipId" : "@(Model.Id)" }
+
+
+        }).done(function(data) {
+
+            notifyUser("Updated quantity of @(Model.Title) to " + quantity + " successfully.");
+            console.log("Updated quantity of @(Model.Title) to " + quantity + " successfully.");
+
+        }).fail(function(error){
+            notifyUser('Failed to modify number of "@(Model.Title)"');
+            console.error(error);
+        });
+
+    });
 
     $("#moveToWishlistBtn@(id)").click(function() {
         console.log("moving @(Model.Id) from cart to wishlist");
