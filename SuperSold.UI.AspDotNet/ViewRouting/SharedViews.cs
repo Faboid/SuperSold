@@ -18,4 +18,8 @@ public static class SharedViews {
         return controller.PartialView("_RelationshipListPartialView", (rowType, products));
     }
 
+    public static IActionResult RelationshipListPartialView(this Controller controller, string rowType, ProductWithSavedRelationship product) {
+        return controller.RelationshipListPartialView(rowType, new ProductWithSavedRelationship[] { product });
+    }
+
 }
