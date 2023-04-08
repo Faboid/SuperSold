@@ -43,6 +43,39 @@ function loadProductInScrollable(productId, scrollable, itemRowFormat) {
 }
 
 /**
+ * Loads product item row with the given format in the scrollable.
+ * 
+ * @param {GUID} relationshipId
+ * @param {ScrollableObjectInfo} scrollable
+ * @param {string} itemRowFormat
+ */
+function loadSavedRelationshipInScrollable(relationshipId, scrollable, itemRowFormat) {
+
+    $.ajax({
+        url: "/SavedRelationships/Get",
+        type: 'GET',
+        data: { "relationshipId": relationshipId, "itemRowFormat": itemRowFormat },
+        dataType: "html",
+        cache: true,
+    }).done(function (result) {
+
+        console.log("Successfully retrieved relationship " + relationshipId);
+        scrollable.append(result);
+        onScrollableChanged(scrollable);
+
+    }).fail(function (error) {
+
+        if (error.status == 404) {
+            console.log("The relationship " + relationshipId + " is missing!");
+            return;
+        }
+
+        console.warn("Failed retrieving item id: " + relationshipId + "\n" + error);
+    });
+
+}
+
+/**
  * Loads an additional page for the given scrollable.
  * 
  * @param {any} scrollableInfo

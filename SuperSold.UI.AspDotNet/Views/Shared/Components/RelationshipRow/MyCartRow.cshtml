@@ -86,7 +86,7 @@
         }).done(function(result) {
             console.log("Moved @(Model.Product.Id) product to wishlist." + result);
             pullUp($("#@(id).item-row"));
-            $(document).trigger('moveToWishlist', ["@(Model.Product.Id)"]);
+            $(document).trigger('moveToWishlist', ["@(Model.SavedRelationship.IdRelationship)"]);
         }).fail(function(error) {
             console.warn(error);
             notifyUser("Moving @(Model.Product.Title) to the wishlist has failed. Error code: " + error.status);

@@ -56,7 +56,7 @@
 
             console.log("Moved @(Model.Product.Id) from wishlist to cart successfully.");
             pullUp($("#@(id).item-row"));
-            $(document).trigger('moveToCart', ["@(Model.Product.Id)"]);
+            $(document).trigger('moveToCart', ["@(Model.SavedRelationship.IdRelationship)"]);
 
         }).fail(function(response) {
 
