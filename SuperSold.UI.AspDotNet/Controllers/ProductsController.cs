@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SuperSold.Data.DBInteractions;
+using SuperSold.Data.Models;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
 using SuperSold.UI.AspDotNet.ViewRouting;
@@ -9,9 +12,11 @@ namespace SuperSold.UI.AspDotNet.Controllers;
 public class ProductsController : Controller {
 
     private readonly IProductsHandler _productsHandler;
+    private readonly IMapper _mapper;
 
-    public ProductsController(IProductsHandler productsHandler) {
+    public ProductsController(IProductsHandler productsHandler, IMapper mapper) {
         _productsHandler = productsHandler;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -26,7 +31,7 @@ public class ProductsController : Controller {
 
         var listProducts = await _productsHandler
             .QueryProductsBySellerId(userId)
-            .Select(x => (Product)x)
+            .ProjectTo<Product>(_mapper.ConfigurationProvider)
             .SkipToPage(page, 10)
             .ToListAsyncSafe();
 
@@ -52,7 +57,7 @@ public class ProductsController : Controller {
         product.Id = Guid.NewGuid();
         product.SellerId = sellerId;
 
-        var result = await _productsHandler.CreateProduct(product, user);
+        var result = await _productsHandler.CreateProduct(_mapper.Map<ProductModel>(product), user);
 
         return result.Match<IActionResult>(
             success => Redirect("MyProducts"),
@@ -102,7 +107,7 @@ public class ProductsController : Controller {
             return new UnauthorizedResult();
         }
 
-        return View((Product)model);
+        return View(_mapper.Map<Product>(model));
 
     }
 
@@ -119,7 +124,7 @@ public class ProductsController : Controller {
             return new UnauthorizedResult();
         }
 
-        var result = await _productsHandler.EditProduct(model.Id, model);
+        var result = await _productsHandler.EditProduct(model.Id, _mapper.Map<ProductModel>(model));
         return result.Match<IActionResult>(
             success => RedirectToAction("MyProducts"),
             notFound => NotFound()
@@ -136,7 +141,7 @@ public class ProductsController : Controller {
             return NotFound();
         }
 
-        return this.ProductListPartialView(itemRowFormat, product);
+        return this.ProductListPartialView(itemRowFormat, _mapper.Map<Product>(product));
 
     }
 

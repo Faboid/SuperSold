@@ -14,8 +14,9 @@ builder.Services.AddAuthentication(Cookies.Auth).AddCookie(Cookies.Auth, options
     options.Cookie.Name = Cookies.Auth;
 });
 
-builder.Services.AddAntiforgery();
+builder.Services.AddAutoMapper();
 
+builder.Services.AddAntiforgery();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

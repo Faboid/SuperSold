@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SuperSold.Data.DBInteractions;
 using SuperSold.UI.AspDotNet.Extensions;
@@ -12,9 +14,11 @@ namespace SuperSold.UI.AspDotNet.Controllers;
 public class CartController : Controller {
 
     private readonly ICartHandler _cartHandler;
+    private readonly IMapper _mapper;
 
-    public CartController(ICartHandler cartHandler) {
+    public CartController(ICartHandler cartHandler, IMapper mapper) {
         _cartHandler = cartHandler;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -26,10 +30,10 @@ public class CartController : Controller {
         var userId = User.GetIdentity();
         var products = await _cartHandler.QueryCartedProductsByUserId(userId)
             .SkipToPage(page, 3)
-            .Select(x => (Product)x.Product)
+            .ProjectTo<ProductWithSavedRelationship>(_mapper.ConfigurationProvider)
             .ToListAsyncSafe();
 
-        return this.ProductListPartialView(PartialViewNames.MyCartRow, products);
+        return this.RelationshipListPartialView(PartialViewNames.MyCartRow, products);
     }
 
     [HttpGet]
