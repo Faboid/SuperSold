@@ -27,11 +27,10 @@ public class WishlistController : Controller {
         var userId = User.GetIdentity();
         var products = await _wishlistHandler.QueryWishlistedProductsByUserId(userId)
             .SkipToPage(page, 3)
-            .Select(x => x.Product)
-            .ProjectTo<Product>(_mapper.ConfigurationProvider)
+            .ProjectTo<ProductWithSavedRelationship>(_mapper.ConfigurationProvider)
             .ToListAsyncSafe();
 
-        return this.ProductListPartialView(PartialViewNames.WishlistRow, products);
+        return this.RelationshipListPartialView(PartialViewNames.WishlistRow, products);
     }
 
     [HttpPost]
