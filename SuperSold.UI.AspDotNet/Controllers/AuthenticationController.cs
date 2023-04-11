@@ -23,14 +23,14 @@ public class AuthenticationController : Controller {
     public async Task<IActionResult> SignUp(SignUpModel model) {
 
         if(!ModelState.IsValid) {
-            return View();
+            return BadRequest();
         }
 
         var result = await _authService.SignUp(model.UserName, model.Email, model.Password, model.RememberMe);
 
         return result.Match(
             success => Redirect("/Home"),
-            alreadyExists => ErrorMessageAndRetry("The given username is already in use.")
+            alreadyExists => ErrorMessageAndRetry("The given username is already in use.", Conflict())
         );
 
     }
@@ -51,8 +51,8 @@ public class AuthenticationController : Controller {
 
         return result.Match(
             success => Redirect("/Home"),
-            notFound => ErrorMessageAndRetry("The given username does not exist."),
-            wrongPass => ErrorMessageAndRetry("The given password is incorrect.")
+            notFound => ErrorMessageAndRetry("The given username does not exist.", NotFound()),
+            wrongPass => ErrorMessageAndRetry("The given password is incorrect.", BadRequest())
         );
 
     }
@@ -62,9 +62,9 @@ public class AuthenticationController : Controller {
         return Redirect("/Home");
     }
 
-    private IActionResult ErrorMessageAndRetry(string message) {
+    private IActionResult ErrorMessageAndRetry(string message, IActionResult error) {
         ViewBag.Message = message;
-        return View();
+        return error;
     }
 
 }

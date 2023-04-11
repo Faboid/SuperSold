@@ -1,47 +1,57 @@
-﻿@model SuperSold.UI.AspDotNet.Models.SignUpModel
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+@model SuperSold.UI.AspDotNet.Models.SignUpModel
 
 @{
     ViewData["Title"] = "Sign Up";
 }
+
+<style>
+
+    .checkmarkContainer {
+        
+    }
+
+</style>
 
 <h1>Sign Up</h1>
 
 <hr/>
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="SignUp">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+        <form action="#" id="signupForm">
+
+            <div>
+                <label for="username">Username: </label>
+                <input type="text" name="username" class="form-control" />
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+
+            <div>
+                <label for="email">Email: </label>
+                <input type="email" name="email" class="form-control" />
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+
+            <div>
+                <label for="password">Password: </label>
+                <input type="password" name="password" class="form-control" id="passwordField"/>
             </div>
-            <div class="form-group">
-                <label asp-for="RepeatPassword" class="control-label"></label>
-                <input asp-for="RepeatPassword" class="form-control" />
-                <span asp-validation-for="RepeatPassword" class="text-danger"></span>
+
+            <div>
+                <label for="repeatPassword">Confirm Password: </label>
+                <input type="password" name="repeatPassword" class="form-control" />
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="AcceptTerms"/>
-                        I agree with the <a asp-controller="Home" asp-action="TermsAndConditions">terms and conditions</a>, 
-                        <a asp-controller="Home" asp-action="Privacy">privacy agreement</a>, and
-                        understand that everything I provide is not guaranteed to be protected by data breaches.
+
+            <div class="checkmarkContainer">
+                <label class="form-check-label" for="acceptTerms">
+                    <input type="checkbox" name="acceptTerms" class="form-check-input" />
+                    I agree with the <a asp-controller="Home" asp-action="TermsAndConditions">terms and conditions</a>,
+                    <a asp-controller="Home" asp-action="Privacy">privacy agreement</a>, and
+                    understand that everything I provide is not guaranteed to be protected by data breaches.
                 </label>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
+
+            <div class="form-group form-check checkmarkContainer">
+                <label class="form-check-label" for="rememberMe">
+                    <input type="checkbox" name="rememberMe" class="form-check-input" /> Remember Me
                 </label>
             </div>
 
@@ -52,7 +62,7 @@
             }
 
             <div class="form-group">
-                <input type="submit" value="SignUp" class="btn btn-primary" />
+                <input type="submit" value="SignUp" class="btn btn-primary" id="submitSignupForm"/>
             </div>
         </form>
     </div>
@@ -61,3 +71,62 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+
+    $("#submitSignupForm").click(function() {
+
+        $("#signupForm").validate({
+            rules: {
+                username: {
+                    required: true
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 8
+                },
+                repeatPassword: {
+                    required: true,
+                    equalTo: $("#passwordField")
+                },
+                acceptTerms: {
+                    required: true
+                }
+            },
+            messages: {
+                repeatPassword: "Must confirm the given password.",
+                acceptTerms: "Must accept the terms to continue."
+            },
+            submitHandler: function(form) { submitSignup(form); }
+        });
+
+    });
+
+    function submitSignup(form) {
+
+        var data = $(form).serialize();
+
+        var indexCheckMarks = data.lastIndexOf("acceptTerms");
+        var split = data.substring(indexCheckMarks).replaceAll("on", "true");
+        data = data.substring(0, indexCheckMarks) + split;
+
+        $.ajax({
+            url: '@(Url.Authentication().SignUp())',
+            type: 'POST',
+            data: data,
+            cache: false
+        }).done(function(data) {
+            console.log("Signed up successfully.")
+            window.location = '@Url.Home().Index()';
+        }).fail(function(error) {
+            notifyUser("There has been a problem trying to sign up.");
+            console.error(error);
+        });
+
+    }
+
+</script>
