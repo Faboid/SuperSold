@@ -12,6 +12,7 @@ public static class RoutesBuilder {
     public static HomeRoutes Home(this IUrlHelper urlHelper) => new(urlHelper);
     public static ProductsRoutes Products(this IUrlHelper urlHelper) => new(urlHelper);
     public static SavedRelationshipsRoutes SavedRelationships(this IUrlHelper urlHelper) => new(urlHelper);
+    public static PurchaseRoutes Purchase(this IUrlHelper urlHelper) => new(urlHelper);
 
 }
 
