@@ -1,0 +1,15 @@
+﻿@using SuperSold.UI.AspDotNet.ViewRouting.PartialViews;
+
+<h1>Title here</h1>
+
+<div>
+    @await Html.PartialPurchase().RenderShippingInformationRequestView()
+</div>
+
+<div>
+    @await Html.PartialPurchase().RenderCreditCardRequestView()
+</div>
+
+<div>
+    @await Html.PartialPurchase().RenderFinalConfirmationView()
+</div>
