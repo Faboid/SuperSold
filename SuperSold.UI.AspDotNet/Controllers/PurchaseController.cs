@@ -1,9 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SuperSold.Data.DBInteractions;
+using SuperSold.UI.AspDotNet.Extensions;
+using SuperSold.UI.AspDotNet.Models;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
+
+[Authorize]
+[AutoValidateAntiforgeryToken]
 public class PurchaseController : Controller {
-    public IActionResult Index() {
-        return View();
+
+    private readonly ICartHandler _cartHandler;
+    private readonly IMapper _mapper;
+
+    public PurchaseController(ICartHandler cartHandler, IMapper mapper) {
+        _cartHandler = cartHandler;
+        _mapper = mapper;
+    }
+
+    public async Task<IActionResult> Index() {
+
+        var userId = User.GetIdentity();
+        var list = await _cartHandler
+            .QueryCartedProductsByUserId(userId)
+            .ProjectTo<ProductWithSavedRelationship>(_mapper.ConfigurationProvider)
+            .ToListAsyncSafe();
+
+        return View(list);
     }
 
 }
