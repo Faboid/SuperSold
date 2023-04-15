@@ -66,6 +66,7 @@
     <div class="profile-dropdown-content vertical-container" id="profileDropdownContent">
         <button class="profile-dropdown-line" type="button" id="profileNavBtn">Profile</button>
         <button class="profile-dropdown-line" type="button" id="cartNavBtn">Cart</button>
+        <button class="profile-dropdown-line" type="button" id="purchaseNavBtn">Purchase Cart</button>
         <button class="profile-dropdown-line" type="button" id="myProductsNavBtn">My Products</button>
         <button class="profile-dropdown-line" type="button" id="logoutNavBtn">Logout</button>
     </div>
@@ -99,6 +100,10 @@
 
     $("#cartNavBtn").click(function () {
         window.location.href = '@(Url.Cart().Index())';
+    });
+
+    $("#purchaseNavBtn").click(function() {
+        window.location.href = '@(Url.Purchase().Index())';
     });
 
     $("#myProductsNavBtn").click(function () {
