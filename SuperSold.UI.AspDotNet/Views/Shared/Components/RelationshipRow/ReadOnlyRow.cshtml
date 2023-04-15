@@ -1,7 +1,21 @@
 ﻿@model ProductWithSavedRelationship
 
-<div>
+<div class="container-fluid item-row-container horizontal-container">
 
-    <h1>@Model.Product.Title</h1>
+    <!--image column-->
+    <div class="col-2 padding-tiny">
+        <img class="left-flex no-overflow" src="@Html.DisplayFor(x => x.Product.UserImgUrl)" alt="Product image" />
+    </div>
+
+    <!--Description-->
+    <div class="col-8 space-children no-overflow border-left-line padding-small">
+        <h2 class="">@Html.DisplayFor(x => x.Product.Title)</h2>
+        <p class="">@Html.DisplayFor(x => x.Product.Description)</p>
+    </div>
+
+    <!--Price-->
+    <div class="col-2 padding-tiny">
+        <p class="text-end"><b>@Html.DisplayFor(x => x.Product.Price)€</b></p>
+    </div>
 
 </div>

@@ -1,5 +1,6 @@
 ﻿@model List<ProductWithSavedRelationship>
 @using SuperSold.UI.AspDotNet.ViewRouting.PartialViews;
+@using SuperSold.UI.AspDotNet.ViewRouting;
 
 <style>
 
@@ -8,6 +9,12 @@
         background: rgba(100, 100, 100, 0.2);
         border:solid 1px black;
         border-radius:20px;
+    }
+
+    .products-area {
+        max-height:45vh;
+        overflow:clip;
+        overflow-y:scroll;
     }
 
 </style>
@@ -98,15 +105,9 @@
 
             <!--Carted products area-->
             <div class="section-area">
-                @foreach(var item in Model) {
-                    <div>
-
-                        @await Component.InvokeAsync("RelationshipRow", new {
-                            rowTemplateName = "ReadOnlyRow", relationship = item
-                        })
-
-                    </div>
-                }
+                <div class="products-area">
+                    @await Html.RelationshipListPartialView("ReadOnlyRow", Model)
+                </div>
             </div>
 
         </div>
