@@ -10,6 +10,6 @@ public class PurchaseRoutes {
         _urlHelper = urlHelper;
     }
 
-    public string? Index() => _urlHelper.Action("Index", "Products");
+    public string? Index() => _urlHelper.Action("Index", "Purchase");
 
 }
