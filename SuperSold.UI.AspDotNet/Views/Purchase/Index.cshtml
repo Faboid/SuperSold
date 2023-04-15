@@ -138,7 +138,7 @@
             <div class="section-area">
 
                 <span>Total: @(Model.Sum(x => x.SavedRelationship.Quantity * x.Product.Price))€</span>
-                <input type="button" id="submitPurchaseBtn" value="Confirm Purchase" /> 
+                <input type="submit" id="submitPurchaseBtn" value="Confirm Purchase" /> 
 
             </div>
 
@@ -148,4 +148,59 @@
 
 </form>
 
+<script type="text/javascript">
 
+    $("#submitPurchaseBtn").click(function() {
+
+        var result = $("#purchaseForm").validate({
+            debug:true,
+            rules: {
+                warningCheckbox: {
+                    required: true
+                },
+                fullname: {
+                    required: true
+                },
+                city: {
+                    required: true
+                },
+                address: {
+                    required: true
+                },
+                state: {
+                    required: true
+                },
+                postalCode: {
+                    required: true
+                },
+                phoneNumber: {
+                    required: true
+                },
+                cardNumber: {
+                    required: true
+                },
+                nameCard: {
+                    required: true
+                },
+                expirationDate: {
+                    required: true
+                }
+            },
+            messages: {
+                warningCheckbox: "Must accept."
+            },
+            submitHandler: function (form) { submitPurchase(form); }
+        });
+
+        console.log(result);
+
+    });
+
+    function submitPurchase(form) {
+
+        var data = $(form).serialize();
+        console.log(data);
+
+    }
+
+</script>
