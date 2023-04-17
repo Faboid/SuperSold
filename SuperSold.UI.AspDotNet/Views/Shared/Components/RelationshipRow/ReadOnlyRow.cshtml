@@ -14,8 +14,9 @@
     </div>
 
     <!--Price-->
-    <div class="col-2 padding-tiny">
+    <div class="col-2 padding-tiny vertical-container space-children">
         <p class="text-end"><b>@Html.DisplayFor(x => x.Product.Price)€</b></p>
+        <span class="text-end">Quantity: @Html.DisplayFor(x => x.SavedRelationship.Quantity)</span>
     </div>
 
 </div>
