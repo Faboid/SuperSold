@@ -31,4 +31,12 @@ public class PurchaseController : Controller {
         return View(list);
     }
 
+    [HttpPost]
+    public Task<IActionResult> SubmitPurchase(PurchaseInfoModel info, string products) {
+
+        var objProducts = products.Split(',').Select(ProductWithSavedRelationship.ParseBasicString).ToList();
+
+        throw new NotImplementedException();
+    }
+
 }

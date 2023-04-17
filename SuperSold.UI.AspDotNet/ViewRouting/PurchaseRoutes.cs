@@ -11,5 +11,6 @@ public class PurchaseRoutes {
     }
 
     public string? Index() => _urlHelper.Action("Index", "Purchase");
+    public string? SubmitPurchase() => _urlHelper.Action("SubmitPurchase", "Purchase");
 
 }

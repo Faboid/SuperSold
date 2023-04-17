@@ -1,5 +1,8 @@
 ﻿@model List<ProductWithSavedRelationship>
+@using Microsoft.AspNetCore.Antiforgery;
+@using SuperSold.UI.AspDotNet.Extensions;
 @using SuperSold.UI.AspDotNet.ViewRouting;
+@inject IAntiforgery antiForgery;
 
 <style>
 
@@ -17,6 +20,10 @@
     }
 
 </style>
+
+@{
+    var tokenset = antiForgery.GetAndStoreTokens(Context);
+}
 
 @*
 
@@ -199,8 +206,29 @@
     function submitPurchase(form) {
 
         var data = $(form).serialize();
-        console.log(data);
+        data += "&products=" + encodeURIComponent(productlist);
+        data = data.replace("on", "true");
+
+        $.ajax({
+            url: '@Url.Purchase().SubmitPurchase()',
+            headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+            data: data,
+            type: 'POST',
+            cache: false,
+        }).done(function(data) {
+
+            notifyUser("Your request has been completed successfully! A 'track order' functionality has not been implemented, as everything is only simulated. Thanks for trying out this site!");
+            console.log("Purchase completed");
+            console.log(data);
+            window.location = '@Url.Home().Index()';
+
+        }).fail(function(error) {
+            notifyUser("There has been an error processing your request. Error code:" + error.statusCode);
+            console.warn(error);
+        });
 
     }
+
+    const productlist = "@(Model.Select(x => x.ToBasicString()).JoinAsStrings(','))";
 
 </script>
