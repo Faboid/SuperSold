@@ -206,6 +206,7 @@
     function submitPurchase(form) {
 
         var data = $(form).serialize();
+        data += "&price=" + '@(Model.Sum(x => x.SavedRelationship.Quantity * x.Product.Price))';
         data += "&products=" + encodeURIComponent(productlist);
         data = data.replace("on", "true");
 
@@ -217,13 +218,13 @@
             cache: false,
         }).done(function(data) {
 
-            notifyUser("Your request has been completed successfully! A 'track order' functionality has not been implemented, as everything is only simulated. Thanks for trying out this site!");
+            alert("Your request has been received! A 'track order' functionality has not been implemented, as everything is only simulated. Thanks for trying out this site!");
             console.log("Purchase completed");
             console.log(data);
             window.location = '@Url.Home().Index()';
 
         }).fail(function(error) {
-            notifyUser("There has been an error processing your request. Error code:" + error.statusCode);
+            notifyUser("There has been an error processing your request. Error code: " + error.statusCode + " Error Response: " + error.message);
             console.warn(error);
         });
 
