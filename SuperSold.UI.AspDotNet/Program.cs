@@ -7,14 +7,16 @@ var connectionString = builder.Configuration.GetConnectionString("MySql") ?? thr
 // Add services to the container.
 //builder.Services.AddMemoryDatabase();
 builder.Services.AddMySqlDatabase(connectionString);
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthenticationHelpers();
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(Cookies.Auth).AddCookie(Cookies.Auth, options => {
     options.Cookie.Name = Cookies.Auth;
 });
 
-builder.Services.AddAntiforgery();
+builder.Services.AddAutoMapper();
 
+builder.Services.AddAntiforgery();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

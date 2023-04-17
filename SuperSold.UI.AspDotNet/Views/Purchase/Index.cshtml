@@ -1,0 +1,235 @@
+﻿@model List<ProductWithSavedRelationship>
+@using Microsoft.AspNetCore.Antiforgery;
+@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewRouting;
+@inject IAntiforgery antiForgery;
+
+<style>
+
+    .section-area {
+        padding:15px;
+        background: rgba(100, 100, 100, 0.2);
+        border:solid 1px black;
+        border-radius:20px;
+    }
+
+    .products-area {
+        max-height:45vh;
+        overflow:clip;
+        overflow-y:scroll;
+    }
+
+</style>
+
+@{
+    var tokenset = antiForgery.GetAndStoreTokens(Context);
+}
+
+@*
+
+//checkmark - confirm understand that it's not real
+
+//Address Information:
+- Name
+- State
+- City
+- Postal Code
+- Address
+- PhoneNumber
+
+//Card Information:
+- Card Number
+- Name on card
+- Expiration date
+
+*@
+
+<form action="#" id="purchaseForm">
+
+    <!--Warning section-->
+    <div class="section-area">
+
+        <p>None of the information written below will be stored, and the purchase will only be simulated. This site has been made for learning purposes, and nothing is truly on sale. Said that, the data you type is still sent on purchase confirm, so please use wrong/fake information. Its validity is not actually checked.</p>
+        <label for="warningCheckbox">
+            <input type="checkbox" class="form-check-input" name="warningCheckbox"/>
+            I understand everything written above.
+        </label>
+
+    </div>
+
+    <br/>
+
+    <div class="horizontal-container" style="margin:0px;padding:0px;">
+
+        <!--Left column-->
+        <div class="col-8">
+
+            <!--Shipping information area-->
+            <div class="horizontal-container section-area">
+
+                <div class="col-5">
+
+                    <div>
+                        <label for="fullname">Name</label>
+                        <input type="text" name="fullname" class="form-control"/>
+                    </div>
+
+                    <div>
+                        <label for="city">City</label>
+                        <input type="text" name="city" class="form-control" />
+                    </div>
+
+                    <div>
+                        <label for="address">Address</label>
+                        <input type="text" name="address" class="form-control" />
+                    </div>
+
+                </div>
+
+                <div class="col-2"></div>
+
+                <div class="col-5">
+
+                    <div>
+                        <label for="state">State</label>
+                        <input type="text" name="state" class="form-control" />
+                    </div>
+
+                    <div>
+                        <label for="postalCode">Postal Code</label>
+                        <input type="text" name="postalCode" class="form-control" />
+                    </div>
+
+                    <div>
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="text" name="phoneNumber" class="form-control" />
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!--Carted products area-->
+            <div class="section-area">
+                <div class="products-area">
+                    @await Html.RelationshipListPartialView("ReadOnlyRow", Model)
+                </div>
+            </div>
+
+        </div>
+
+        <!--Right column-->
+        <div class="col-4">
+
+            <!--Card information-->
+            <div class="section-area">
+
+                <div>
+                    <label for="cardNumber">Card Number</label>
+                    <input type="password" name="cardNumber" class="form-control" />
+                </div>
+
+                <div>
+                    <label for="nameCard">Name on card</label>
+                    <input type="text" name="nameCard" class="form-control" />
+                </div>
+
+                <div>
+                    <label for="expirationDate">Expiration Date</label>
+                    <input type="month" name="expirationDate"/>
+                </div>
+
+            </div>
+
+            <!--Confirm purchase area-->
+            <div class="section-area">
+
+                <span>Total: @(Model.Sum(x => x.SavedRelationship.Quantity * x.Product.Price))€</span>
+                <input type="submit" id="submitPurchaseBtn" value="Confirm Purchase" /> 
+
+            </div>
+
+        </div>
+
+    </div>
+
+</form>
+
+<script type="text/javascript">
+
+    $("#submitPurchaseBtn").click(function() {
+
+        var result = $("#purchaseForm").validate({
+            debug:true,
+            rules: {
+                warningCheckbox: {
+                    required: true
+                },
+                fullname: {
+                    required: true
+                },
+                city: {
+                    required: true
+                },
+                address: {
+                    required: true
+                },
+                state: {
+                    required: true
+                },
+                postalCode: {
+                    required: true
+                },
+                phoneNumber: {
+                    required: true
+                },
+                cardNumber: {
+                    required: true
+                },
+                nameCard: {
+                    required: true
+                },
+                expirationDate: {
+                    required: true
+                }
+            },
+            messages: {
+                warningCheckbox: "Must accept."
+            },
+            submitHandler: function (form) { submitPurchase(form); }
+        });
+
+        console.log(result);
+
+    });
+
+    function submitPurchase(form) {
+
+        var data = $(form).serialize();
+        data += "&price=" + '@(Model.Sum(x => x.SavedRelationship.Quantity * x.Product.Price))';
+        data += "&products=" + encodeURIComponent(productlist);
+        data = data.replace("on", "true");
+
+        $.ajax({
+            url: '@Url.Purchase().SubmitPurchase()',
+            headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+            data: data,
+            type: 'POST',
+            cache: false,
+        }).done(function(data) {
+
+            alert("Your request has been received! A 'track order' functionality has not been implemented, as everything is only simulated. Thanks for trying out this site!");
+            console.log("Purchase completed");
+            console.log(data);
+            window.location = '@Url.Home().Index()';
+
+        }).fail(function(error) {
+            notifyUser("There has been an error processing your request. Error code: " + error.statusCode + " Error Response: " + error.message);
+            console.warn(error);
+        });
+
+    }
+
+    const productlist = "@(Model.Select(x => x.ToBasicString()).JoinAsStrings(','))";
+
+</script>

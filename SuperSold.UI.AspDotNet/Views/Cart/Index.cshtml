@@ -67,16 +67,20 @@
         $(document).on('moveToWishlist', function (e, eventInfo) {
             console.log(e);
             console.log(eventInfo);
-            loadProductInScrollable(eventInfo, wishlistScrollable, "@(PartialViewNames.WishlistRow)");
+            loadSavedRelationshipInScrollable(eventInfo, wishlistScrollable, "@(PartialViewNames.WishlistRow)");
         });
 
         $(document).off('moveToCart');
         $(document).on('moveToCart', function (e, eventInfo) {
             console.log(e);
             console.log(eventInfo);
-            loadProductInScrollable(eventInfo, cartScrollable, "@(PartialViewNames.MyCartRow)");
+            loadSavedRelationshipInScrollable(eventInfo, cartScrollable, "@(PartialViewNames.MyCartRow)");
         });
 
     }
+
+    $("#buyButton").click(function() {
+        window.location = "@(Url.Purchase().Index())";
+    });
 
 </script>

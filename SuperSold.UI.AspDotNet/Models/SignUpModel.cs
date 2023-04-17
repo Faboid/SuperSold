@@ -26,7 +26,6 @@ public class SignUpModel {
 
     //todo - implement custom "must be true" attribute
     [Required]
-    //[Range(typeof(bool), "true", "true", ErrorMessage = "Must agree to the terms to continue.")]
     public bool AcceptTerms { get; set; }
 
     public bool RememberMe { get; set; }

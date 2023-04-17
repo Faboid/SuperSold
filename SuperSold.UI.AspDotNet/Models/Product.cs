@@ -1,5 +1,4 @@
-﻿using SuperSold.Data.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace SuperSold.UI.AspDotNet.Models;
 
@@ -19,27 +18,5 @@ public class Product {
 
     [Range(0, double.MaxValue, ErrorMessage = "Must be a positive price.")]
     public required decimal Price { get; set; }
-
-    public static implicit operator Product(ProductModel model) {
-        return new Product() {
-            Id = model.IdProduct,
-            SellerId = model.IdSellerAccount,
-            UserImgUrl = model.ImageUrl ?? "",
-            Title = model.Title,
-            Description = model.Description,
-            Price = model.Price
-        };
-    }
-
-    public static implicit operator ProductModel(Product product) {
-        return new ProductModel() {
-            IdProduct = product.Id,
-            IdSellerAccount = product.SellerId,
-            ImageUrl = product.UserImgUrl,
-            Title = product.Title,
-            Description = product.Description,
-            Price = product.Price
-        };
-    }
 
 }

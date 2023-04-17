@@ -17,4 +17,3 @@ public class ProductModel {
     public required decimal Price { get; set; }
 
 }
-

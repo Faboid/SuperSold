@@ -1,23 +1,26 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using OneOf;
+using OneOf.Types;
 using SuperSold.Data.DBInteractions;
 using SuperSold.Data.Extensions;
 using SuperSold.Identification;
 using SuperSold.UI.AspDotNet.Constants;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
-using System.Net;
-using System.Security.Claims;
+using SuperSold.UI.AspDotNet.Services;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class ProfileController : Controller {
 
     private readonly IAccountsHandler _accountsHandler;
+    private readonly IAuthService _authService;
     private readonly IAuthenticator _authenticator;
 
-    public ProfileController(IAccountsHandler accountsHandler, IAuthenticator authenticator) {
+    public ProfileController(IAccountsHandler accountsHandler, IAuthenticator authenticator, IAuthService authService) {
         _accountsHandler = accountsHandler;
         _authenticator = authenticator;
+        _authService = authService;
     }
 
     public async Task<IActionResult> Index() {
@@ -40,21 +43,20 @@ public class ProfileController : Controller {
     [HttpPost]
     public async Task<IActionResult> RenameAccount(string username, string password) {
 
-        var currUsername = User.Identity!.Name!;
-        var passwordCheck = await _authenticator.Login(currUsername, password);
+        var userId = User.GetIdentity();
+        var passwordCheck = await _authenticator.Verify(userId, password);
 
-        if(!passwordCheck.TryPickT0(out var cookies, out var remainder)) {
+        if(!passwordCheck.TryPickT0(out var _, out var remainder)) {
             return remainder.Match<IActionResult>(
                 notfound => NotFound(),
                 wrongpassword => BadRequest("The given password is wrong.")
             );
         }
 
-        var userId = User.GetIdentity();
         var result = await _accountsHandler.RenameAccount(userId, username);
 
         return await result.Match<Task<IActionResult>>(
-            async success => await RefreshAuthCookiesAndReturnOk(cookies, username),
+            async success => await RefreshAuthCookiesAndReturnOk(username),
             async notfound => await NotFound().AsTask(),
             async alredyExists => await BadRequest("The new username is already in use.").AsTask()
         );
@@ -130,25 +132,8 @@ public class ProfileController : Controller {
 
     }
 
-    private async Task<IActionResult> RefreshAuthCookiesAndReturnOk(ClaimsPrincipal principal, string newname) {
-
-        var features = HttpContext.Features.Get<IAuthenticateResultFeature>()?.AuthenticateResult?.Properties;
-
-        await HttpContext.SignOutAsync(Cookies.Auth);
-        if(principal.Identity is not ClaimsIdentity identity) {
-            throw new Exception();
-        }
-
-        var oldName = identity.FindFirst(ClaimTypes.Name);
-        if(oldName != null) {
-            identity.RemoveClaim(oldName);
-        }
-
-        var newClaim = new Claim(ClaimTypes.Name, newname);
-        identity.AddClaim(newClaim);
-
-        await HttpContext.SignInAsync(Cookies.Auth, principal, features ?? new());
-
+    private async Task<IActionResult> RefreshAuthCookiesAndReturnOk(string newname) {
+        await _authService.RefreshAuthCookieWithNewUserName(newname);
         return Ok();
     }
 

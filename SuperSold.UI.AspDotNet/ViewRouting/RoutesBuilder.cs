@@ -11,23 +11,20 @@ public static class RoutesBuilder {
     public static AuthenticationRoutes Authentication(this IUrlHelper urlHelper) => new(urlHelper);
     public static HomeRoutes Home(this IUrlHelper urlHelper) => new(urlHelper);
     public static ProductsRoutes Products(this IUrlHelper urlHelper) => new(urlHelper);
+    public static SavedRelationshipsRoutes SavedRelationships(this IUrlHelper urlHelper) => new(urlHelper);
+    public static PurchaseRoutes Purchase(this IUrlHelper urlHelper) => new(urlHelper);
 
 }
 
-public class ProfileRoutes {
+public class SavedRelationshipsRoutes {
 
     private readonly IUrlHelper _urlHelper;
-    private const string _controllerName = "Profile";
+    private const string _controllerName = "SavedRelationships";
 
-    public ProfileRoutes(IUrlHelper urlHelper) {
+    public SavedRelationshipsRoutes(IUrlHelper urlHelper) {
         _urlHelper = urlHelper;
     }
 
-    public string? Index() => _urlHelper.Action("Index", _controllerName);
-    public string? IsUsernameUnique() => _urlHelper.Action("IsUsernameUnique", _controllerName);
-    public string? RenameAccount() => _urlHelper.Action("RenameAccount", _controllerName);
-    public string? ChangeEmail() => _urlHelper.Action("ChangeEmail", _controllerName);
-    public string? ChangePassword() => _urlHelper.Action("ChangePassword", _controllerName);
-    public string? DeleteAccount() => _urlHelper.Action("DeleteAccount", _controllerName);
+    public string? ModifyQuantity() => _urlHelper.Action("ModifyQuantity", _controllerName);
 
 }

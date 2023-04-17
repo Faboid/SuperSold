@@ -16,11 +16,11 @@ public class EFCoreCartHandler : ICartHandler {
         _relationships = relationships;
     }
 
-    public IQueryable<ProductModel> QueryCartedProductsByUserId(Guid userId) {
+    public IQueryable<SavedRelationshipWithProduct> QueryCartedProductsByUserId(Guid userId) {
         return _relationships
             .QuerySavedRelationshipsByUserId(userId)
             .WhereIs(RelationshipType.Cart)
-            .Select(x => _context.Products.First(y => x.IdProduct == y.IdProduct));
+            .Select(x => new SavedRelationshipWithProduct(_context.Products.First(y => x.IdProduct == y.IdProduct), x));
     }
 
     public async Task<OneOf<Success, Error>> AddToCart(Guid userId, Guid productId) {

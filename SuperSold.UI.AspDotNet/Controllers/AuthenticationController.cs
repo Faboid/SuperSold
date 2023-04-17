@@ -1,18 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using SuperSold.Data.Extensions;
-using SuperSold.Identification;
 using SuperSold.UI.AspDotNet.Constants;
 using SuperSold.UI.AspDotNet.Models;
-using System.Security.Claims;
+using SuperSold.UI.AspDotNet.Services;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class AuthenticationController : Controller {
 
-    private readonly IAuthenticator _authenticator;
+    private readonly IAuthService _authService;
 
-    public AuthenticationController(IAuthenticator authenticator) {
-        _authenticator = authenticator;
+    public AuthenticationController(IAuthService authService) {
+        _authService = authService;
     }
 
     [HttpGet]
@@ -24,17 +23,14 @@ public class AuthenticationController : Controller {
     public async Task<IActionResult> SignUp(SignUpModel model) {
 
         if(!ModelState.IsValid) {
-            return View();
+            return BadRequest();
         }
 
-        var result = await _authenticator.SignUp(model.UserName, model.Email, model.Password);
-        var authProps = new AuthenticationProperties() {
-            IsPersistent = model.RememberMe
-        };
+        var result = await _authService.SignUp(model.UserName, model.Email, model.Password, model.RememberMe);
 
-        return await result.Match(
-            async principal => await LoginAndRedirect(principal, authProps),
-            alreadyExists => ErrorMessageAndRetry("The given username is already in use.").AsTask()
+        return result.Match(
+            success => Redirect("/Home"),
+            alreadyExists => ErrorMessageAndRetry("The given username is already in use.", Conflict())
         );
 
     }
@@ -51,33 +47,24 @@ public class AuthenticationController : Controller {
             return View();
         }
 
-        var result = await _authenticator.Login(login.UserName, login.Password);
+        var result = await _authService.Login(login.UserName, login.Password, login.RememberMe);
 
-        var authProps = new AuthenticationProperties() {
-            IsPersistent = login.RememberMe
-        };
-
-        return await result.Match(
-            async principal => await LoginAndRedirect(principal, authProps),
-            notFound => ErrorMessageAndRetry("The given username does not exist.").AsTask(),
-            wrongPass => ErrorMessageAndRetry("The given password is incorrect.").AsTask()
+        return result.Match(
+            success => Redirect("/Home"),
+            notFound => ErrorMessageAndRetry("The given username does not exist.", NotFound()),
+            wrongPass => ErrorMessageAndRetry("The given password is incorrect.", BadRequest())
         );
 
     }
 
     public async Task<IActionResult> Logout() {
-        await HttpContext.SignOutAsync(Cookies.Auth);
+        await _authService.Logout();
         return Redirect("/Home");
     }
 
-    private IActionResult ErrorMessageAndRetry(string message) {
+    private IActionResult ErrorMessageAndRetry(string message, IActionResult error) {
         ViewBag.Message = message;
-        return View();
-    }
-
-    private async Task<IActionResult> LoginAndRedirect(ClaimsPrincipal principal, AuthenticationProperties authProps) {
-        await HttpContext.SignInAsync(Cookies.Auth, principal, authProps);
-        return Redirect("/Home");
+        return error;
     }
 
 }
