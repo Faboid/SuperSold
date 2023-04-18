@@ -14,7 +14,7 @@ public class RollbackModel {
     public required RollbackType RollbackType { get; set; }
 
     [Column(TypeName = "varchar(250)")]
-    public required string PreviousValue { get; set; }
+    public required string Body { get; set; }
 
     [Column(TypeName = "DATETIME")]
     public required DateOnly ExpireOn { get; set; }
