@@ -79,10 +79,8 @@ public class RollbacksController : Controller {
             return NotFound("The rollback token or user id do not exist.");
         }
 
-        var oldEmail = account.Email; //todo - send email with newly-made rollback token
-
         var result = await _accountsHandler.ChangeEmail(userId, rollbackModel.Body);
-        if(result.TryPickT1(out var _, out var success)) {
+        if(result.TryPickT1(out var _, out var _)) {
             return NotFound("There has been an error finding the account to rollback the email.");
         }
 
