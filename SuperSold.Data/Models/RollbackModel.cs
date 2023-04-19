@@ -17,7 +17,7 @@ public class RollbackModel {
     public required string Body { get; set; }
 
     [Column(TypeName = "DATETIME")]
-    public required DateOnly ExpireOn { get; set; }
+    public required DateTime ExpireOn { get; set; }
 
 }
 
