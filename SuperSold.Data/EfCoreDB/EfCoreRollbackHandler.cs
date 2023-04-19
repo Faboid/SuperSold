@@ -51,11 +51,15 @@ public class EfCoreRollbackHandler : IRollbackHandler {
 
     }
 
-    public async Task<OneOf<RollbackModel, NotFound>> GetRollback(Guid userId, RollbackType type) {
+    public async Task<OneOf<RollbackModel, Unauthorized, NotFound>> GetRollback(Guid rollbackId, Guid userId, RollbackType type) {
 
-        var rollback = await _context.Rollbacks.FirstOrDefaultAsync(x => x.IdAccount == userId && x.RollbackType == type);
+        var rollback = await _context.Rollbacks.FindAsync(rollbackId);
         if(rollback is null) {
             return new NotFound();
+        }
+
+        if(rollback.IdAccount != userId || rollback.RollbackType != type) {
+            return new Unauthorized();
         }
 
         return rollback;
@@ -69,4 +73,6 @@ public class EfCoreRollbackHandler : IRollbackHandler {
     public IQueryable<RollbackModel> GetAllByUserId(Guid userId) {
         return _context.Rollbacks.Where(x => x.IdAccount == userId);
     }
+
+    public IQueryable<RollbackModel> GetAllOlderThan(DateOnly time) => throw new NotImplementedException();
 }
