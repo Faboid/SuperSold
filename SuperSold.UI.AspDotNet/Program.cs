@@ -9,6 +9,7 @@ var connectionString = builder.Configuration.GetConnectionString("MySql") ?? thr
 builder.Services.AddMySqlDatabase(connectionString);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthenticationHelpers();
+builder.Services.AddEmailSupport();
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(Cookies.Auth).AddCookie(Cookies.Auth, options => {
     options.Cookie.Name = Cookies.Auth;
