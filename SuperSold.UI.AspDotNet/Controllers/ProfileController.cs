@@ -16,11 +16,13 @@ public class ProfileController : Controller {
     private readonly IAccountsHandler _accountsHandler;
     private readonly IAuthService _authService;
     private readonly IAuthenticator _authenticator;
+    private readonly IEmailService _emailService;
 
-    public ProfileController(IAccountsHandler accountsHandler, IAuthenticator authenticator, IAuthService authService) {
+    public ProfileController(IAccountsHandler accountsHandler, IAuthenticator authenticator, IAuthService authService, IEmailService emailService) {
         _accountsHandler = accountsHandler;
         _authenticator = authenticator;
         _authService = authService;
+        _emailService = emailService;
     }
 
     public async Task<IActionResult> Index() {
@@ -65,7 +67,6 @@ public class ProfileController : Controller {
 
     [HttpPost]
     public async Task<IActionResult> ChangeEmail(string email, string password) {
-        //todo - consider sending an email to old email with some sort of temporary "rollback link"
 
         var accountId = User.GetIdentity();
         var passwordCheck = await _authenticator.Verify(accountId, password);
@@ -76,6 +77,13 @@ public class ProfileController : Controller {
                 wrongpassword => BadRequest("The given password is wrong.")
             );
         }
+
+        var cached = await _accountsHandler.GetAccountById(accountId);
+        if(cached.TryPickT1(out var _, out var cachedAccount)) {
+            return NotFound();
+        }
+
+        await _emailService.Send(cachedAccount.UserName, cachedAccount.Email, "<html><h1>As requested, your SuperSold account email has been moved to {email}. If it wasn't you, you can rollback with <a href=\"dunno yet\">this link</a> to use this email again. The link will expire in 3 days.</h1></html>");
 
         var result = await _accountsHandler.ChangeEmail(accountId, email);
         return result.Match<IActionResult>(
