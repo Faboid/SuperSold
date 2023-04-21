@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SuperSold.UI.AspDotNet.Controllers;
-namespace SuperSold.UI.AspDotNet.ViewRouting;
 
-public class WishlistRoutes : BaseRoutes {
-    
+namespace SuperSold.UI.AspDotNet.ViewRouting.ControllersPaths;
+
+public class WishlistRoutes : BaseRoutes
+{
+
     public WishlistRoutes(IUrlHelper urlHelper) : base(urlHelper, "Wishlist") { }
 
     public string? IndexPartial() => BuildUrlToAction("IndexPartial");

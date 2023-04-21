@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SuperSold.UI.AspDotNet.ViewRouting;
+namespace SuperSold.UI.AspDotNet.ViewRouting.ControllersPaths;
 
-public class RollbacksRoutes : BaseRoutes {
+public class RollbacksRoutes : BaseRoutes
+{
 
     public RollbacksRoutes(IUrlHelper urlHelper) : base(urlHelper, "Rollbacks") { }
 

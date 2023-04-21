@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SuperSold.UI.AspDotNet.ViewRouting;
+namespace SuperSold.UI.AspDotNet.ViewRouting.ControllersPaths;
 
-public class ProfileRoutes : BaseRoutes {
+public class ProfileRoutes : BaseRoutes
+{
 
     public ProfileRoutes(IUrlHelper urlHelper) : base(urlHelper, "Profile") { }
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SuperSold.UI.AspDotNet.Controllers;
+using SuperSold.UI.AspDotNet.ViewRouting.ControllersPaths;
 
 namespace SuperSold.UI.AspDotNet.ViewRouting;
 

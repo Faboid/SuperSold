@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SuperSold.UI.AspDotNet.ViewRouting;
+namespace SuperSold.UI.AspDotNet.ViewRouting.ControllersPaths;
 
-public class ProductsRoutes : BaseRoutes {
+public class ProductsRoutes : BaseRoutes
+{
 
     public ProductsRoutes(IUrlHelper urlHelper) : base(urlHelper, "Products") { }
 

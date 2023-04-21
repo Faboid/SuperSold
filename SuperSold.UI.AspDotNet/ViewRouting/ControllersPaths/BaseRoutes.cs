@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SuperSold.UI.AspDotNet.ViewRouting;
+namespace SuperSold.UI.AspDotNet.ViewRouting.ControllersPaths;
 
-public abstract class BaseRoutes {
+public abstract class BaseRoutes
+{
 
     private readonly IUrlHelper _urlHelper;
     private readonly string _controller;
 
-    public BaseRoutes(IUrlHelper urlHelper, string controllerName) {
+    public BaseRoutes(IUrlHelper urlHelper, string controllerName)
+    {
         _urlHelper = urlHelper;
         _controller = controllerName;
     }
