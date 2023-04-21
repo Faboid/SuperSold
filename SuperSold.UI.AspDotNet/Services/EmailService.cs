@@ -1,6 +1,4 @@
 ﻿using MailKit;
-using MailKit.Net.Smtp;
-using MailKit.Security;
 using MimeKit;
 
 namespace SuperSold.UI.AspDotNet.Services;
@@ -11,9 +9,9 @@ public interface IEmailService {
 
 public class EmailService : IEmailService {
 
-    private readonly ISmtpClient _smtp;
+    private readonly ISmtpClientWrapper _smtp;
 
-    public EmailService(ISmtpClient smtp) {
+    public EmailService(ISmtpClientWrapper smtp) {
         _smtp = smtp;
     }
 
@@ -29,10 +27,7 @@ public class EmailService : IEmailService {
             Text = body
         };
 
-        await _smtp.ConnectAsync("sandbox.smtp.mailtrap.io", 2525, false);
-        await _smtp.AuthenticateAsync(new SaslMechanismLogin("e5b094df837f8c", "5db3a96acedcb4"));
-        _smtp.Send(email);
-        await _smtp.DisconnectAsync(true);
+        await _smtp.SendAsync(email);
 
     }
 
