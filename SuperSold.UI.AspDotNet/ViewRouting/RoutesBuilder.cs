@@ -15,16 +15,3 @@ public static class RoutesBuilder {
     public static PurchaseRoutes Purchase(this IUrlHelper urlHelper) => new(urlHelper);
 
 }
-
-public class SavedRelationshipsRoutes {
-
-    private readonly IUrlHelper _urlHelper;
-    private const string _controllerName = "SavedRelationships";
-
-    public SavedRelationshipsRoutes(IUrlHelper urlHelper) {
-        _urlHelper = urlHelper;
-    }
-
-    public string? ModifyQuantity() => _urlHelper.Action("ModifyQuantity", _controllerName);
-
-}
