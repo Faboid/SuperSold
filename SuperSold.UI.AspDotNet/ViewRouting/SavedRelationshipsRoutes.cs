@@ -2,15 +2,9 @@
 
 namespace SuperSold.UI.AspDotNet.ViewRouting;
 
-public class SavedRelationshipsRoutes {
+public class SavedRelationshipsRoutes : BaseRoutes {
+    public SavedRelationshipsRoutes(IUrlHelper urlHelper) : base(urlHelper, "SavedRelationships") { }
 
-    private readonly IUrlHelper _urlHelper;
-    private const string _controllerName = "SavedRelationships";
-
-    public SavedRelationshipsRoutes(IUrlHelper urlHelper) {
-        _urlHelper = urlHelper;
-    }
-
-    public string? ModifyQuantity() => _urlHelper.Action("ModifyQuantity", _controllerName);
+    public string? ModifyQuantity() => BuildUrlToAction("ModifyQuantity");
 
 }

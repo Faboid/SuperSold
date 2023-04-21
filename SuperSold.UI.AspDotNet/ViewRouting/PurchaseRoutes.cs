@@ -2,15 +2,11 @@
 
 namespace SuperSold.UI.AspDotNet.ViewRouting;
 
-public class PurchaseRoutes {
+public class PurchaseRoutes : BaseRoutes {
+    
+    public PurchaseRoutes(IUrlHelper urlHelper) : base(urlHelper, "Purchase") { }
 
-    private readonly IUrlHelper _urlHelper;
-
-    public PurchaseRoutes(IUrlHelper urlHelper) {
-        _urlHelper = urlHelper;
-    }
-
-    public string? Index() => _urlHelper.Action("Index", "Purchase");
-    public string? SubmitPurchase() => _urlHelper.Action("SubmitPurchase", "Purchase");
+    public string? Index() => BuildUrlToAction("Index");
+    public string? SubmitPurchase() => BuildUrlToAction("SubmitPurchase");
 
 }

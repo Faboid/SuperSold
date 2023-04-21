@@ -2,18 +2,13 @@
 using SuperSold.UI.AspDotNet.Controllers;
 namespace SuperSold.UI.AspDotNet.ViewRouting;
 
-public class WishlistRoutes {
+public class WishlistRoutes : BaseRoutes {
+    
+    public WishlistRoutes(IUrlHelper urlHelper) : base(urlHelper, "Wishlist") { }
 
-    private readonly IUrlHelper _urlHelper;
-    private const string _controllerName = "Wishlist";
-
-    public WishlistRoutes(IUrlHelper urlHelper) {
-        _urlHelper = urlHelper;
-    }
-
-    public string? IndexPartial() => _urlHelper.Action("IndexPartial", _controllerName);
-    public string? AddToWishlist() => _urlHelper.Action("AddToWishlist", _controllerName);
-    public string? Remove() => _urlHelper.Action("Remove", _controllerName);
-    public string? MoveToCart() => _urlHelper.Action("MoveToCart", _controllerName);
+    public string? IndexPartial() => BuildUrlToAction("IndexPartial");
+    public string? AddToWishlist() => BuildUrlToAction("AddToWishlist");
+    public string? Remove() => BuildUrlToAction("Remove");
+    public string? MoveToCart() => BuildUrlToAction("MoveToCart");
 
 }

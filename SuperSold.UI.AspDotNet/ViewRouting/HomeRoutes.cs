@@ -2,21 +2,16 @@
 
 namespace SuperSold.UI.AspDotNet.ViewRouting;
 
-public class HomeRoutes {
+public class HomeRoutes : BaseRoutes {
 
-    private readonly IUrlHelper _urlHelper;
+    public HomeRoutes(IUrlHelper urlHelper) : base(urlHelper, "Home") { }
 
-    public HomeRoutes(IUrlHelper urlHelper) {
-        _urlHelper = urlHelper;
-    }
-
-    public string? Index() => _urlHelper.Action("Index", "Home");
-    public string? IndexPartial() => _urlHelper.Action("IndexPartial", "Home");
-    public string? Search() => _urlHelper.Action("Search", "Home");
-    public string? SearchPartial() => _urlHelper.Action("SearchPartial", "Home");
-    public string? Privacy() => _urlHelper.Action("Privacy", "Home");
-    public string? Error() => _urlHelper.Action("Error", "Home");
-    public string? TermsAndConditions() => _urlHelper.Action("TermsAndConditions", "Home");
-
+    public string? Index() => BuildUrlToAction("Index");
+    public string? IndexPartial() => BuildUrlToAction("IndexPartial");
+    public string? Search() => BuildUrlToAction("Search");
+    public string? SearchPartial() => BuildUrlToAction("SearchPartial");
+    public string? Privacy() => BuildUrlToAction("Privacy");
+    public string? Error() => BuildUrlToAction("Error");
+    public string? TermsAndConditions() => BuildUrlToAction("TermsAndConditions");
 
 }

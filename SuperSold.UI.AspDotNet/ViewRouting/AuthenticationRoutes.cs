@@ -2,16 +2,12 @@
 
 namespace SuperSold.UI.AspDotNet.ViewRouting;
 
-public class AuthenticationRoutes {
+public class AuthenticationRoutes : BaseRoutes {
 
-    private readonly IUrlHelper _urlHelper;
+    public AuthenticationRoutes(IUrlHelper urlHelper) : base(urlHelper, "Authentication") {}
 
-    public AuthenticationRoutes(IUrlHelper urlHelper) {
-        _urlHelper = urlHelper;
-    }
-
-    public string? SignUp() => _urlHelper.Action("SignUp", "Authentication");
-    public string? Login() => _urlHelper.Action("Login", "Authentication");
-    public string? Logout() => _urlHelper.Action("Logout", "Authentication");
+    public string? SignUp() => BuildUrlToAction("SignUp");
+    public string? Login() => BuildUrlToAction("Login");
+    public string? Logout() => BuildUrlToAction("Logout");
 
 }
