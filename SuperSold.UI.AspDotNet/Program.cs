@@ -1,5 +1,6 @@
 using SuperSold.UI.AspDotNet.Constants;
 using SuperSold.UI.AspDotNet.HostBuilders;
+using SuperSold.UI.AspDotNet.HostedServices;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MySql") ?? throw new Exception("The connection string 'MySql' has not been provided in appsettings.json");
@@ -14,6 +15,10 @@ builder.Services.AddEmailSupport();
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(Cookies.Auth).AddCookie(Cookies.Auth, options => {
     options.Cookie.Name = Cookies.Auth;
+});
+
+builder.Services.AddHostedService(s => {
+    return new ExpiredRollbacksCleanerHostedService(s, TimeSpan.FromMinutes(30));
 });
 
 builder.Services.AddAutoMapper();
