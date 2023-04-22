@@ -25,7 +25,7 @@ public class RollbacksController : Controller {
             await _rollbackHandler.ExpireRollback(token);
             return Unauthorized("The token has expired");
         }
-
+        
         return View();
 
     }
@@ -85,7 +85,7 @@ public class RollbacksController : Controller {
         }
 
         await _rollbackHandler.ExpireRollback(token);
-        return Ok();
+        return Ok("The email has been rerolled back successfully.");
 
     }
 
