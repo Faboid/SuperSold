@@ -11,7 +11,7 @@ public interface IRollbackHandler {
     Task<OneOf<RollbackModel, Unauthorized, NotFound>> GetRollback(Guid rollbackId, Guid userId, RollbackType type);
     Task<OneOf<Success, NotFound>> ExpireRollback(Guid rollbackId);
     IQueryable<RollbackModel> GetAll();
-    IQueryable<RollbackModel> GetAllOlderThan(DateOnly time);
+    IQueryable<RollbackModel> GetAllOlderThan(DateTime time);
     IQueryable<RollbackModel> GetAllByUserId(Guid userId);
 
 }

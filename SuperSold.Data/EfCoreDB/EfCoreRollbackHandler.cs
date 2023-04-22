@@ -74,5 +74,8 @@ public class EfCoreRollbackHandler : IRollbackHandler {
         return _context.Rollbacks.Where(x => x.IdAccount == userId);
     }
 
-    public IQueryable<RollbackModel> GetAllOlderThan(DateOnly time) => throw new NotImplementedException();
+    public IQueryable<RollbackModel> GetAllOlderThan(DateTime time) {
+        return _context.Rollbacks.Where(x => x.ExpireOn <= time);
+    }
+
 }
