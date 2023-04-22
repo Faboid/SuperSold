@@ -17,12 +17,14 @@ public class ProfileController : Controller {
     private readonly IAuthService _authService;
     private readonly IAuthenticator _authenticator;
     private readonly IEmailService _emailService;
+    private readonly IEmailViewsBuilder _emailViewsBuilder;
 
-    public ProfileController(IAccountsHandler accountsHandler, IAuthenticator authenticator, IAuthService authService, IEmailService emailService) {
+    public ProfileController(IAccountsHandler accountsHandler, IAuthenticator authenticator, IAuthService authService, IEmailService emailService, IEmailViewsBuilder emailViewsBuilder) {
         _accountsHandler = accountsHandler;
         _authenticator = authenticator;
         _authService = authService;
         _emailService = emailService;
+        _emailViewsBuilder = emailViewsBuilder;
     }
 
     public async Task<IActionResult> Index() {
@@ -83,7 +85,8 @@ public class ProfileController : Controller {
             return NotFound();
         }
 
-        await _emailService.Send(cachedAccount.UserName, cachedAccount.Email, "<html><h1>As requested, your SuperSold account email has been moved to {email}. If it wasn't you, you can rollback with <a href=\"dunno yet\">this link</a> to use this email again. The link will expire in 3 days.</h1></html>");
+        var emailBody = _emailViewsBuilder.BuildRollbackEmailHtml(email, "to implement", "to implement");
+        await _emailService.Send(cachedAccount.UserName, cachedAccount.Email, emailBody);
 
         var result = await _accountsHandler.ChangeEmail(accountId, email);
         return result.Match<IActionResult>(
