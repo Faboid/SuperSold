@@ -15,5 +15,10 @@ public abstract class BaseRoutes
     }
 
     protected string? BuildUrlToAction(string action) => _urlHelper.Action(action, _controller);
+    protected string? BuildAbsoluteUrlToAction(string action) {
+        var scheme = _urlHelper.ActionContext.HttpContext.Request.Scheme;
+        var routeValues = _urlHelper.ActionContext.HttpContext.Request.RouteValues;
+        return _urlHelper.Action(action, _controller, routeValues, scheme);
+    }
 
 }

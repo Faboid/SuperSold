@@ -9,5 +9,6 @@ public class RollbacksRoutes : BaseRoutes
 
     public string? ForgotPassword() => BuildUrlToAction("ForgotPassword");
     public string? RollbackEmail() => BuildUrlToAction("RollbackEmail");
+    public string? RollbackEmail(Guid userId, Guid token) => $"{BuildAbsoluteUrlToAction("RollbackEmail")}?userId={userId}&token={token}";
 
 }
