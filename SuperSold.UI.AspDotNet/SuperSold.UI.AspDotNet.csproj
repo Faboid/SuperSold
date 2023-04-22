@@ -18,4 +18,8 @@
       <ProjectReference Include="..\SuperSold.Identification\SuperSold.Identification.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\html\RollbackEmailTemplate.html" />
+  </ItemGroup>
+
 </Project>
