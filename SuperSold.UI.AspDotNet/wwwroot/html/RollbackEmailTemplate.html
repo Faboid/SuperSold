@@ -1,22 +1,16 @@
 ﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
 
-    <div>
-        <p>From SuperSold,</p>
+<div>
+    <h1>From SuperSold,</h1>
+
+    <form action="{{rollbackLink}}" method="post">
         <p>
             As requested, your SuperSold account email has been moved to {{email}}.
-            If it wasn't you, you can rollback to this by clicking <a href="{{rollbackLink}}">here.</a>
+            If it wasn't you, you can rollback to this by clicking <button type="submit">here.</button>
         </p>
+    </form>
 
-        <br />
+    <br />
 
-        <p>This link will expire in {{expireDate}}.</p>
-    </div>
-
-</body>
-</html>
+    <h4>This link will expire in {{expireDate}}.</h4>
+</div>
