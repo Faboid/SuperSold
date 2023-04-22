@@ -7,6 +7,7 @@ var connectionString = builder.Configuration.GetConnectionString("MySql") ?? thr
 // Add services to the container.
 //builder.Services.AddMemoryDatabase();
 builder.Services.AddMySqlDatabase(connectionString);
+builder.Services.AddStaticHtmlResources();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthenticationHelpers();
 builder.Services.AddEmailSupport();
