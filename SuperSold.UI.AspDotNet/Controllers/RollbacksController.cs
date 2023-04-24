@@ -1,16 +1,62 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SuperSold.Data.DBInteractions;
 using SuperSold.Data.Models;
+using SuperSold.UI.AspDotNet.Services;
+using SuperSold.UI.AspDotNet.ViewRouting;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class RollbacksController : Controller {
 
     private readonly IRollbackHandler _rollbackHandler;
     private readonly IAccountsHandler _accountsHandler;
+    private readonly IEmailService _emailService;
+    private readonly IEmailViewsBuilder _emailBuilder;
+    private readonly ILogger<RollbacksController> _logger;
 
-    public RollbacksController(IRollbackHandler rollbackHandler, IAccountsHandler accountsHandler) {
+    public RollbacksController(IRollbackHandler rollbackHandler, IAccountsHandler accountsHandler, IEmailService emailService, IEmailViewsBuilder emailBuilder, ILogger<RollbacksController> logger) {
         _rollbackHandler = rollbackHandler;
         _accountsHandler = accountsHandler;
+        _emailService = emailService;
+        _emailBuilder = emailBuilder;
+        _logger = logger;
+    }
+
+    [HttpGet]
+    public IActionResult ForgotPasswordRequest() {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ForgotPasswordRequest(string username) {
+
+        if(username is null) {
+            return BadRequest("Must insert valid username.");
+        }
+
+        var result = await _accountsHandler.GetAccountByUserName(username);
+        if(result.TryPickT1(out var _, out var account)) {
+            return NotFound();
+        }
+
+        //create rollback code
+        var rollback = new RollbackModel() {
+            IdRollback = Guid.NewGuid(),
+            IdAccount = account.IdAccount,
+            Body = string.Empty,
+            ExpireOn = DateTime.UtcNow.AddMinutes(20),
+            RollbackType = RollbackType.Password
+        };
+
+        await _rollbackHandler.CreateRollback(rollback);
+
+        //send mail
+        var email = account.Email;
+        var url = Url.Rollbacks().ForgotPassword(rollback.IdAccount, rollback.IdRollback)!;
+        var body = _emailBuilder.BuildForgotPasswordEmailHtml(url, rollback.ExpireOn.ToLongTimeString());
+        await _emailService.Send(username, email, body);
+
+        return StatusCode(209, $"The reset code has been sent to the email linked to this account. The email starts with [{email[..4]}...]");
+
     }
 
     [HttpGet]
