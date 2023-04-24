@@ -5,6 +5,9 @@ using SuperSold.UI.AspDotNet.HostedServices;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("MySql") ?? throw new Exception("The connection string 'MySql' has not been provided in appsettings.json");
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 // Add services to the container.
 //builder.Services.AddMemoryDatabase();
 builder.Services.AddMySqlDatabase(connectionString);
