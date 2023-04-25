@@ -72,7 +72,7 @@ public class RollbacksController : Controller {
             return Unauthorized("The token has expired");
         }
         
-        return View();
+        return View((userId, token));
 
     }
 
@@ -99,7 +99,7 @@ public class RollbacksController : Controller {
         }
 
         await _rollbackHandler.ExpireRollback(token);
-        return Ok();
+        return Ok("The password has been changed successfully.");
 
     }
 
