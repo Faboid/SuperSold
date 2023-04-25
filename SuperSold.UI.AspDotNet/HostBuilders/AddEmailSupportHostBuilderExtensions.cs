@@ -9,8 +9,8 @@ public static class AddEmailSupportHostBuilderExtensions {
         services.AddScoped<ISmtpClient, SmtpClient>();
         services.AddScoped<ISmtpClientWrapper, SmtpClientWrapper>();
 
-        services.AddScoped<IEmailService, FakeEmailService>();
-        //services.AddScoped<IEmailService, EmailService>();
+        //services.AddScoped<IEmailService, FakeEmailService>();
+        services.AddScoped<IEmailService, EmailService>();
 
         services.AddScoped<IEmailViewsBuilder, EmailViewsBuilder>();
     }
