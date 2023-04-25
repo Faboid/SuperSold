@@ -35,7 +35,7 @@ public class RollbacksController : Controller {
 
         var result = await _accountsHandler.GetAccountByUserName(username);
         if(result.TryPickT1(out var _, out var account)) {
-            return NotFound();
+            return NotFound("The given username does not exist.");
         }
 
         //create rollback code
