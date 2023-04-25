@@ -18,7 +18,7 @@ public class EfCoreProductsHandler : IProductsHandler {
 
     public async Task<OneOf<Success, AlreadyExists>> CreateProduct(ProductModel product, string sellerUserName) {
         
-        await _context.AddAsync(product);
+        await _context.Products.AddAsync(product);
         var result = await _context.SaveChangesAsync();
         
         if(result == 1) {

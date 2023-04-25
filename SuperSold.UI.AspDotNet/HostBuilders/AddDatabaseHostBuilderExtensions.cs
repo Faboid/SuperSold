@@ -30,6 +30,7 @@ public static class AddDatabaseHostBuilderExtensions {
         services.AddScoped<IWishlistHandler, EfCoreWishlistHandler>();
         services.AddScoped<ISavedRelationshipsHandler, EfCoreSavedRelationshipsHandler>();
         services.AddScoped<ICartHandler, EFCoreCartHandler>();
+        services.AddScoped<IRollbackHandler, EfCoreRollbackHandler>();
     }
 
 }

@@ -37,6 +37,7 @@ public class HomeController : Controller {
             .ProjectTo<Product>(_mapper.ConfigurationProvider)
             .ToListAsyncSafe();
 
+        _logger.LogInformation("Loaded {number} items with IndexPartial", products.Count);
         return this.ProductListPartialView(PartialViewNames.HomeSearchRow, products);
     }
 
@@ -56,6 +57,7 @@ public class HomeController : Controller {
             .ToListAsyncSafe();
 
         ViewBag.SearchItem = search;
+        _logger.LogInformation("Loaded {number} items with SearchPartial", products.Count);
         return this.ProductListPartialView(PartialViewNames.HomeSearchRow, products);
     }
 

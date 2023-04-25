@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SuperSold.UI.AspDotNet.Controllers;
+using SuperSold.UI.AspDotNet.ViewRouting.ControllersPaths;
 
 namespace SuperSold.UI.AspDotNet.ViewRouting;
 
@@ -13,18 +14,6 @@ public static class RoutesBuilder {
     public static ProductsRoutes Products(this IUrlHelper urlHelper) => new(urlHelper);
     public static SavedRelationshipsRoutes SavedRelationships(this IUrlHelper urlHelper) => new(urlHelper);
     public static PurchaseRoutes Purchase(this IUrlHelper urlHelper) => new(urlHelper);
-
-}
-
-public class SavedRelationshipsRoutes {
-
-    private readonly IUrlHelper _urlHelper;
-    private const string _controllerName = "SavedRelationships";
-
-    public SavedRelationshipsRoutes(IUrlHelper urlHelper) {
-        _urlHelper = urlHelper;
-    }
-
-    public string? ModifyQuantity() => _urlHelper.Action("ModifyQuantity", _controllerName);
+    public static RollbacksRoutes Rollbacks(this IUrlHelper urlHelper) => new(urlHelper);
 
 }
