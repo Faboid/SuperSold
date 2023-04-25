@@ -1,5 +1,4 @@
-﻿using MailKit;
-using MimeKit;
+﻿using MimeKit;
 
 namespace SuperSold.UI.AspDotNet.Services;
 
@@ -10,9 +9,11 @@ public interface IEmailService {
 public class EmailService : IEmailService {
 
     private readonly ISmtpClientWrapper _smtp;
+    private readonly ILogger<EmailService> _logger;
 
-    public EmailService(ISmtpClientWrapper smtp) {
+    public EmailService(ISmtpClientWrapper smtp, ILogger<EmailService> logger) {
         _smtp = smtp;
+        _logger = logger;
     }
 
     //code derived from https://mailtrap.io/blog/csharp-send-email/
@@ -28,7 +29,25 @@ public class EmailService : IEmailService {
         };
 
         await _smtp.SendAsync(email);
+        _logger.LogInformation("Sent email to {email} successfully.", emailAddress);
 
     }
 
+}
+
+/// <summary>
+/// A class to fake sending emails. Used to save on API requests when debugging.
+/// </summary>
+public class FakeEmailService : IEmailService {
+
+    private readonly ILogger<FakeEmailService> _logger;
+
+    public FakeEmailService(ILogger<FakeEmailService> logger) {
+        _logger = logger;
+    }
+
+    public Task Send(string username, string emailAddress, string body) {
+        _logger.LogWarning("Faked sending email to {email}. Remember to change injected IEmailService class for production.", emailAddress);
+        return Task.CompletedTask;
+    }
 }
