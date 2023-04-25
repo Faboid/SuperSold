@@ -4,11 +4,13 @@ using OneOf;
 using OneOf.Types;
 using SuperSold.Data.DBInteractions;
 using SuperSold.Data.Extensions;
+using SuperSold.Data.Models;
 using SuperSold.Identification;
 using SuperSold.UI.AspDotNet.Constants;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
 using SuperSold.UI.AspDotNet.Services;
+using SuperSold.UI.AspDotNet.ViewRouting;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class ProfileController : Controller {
@@ -16,11 +18,17 @@ public class ProfileController : Controller {
     private readonly IAccountsHandler _accountsHandler;
     private readonly IAuthService _authService;
     private readonly IAuthenticator _authenticator;
+    private readonly IRollbackHandler _rollbackHandler;
+    private readonly IEmailService _emailService;
+    private readonly IEmailViewsBuilder _emailViewsBuilder;
 
-    public ProfileController(IAccountsHandler accountsHandler, IAuthenticator authenticator, IAuthService authService) {
+    public ProfileController(IAccountsHandler accountsHandler, IAuthenticator authenticator, IAuthService authService, IEmailService emailService, IEmailViewsBuilder emailViewsBuilder, IRollbackHandler rollbackHandler) {
         _accountsHandler = accountsHandler;
         _authenticator = authenticator;
         _authService = authService;
+        _emailService = emailService;
+        _emailViewsBuilder = emailViewsBuilder;
+        _rollbackHandler = rollbackHandler;
     }
 
     public async Task<IActionResult> Index() {
@@ -65,7 +73,6 @@ public class ProfileController : Controller {
 
     [HttpPost]
     public async Task<IActionResult> ChangeEmail(string email, string password) {
-        //todo - consider sending an email to old email with some sort of temporary "rollback link"
 
         var accountId = User.GetIdentity();
         var passwordCheck = await _authenticator.Verify(accountId, password);
@@ -76,6 +83,25 @@ public class ProfileController : Controller {
                 wrongpassword => BadRequest("The given password is wrong.")
             );
         }
+
+        var cached = await _accountsHandler.GetAccountById(accountId);
+        if(cached.TryPickT1(out var _, out var cachedAccount)) {
+            return NotFound();
+        }
+
+        var rollback = new RollbackModel() {
+            IdRollback = Guid.NewGuid(),
+            IdAccount = accountId,
+            Body = cachedAccount.Email,
+            RollbackType = RollbackType.Email,
+            ExpireOn = DateTime.UtcNow.AddDays(3)
+        };
+
+        await _rollbackHandler.CreateRollback(rollback);
+        
+        var pathToRollback = Url.Rollbacks().RollbackEmail(accountId, rollback.IdRollback)!;
+        var emailBody = _emailViewsBuilder.BuildRollbackEmailHtml(email, pathToRollback, rollback.ExpireOn.ToLongDateString());
+        await _emailService.Send(cachedAccount.UserName, cachedAccount.Email, emailBody);
 
         var result = await _accountsHandler.ChangeEmail(accountId, email);
         return result.Match<IActionResult>(
