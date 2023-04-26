@@ -9,6 +9,7 @@ public interface IAccountsHandler {
     Task<OneOf<AccountModel, NotFound>> GetAccountByUserName(string accountName);
     Task<OneOf<AccountModel, NotFound>> GetAccountById(Guid accountId);
     Task<bool> UserNameExists(string userName);
+    Task<bool> AccountExists(Guid accountId);
     Task<OneOf<Success, NotFound, AlreadyExists>> RenameAccount(Guid accountId, string newName);
     Task<OneOf<Success, NotFound>> ChangeEmail(Guid accountId, string newEmail);
     Task<OneOf<Success, NotFound>> ChangePassword(Guid accountId, string newPassword);

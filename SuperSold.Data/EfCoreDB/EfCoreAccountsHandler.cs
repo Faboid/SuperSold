@@ -72,6 +72,10 @@ public class EfCoreAccountsHandler : IAccountsHandler {
         return await _context.Accounts.AnyAsync(x => x.UserName == accountName);
     }
 
+    public async Task<bool> AccountExists(Guid accountId) {
+        return await _context.Accounts.AnyAsync(x => x.IdAccount == accountId);
+    }
+
     public async Task<OneOf<AccountModel, NotFound>> GetAccountById(Guid guid) {
         var result = await _context.Accounts.FindAsync(guid);
         if(result is null) {
