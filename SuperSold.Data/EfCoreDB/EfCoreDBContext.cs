@@ -9,6 +9,8 @@ public class EfCoreDBContext : DbContext {
     public DbSet<ProductModel> Products { get; set; }
     public DbSet<SavedRelationshipModel> SavedRelationships { get; set; }
     public DbSet<RollbackModel> Rollbacks { get; set; }
+    public DbSet<AccountRoleModel> Accounts_Roles { get; set; }
+    public DbSet<AccountRestrictionModel> Accounts_Restrictions { get; set; }
 
     public EfCoreDBContext(DbContextOptions<EfCoreDBContext> options) : base(options) { }
 
