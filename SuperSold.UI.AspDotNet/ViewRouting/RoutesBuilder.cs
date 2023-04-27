@@ -15,5 +15,6 @@ public static class RoutesBuilder {
     public static SavedRelationshipsRoutes SavedRelationships(this IUrlHelper urlHelper) => new(urlHelper);
     public static PurchaseRoutes Purchase(this IUrlHelper urlHelper) => new(urlHelper);
     public static RollbacksRoutes Rollbacks(this IUrlHelper urlHelper) => new(urlHelper);
+    public static AdminAreaRoutes AdminArea(this IUrlHelper urlHelper) => new(urlHelper);
 
 }
