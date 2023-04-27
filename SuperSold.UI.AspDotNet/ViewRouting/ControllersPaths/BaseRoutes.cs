@@ -2,8 +2,7 @@
 
 namespace SuperSold.UI.AspDotNet.ViewRouting.ControllersPaths;
 
-public abstract class BaseRoutes
-{
+public abstract class BaseRoutes {
 
     private readonly IUrlHelper _urlHelper;
     private readonly string _controller;
