@@ -15,5 +15,6 @@ public interface IAccountsHandler {
     Task<OneOf<Success, NotFound>> ChangePassword(Guid accountId, string newPassword);
     Task<OneOf<Success, NotFound>> DeleteAccount(Guid accountId);
     Task<OneOf<Success, AlreadyExists>> CreateAccount(AccountModel model);
+    IQueryable<AccountModel> QueryAccounts();
 
 }

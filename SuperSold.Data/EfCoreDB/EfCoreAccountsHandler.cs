@@ -136,5 +136,6 @@ public class EfCoreAccountsHandler : IAccountsHandler {
 
     }
 
+    public IQueryable<AccountModel> QueryAccounts() => _context.Accounts;
 }
 
