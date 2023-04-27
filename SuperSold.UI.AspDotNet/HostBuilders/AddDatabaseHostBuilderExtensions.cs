@@ -31,6 +31,8 @@ public static class AddDatabaseHostBuilderExtensions {
         services.AddScoped<ISavedRelationshipsHandler, EfCoreSavedRelationshipsHandler>();
         services.AddScoped<ICartHandler, EFCoreCartHandler>();
         services.AddScoped<IRollbackHandler, EfCoreRollbackHandler>();
+        services.AddScoped<IAccountRolesHandler, EfCoreAccountRolesHandler>();
+        services.AddScoped<IAccountRestrictionsHandler, EfCoreAccountRestrictionsHandler>();
     }
 
 }
