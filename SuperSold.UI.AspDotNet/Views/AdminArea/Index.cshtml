@@ -1,2 +1,97 @@
-﻿
-<h1>Admin Area</h1>
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+
+<style>
+    .form-container {
+        border-radius: 50px;
+        border:solid 1px black;
+        padding:2rem;
+    }
+</style>
+
+<h1>Set up search parameters</h1>
+
+<!--Search Parameters-->
+<div class="form-container bg-secondary-subtle">
+
+    <h2>Search products:</h2>
+    <form action="@Url.AdminArea().SearchProducts()">
+
+        <div>
+            <label for="searchTitle">Search Title:</label>
+            <input type="text" name="searchTitle" class="form-control" />
+        </div>
+
+        <div>
+            <label for="minPrice">Min Price:</label>
+            <input type="number" name="minPrice" class="form-control" />
+        </div>
+
+        <div>
+            <label for="maxPrice">Max Price:</label>
+            <input type="number" name="maxPrice" class="form-control" />
+        </div>
+
+        <div>
+            <input type="submit" value="Search Matching Products" />
+        </div>
+
+    </form>
+
+</div>
+
+<br />
+<br />
+
+<div class="form-container bg-secondary-subtle">
+
+    <h2>Search users:</h2>
+    <form action="@Url.AdminArea().SearchAccountsByUsername()" method="get">
+
+        <div>
+            <label for="username">Username: </label>
+            <input type="text" name="username" class="form-control" />
+        </div>
+
+        <div>
+            <input type="submit" value="Search By Username" />
+        </div>
+
+    </form>
+
+</div>
+
+<br/>
+
+<div class="form-container bg-secondary-subtle">
+
+    <h2>Search specific user(retrieves their published products as well):</h2>
+
+    <form action="@Url.AdminArea().SearchAccountByUsername()" method="get">
+
+        <div>
+            <label for="username">Username: </label>
+            <input type="text" name="username" class="form-control" />
+        </div>
+        
+        <div>
+            <input type="submit" value="Search User" />
+        </div>
+
+    </form>
+
+    <br/>
+
+    <form action="@Url.AdminArea().SearchAccountById()" method="get">
+        
+        <div>
+            <label for="accountId">Id: </label>
+            <input type="text" name="accountId" class="form-control" />
+        </div>
+
+        <div>
+            <input type="submit" value="Search User" />
+        </div>
+
+    </form>
+
+</div>
