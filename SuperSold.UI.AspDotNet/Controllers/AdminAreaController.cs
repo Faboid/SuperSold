@@ -64,7 +64,7 @@ public class AdminAreaController : Controller {
 
         var accounts = await _accountsHandler
             .QueryAccounts()
-            .Where(x => x.UserName == username)
+            .Where(x =>  x.UserName.Contains(username))
             .ProjectTo<AccountInfoModel>(_mapper.ConfigurationProvider)
             .ToListAsyncSafe();
 
