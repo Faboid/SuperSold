@@ -89,6 +89,26 @@ public class AdminAreaController : Controller {
         return await MapUserWithSoldProducts(queryResult);
     }
 
+    [HttpDelete]
+    public async Task<IActionResult> DeleteProduct(Guid sellerId, Guid productId) {
+
+        var productOption = await _productsHandler.GetProduct(productId);
+        if(productOption.TryPickT1(out var _, out var product)) {
+            return NotFound("Product is not found.");
+        }
+
+        if(product.IdSellerAccount != sellerId) {
+            return BadRequest("The given seller Id is not the product's seller id.");
+        }
+
+        var result = await _productsHandler.DeleteProduct(productId);
+        return result.Match<IActionResult>(
+            success => Ok("Deleted product successfully."), 
+            notfound => NotFound("The product is not found.")
+        );
+
+    }
+
     private async Task<IActionResult> MapUserWithSoldProducts(OneOf<AccountModel, NotFound> queryResult) {
 
         if(queryResult.TryPickT1(out var _, out var acc)) {
