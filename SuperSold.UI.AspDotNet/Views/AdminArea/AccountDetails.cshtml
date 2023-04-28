@@ -1,5 +1,54 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewRouting;
+@model (AccountInfoModel Account, IEnumerable<Product> Products)
+
+<!--Main info-->
+<div>
+
+    <div>
+        <label for="id">Id:</label>
+        <span>@Model.Account.IdAccount</span>
+    </div>
+
+    <div>
+        <label for="username">Username:</label>
+        <span>@Model.Account.Username</span>
+    </div>
+
+    <div>
+        <label for="email">Email:</label>
+        <span>@Model.Account.Email</span>
+    </div>
+
+</div>
+
+<!--Apply restrictions-->
+<div>
+
+    <button type="button" id="restrictFromSellingNewBtn">Restrict from selling new products</button>
+
+</div>
+
+<!--List account's selling products-->
+<div>
+
+    @foreach(var product in Model.Products) {
+
+        <div class="item-row" id="@(product.Id.ToValidHtml())" style="border:solid; border-width:2px; border-radius:5px;">
+            @await Component.ProductRow().AdminManagementRow(product);
+        </div>
+
+    }
+
+</div>
+
+<script type="text/javascript">
+
+    $("#restrictFromSellingNewBtn").click(function() {
+
+
+
+    });
+
+
+</script>
