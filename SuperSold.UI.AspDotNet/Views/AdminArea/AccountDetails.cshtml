@@ -46,7 +46,18 @@
 
     $("#restrictFromSellingNewBtn").click(function() {
 
-
+        $.ajax({
+            url: '@(Url.AdminArea().RestrictAccountFromSelling())',
+            data: { "accountId": "@(Model.Account.IdAccount)" },
+            type: "POST",
+            cache: false
+        }).done(function(data) {
+            console.log(data);
+            notifyUser(data);
+        }).fail(function(error) {
+            notifyUser("There has been an error: " + error.Message);
+            console.error(error);
+        });
 
     });
 

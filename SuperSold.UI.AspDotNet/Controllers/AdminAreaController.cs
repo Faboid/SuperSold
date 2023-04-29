@@ -7,6 +7,7 @@ using OneOf.Types;
 using SuperSold.Data.DBInteractions;
 using SuperSold.Data.Models;
 using SuperSold.UI.AspDotNet.Attributes;
+using SuperSold.UI.AspDotNet.Constants;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
 
@@ -18,12 +19,14 @@ public class AdminAreaController : Controller {
 
     private readonly IAccountsHandler _accountsHandler;
     private readonly IProductsHandler _productsHandler;
+    private readonly IAccountRestrictionsHandler _accountRestrictionsHandler;
     private readonly IMapper _mapper;
 
-    public AdminAreaController(IAccountsHandler accountsHandler, IMapper mapper, IProductsHandler productsHandler) {
+    public AdminAreaController(IAccountsHandler accountsHandler, IMapper mapper, IProductsHandler productsHandler, IAccountRestrictionsHandler accountRestrictionsHandler) {
         _accountsHandler = accountsHandler;
         _mapper = mapper;
         _productsHandler = productsHandler;
+        _accountRestrictionsHandler = accountRestrictionsHandler;
     }
 
     [HttpGet]
@@ -105,6 +108,17 @@ public class AdminAreaController : Controller {
         return result.Match<IActionResult>(
             success => Ok("Deleted product successfully."), 
             notfound => NotFound("The product is not found.")
+        );
+
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> RestrictAccountFromSelling(Guid accountId) {
+
+        var result = await _accountRestrictionsHandler.AddRestriction(accountId, Restrictions.ProductSeller);
+        return result.Match<IActionResult>(
+            success => Ok("The account has been restricted."),
+            notfound => NotFound("The account has not been found.")
         );
 
     }

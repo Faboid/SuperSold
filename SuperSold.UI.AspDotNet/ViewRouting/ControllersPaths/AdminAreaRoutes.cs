@@ -7,6 +7,7 @@ public class AdminAreaRoutes : BaseRoutes {
 
     public string? Index() => BuildUrlToAction(nameof(Index));
     public string? DeleteProduct() => BuildUrlToAction(nameof(DeleteProduct));
+    public string? RestrictAccountFromSelling() => BuildUrlToAction(nameof(RestrictAccountFromSelling));
 
     public string? SearchAccountsByUsername() => BuildUrlToAction(nameof(SearchAccountsByUsername));
     public string? SearchAccountByUsername() => BuildUrlToAction(nameof(SearchAccountByUsername));
