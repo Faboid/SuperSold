@@ -1,4 +1,5 @@
-﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+﻿@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewRouting;
 
 @{
     var name = User.Identity!.Name;
@@ -64,6 +65,11 @@
     </div>
 
     <div class="profile-dropdown-content vertical-container" id="profileDropdownContent">
+
+        @if(User.IsAdmin()) {
+            <button class="profile-dropdown-line" type="button" id="adminAreaNavBtn">AdminArea</button>
+        }
+
         <button class="profile-dropdown-line" type="button" id="profileNavBtn">Profile</button>
         <button class="profile-dropdown-line" type="button" id="cartNavBtn">Cart</button>
         <button class="profile-dropdown-line" type="button" id="purchaseNavBtn">Purchase Cart</button>
@@ -92,6 +98,10 @@
     profileDropdownBtn.click(function () {
         console.log("click profile dropdown btn");
         $(profileDropdownContent).slideToggle("slow", "swing");
+    });
+
+    $("#adminAreaNavBtn").click(function () {
+        window.location.href = '@(Url.AdminArea().Index())';
     });
 
     $("#profileNavBtn").click(function () {

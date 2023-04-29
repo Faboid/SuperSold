@@ -1,0 +1,60 @@
+﻿@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewRouting;
+@model Product
+
+@{
+    string id = Model.Id.ToValidHtml();
+}
+
+<div class="container-fluid item-row-container horizontal-container">
+
+    <!--image column-->
+    <div class="col-2 padding-tiny">
+        <img class="left-flex no-overflow" src="@Html.DisplayFor(x => x.UserImgUrl)" alt="Product image" />
+    </div>
+
+    <!--Description-->
+    <div class="col-8 space-children no-overflow border-left-line padding-small">
+        <h2 class="">@Html.DisplayFor(x => x.Title)</h2>
+        <p class="">@Html.DisplayFor(x => x.Description)</p>
+    </div>
+
+    <!--Buttons & Price-->
+    <div class="col-2 vertical-container space-children padding-tiny">
+
+        <p class="text-end"><b>@Html.DisplayFor(x => x.Price)€</b></p>
+
+        <div class="vertical-container no-overflow">
+            <button class="space-top-tiny round-right-down-corner" type="button" id="inspectSeller@(id)">Inspect Seller</button>
+            <button class="space-top-tiny round-right-down-corner" type="button" id="removeBtn@(id)">Remove</button>
+        </div>
+
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    
+    $("#inspectSeller@(id)").click(function () {
+        window.location.href = '@(Url.AdminArea().SearchAccountById())?accountId=@(Model.SellerId)';
+    });
+
+    $("#removeBtn@(id)").click(function() {
+
+        $.ajax({
+            url: '@(Url.AdminArea().DeleteProduct())',
+            data: { "sellerId": "@Model.SellerId", "productId": "@Model.Id" },
+            type: 'DELETE',
+            cache: false
+        }).done(function(data) {
+            pullUp($("#@(id).item-row"));
+            console.log(data);
+            notifyUser(data);
+        }).fail(function(error) {
+            console.error(error);
+            notifyUser(error.message);
+        });
+
+    });
+
+</script>

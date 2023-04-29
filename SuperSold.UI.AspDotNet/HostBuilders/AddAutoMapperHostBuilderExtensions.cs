@@ -24,6 +24,9 @@ public static class AddAutoMapperHostBuilderExtensions {
             cfg.CreateMap<SavedRelationshipWithProduct, ProductWithSavedRelationship>()
                 .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Product))
                 .ForMember(dest => dest.SavedRelationship, opt => opt.MapFrom(src => src.SavedRelationship));
+
+            cfg.CreateMap<AccountModel, AccountInfoModel>();
+
         });
 
     }

@@ -1,0 +1,110 @@
+﻿@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewRouting;
+@model (AccountInfoModel Account, IEnumerable<string> Roles, IEnumerable<string> Restrictions, IEnumerable<Product> Products)
+
+<style>
+
+    .area-container {
+        padding:2px;
+        border-radius:5px;
+        border:1px solid black;
+    }
+
+    .role-display, 
+    .restriction-display {
+        padding:2px;
+        border-radius:2px;
+        border: 1px black solid;
+    }
+
+</style>
+
+<!--Main info-->
+<div>
+
+    <div>
+        <label for="id">Id:</label>
+        <span>@Model.Account.IdAccount</span>
+    </div>
+
+    <div>
+        <label for="username">Username:</label>
+        <span>@Model.Account.Username</span>
+    </div>
+
+    <div>
+        <label for="email">Email:</label>
+        <span>@Model.Account.Email</span>
+    </div>
+
+    <!--Roles-->
+    <label>Roles: </label>
+    <div class="horizontal-container flex-wrap area-container">
+        
+        @foreach(var role in Model.Roles) {
+            <span class="role-display">@role</span>
+        }
+
+        @if(!Model.Roles.Any()) {
+            <span class="role-display">None</span>
+        }
+
+    </div>
+
+    <!--Restrictions-->
+    <label>Restrictions: </label>
+    <div class="horizontal-container flex-wrap area-container">
+
+        @foreach(var restriction in Model.Restrictions) {
+            <span class="restriction-display">@restriction</span>      
+        }
+
+        @if(!Model.Restrictions.Any()) {
+            <span class="restriction-display">None</span>
+        }
+
+    </div>
+
+</div>
+
+<!--Apply restrictions-->
+<div>
+
+    <button type="button" id="restrictFromSellingNewBtn">Restrict from selling new products</button>
+
+</div>
+
+<!--List account's selling products-->
+<div>
+
+    @foreach(var product in Model.Products) {
+
+        <div class="item-row" id="@(product.Id.ToValidHtml())" style="border:solid; border-width:2px; border-radius:5px;">
+            @await Component.ProductRow().AdminManagementRow(product);
+        </div>
+
+    }
+
+</div>
+
+<script type="text/javascript">
+
+    $("#restrictFromSellingNewBtn").click(function() {
+
+        $.ajax({
+            url: '@(Url.AdminArea().RestrictAccountFromSelling())',
+            data: { "accountId": "@(Model.Account.IdAccount)" },
+            type: "POST",
+            cache: false
+        }).done(function(data) {
+            console.log(data);
+            notifyUser(data);
+        }).fail(function(error) {
+            notifyUser("There has been an error: " + error.Message);
+            console.error(error);
+        });
+
+    });
+
+
+</script>

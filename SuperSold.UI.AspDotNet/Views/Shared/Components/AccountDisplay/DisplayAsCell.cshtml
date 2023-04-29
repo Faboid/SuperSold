@@ -1,0 +1,38 @@
+﻿@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewRouting;
+@model AccountInfoModel
+
+@{
+    string id = ((Guid)Model.IdAccount!).ToValidHtml();
+}
+
+<div style="padding:0.5rem;">
+
+    <div>
+        <label>Id: </label>
+        <span>@Model.IdAccount</span>
+    </div>
+
+    <div>
+        <label>Username: </label>
+        <span>@Model.Username</span>
+    </div>
+
+    <div>
+        <label>Email: </label>
+        <span>@Model.Email</span>
+    </div>
+
+    <div>
+        <button class="space-top-tiny round-right-down-corner" type="button" id="inspectSeller@(id)">Get Account Details</button>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    
+    $("#inspectSeller@(id)").click(function () {
+        window.location.href = '@(Url.AdminArea().SearchAccountById())?accountId=@(Model.IdAccount)';
+    });
+
+</script>

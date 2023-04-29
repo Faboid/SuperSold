@@ -1,0 +1,18 @@
+﻿@using SuperSold.UI.AspDotNet.Extensions;
+@using SuperSold.UI.AspDotNet.ViewRouting;
+@model IEnumerable<Product>
+
+<h1>Admin Area</h1>
+<span>for products management</span>
+
+<div>
+
+    @foreach(var product in Model) {
+
+        <div class="item-row" id="@(product.Id.ToValidHtml())" style="border:solid; border-width:2px; border-radius:5px;">
+            @await Component.ProductRow().AdminManagementRow(product)
+        </div>
+
+    }
+
+</div>
