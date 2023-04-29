@@ -19,14 +19,16 @@ public class AdminAreaController : Controller {
 
     private readonly IAccountsHandler _accountsHandler;
     private readonly IProductsHandler _productsHandler;
+    private readonly IAccountRolesHandler _accountRolesHandler;
     private readonly IAccountRestrictionsHandler _accountRestrictionsHandler;
     private readonly IMapper _mapper;
 
-    public AdminAreaController(IAccountsHandler accountsHandler, IMapper mapper, IProductsHandler productsHandler, IAccountRestrictionsHandler accountRestrictionsHandler) {
+    public AdminAreaController(IAccountsHandler accountsHandler, IMapper mapper, IProductsHandler productsHandler, IAccountRestrictionsHandler accountRestrictionsHandler, IAccountRolesHandler accountRolesHandler) {
         _accountsHandler = accountsHandler;
         _mapper = mapper;
         _productsHandler = productsHandler;
         _accountRestrictionsHandler = accountRestrictionsHandler;
+        _accountRolesHandler = accountRolesHandler;
     }
 
     [HttpGet]
@@ -35,8 +37,8 @@ public class AdminAreaController : Controller {
     }
 
     [HttpGet]
-    public IActionResult AccountDetails(AccountInfoModel account, IEnumerable<Product> products) {
-        return View(nameof(AccountDetails), (account, products));
+    public IActionResult AccountDetails(AccountInfoModel account, IEnumerable<string> roles, IEnumerable<string> restrictions,  IEnumerable<Product> products) {
+        return View(nameof(AccountDetails), (account, roles, restrictions, products));
     }
 
     [HttpGet]
@@ -134,8 +136,11 @@ public class AdminAreaController : Controller {
             .ProjectTo<Product>(_mapper.ConfigurationProvider)
             .ToListAsyncSafe();
 
+        var roles = await _accountRolesHandler.GetAccountRoles(acc.IdAccount).Select(x => x.Role).ToListAsyncSafe();
+        var restrictions = await _accountRestrictionsHandler.GetAccountRestrictions(acc.IdAccount).Select(x => x.Restriction).ToListAsyncSafe();
+
         return queryResult.Match<IActionResult>(
-            account => AccountDetails(_mapper.Map<AccountInfoModel>(account), products),
+            account => AccountDetails(_mapper.Map<AccountInfoModel>(account), roles, restrictions, products),
             notfound => NotFound()
         );
 

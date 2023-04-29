@@ -1,6 +1,23 @@
 ﻿@using SuperSold.UI.AspDotNet.Extensions;
 @using SuperSold.UI.AspDotNet.ViewRouting;
-@model (AccountInfoModel Account, IEnumerable<Product> Products)
+@model (AccountInfoModel Account, IEnumerable<string> Roles, IEnumerable<string> Restrictions, IEnumerable<Product> Products)
+
+<style>
+
+    .area-container {
+        padding:2px;
+        border-radius:5px;
+        border:1px solid black;
+    }
+
+    .role-display, 
+    .restriction-display {
+        padding:2px;
+        border-radius:2px;
+        border: 1px black solid;
+    }
+
+</style>
 
 <!--Main info-->
 <div>
@@ -18,6 +35,34 @@
     <div>
         <label for="email">Email:</label>
         <span>@Model.Account.Email</span>
+    </div>
+
+    <!--Roles-->
+    <label>Roles: </label>
+    <div class="horizontal-container flex-wrap area-container">
+        
+        @foreach(var role in Model.Roles) {
+            <span class="role-display">@role</span>
+        }
+
+        @if(!Model.Roles.Any()) {
+            <span class="role-display">None</span>
+        }
+
+    </div>
+
+    <!--Restrictions-->
+    <label>Restrictions: </label>
+    <div class="horizontal-container flex-wrap area-container">
+
+        @foreach(var restriction in Model.Restrictions) {
+            <span class="restriction-display">@restriction</span>      
+        }
+
+        @if(!Model.Restrictions.Any()) {
+            <span class="restriction-display">None</span>
+        }
+
     </div>
 
 </div>
