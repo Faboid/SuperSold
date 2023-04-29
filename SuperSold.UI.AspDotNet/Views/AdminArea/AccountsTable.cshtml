@@ -2,15 +2,25 @@
 @using SuperSold.UI.AspDotNet.ViewRouting;
 @model IEnumerable<AccountInfoModel>
 
+<style>
+
+    .table-container {
+        display:flex;
+        flex-direction:row;
+        flex-wrap:wrap;
+    }
+
+</style>
+
 <h1>Admin Area</h1>
 <span>for accounts management</span>
 
-<div>
+<div class="table-container">
 
     @foreach(var account in Model) {
 
-        <div class="item-row" style="border:solid; border-width:2px; border-radius:5px;">
-            @await Component.AccountDisplay().DisplayAsRow(account)
+        <div style="border:solid; border-width:2px; border-radius:5px;">
+            @await Component.AccountDisplay().DisplayAsCell(account)
         </div>
 
     }

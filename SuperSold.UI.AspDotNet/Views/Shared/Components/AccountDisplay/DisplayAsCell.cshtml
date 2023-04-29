@@ -6,31 +6,25 @@
     string id = ((Guid)Model.IdAccount!).ToValidHtml();
 }
 
-<div class="horizontal-container" style="padding:0.5rem;">
+<div style="padding:0.5rem;">
 
-    <div class="col-6">
-
-        <div>
-            <label>Id: </label>
-            <span>@Model.IdAccount</span>
-        </div>
-
-        <div>
-            <label>Username: </label>
-            <span>@Model.Username</span>
-        </div>
-
-        <div>
-            <label>Email: </label>
-            <span>@Model.Email</span>
-        </div>
-
+    <div>
+        <label>Id: </label>
+        <span>@Model.IdAccount</span>
     </div>
 
-    <div class="col-6 vertical-container no-overflow">
+    <div>
+        <label>Username: </label>
+        <span>@Model.Username</span>
+    </div>
 
+    <div>
+        <label>Email: </label>
+        <span>@Model.Email</span>
+    </div>
+
+    <div>
         <button class="space-top-tiny round-right-down-corner" type="button" id="inspectSeller@(id)">Get Account Details</button>
-
     </div>
 
 </div>
