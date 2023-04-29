@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SuperSold.Data.DBInteractions;
 using SuperSold.Data.Models;
+using SuperSold.UI.AspDotNet.Attributes;
 using SuperSold.UI.AspDotNet.Extensions;
 using SuperSold.UI.AspDotNet.Models;
 using SuperSold.UI.AspDotNet.ViewRouting;
@@ -41,10 +42,12 @@ public class ProductsController : Controller {
 
     [HttpGet]
     [Authorize]
+    [CheckRestrictProductManagement]
     public IActionResult Publish() => View();
 
     [HttpPost]
     [Authorize]
+    [CheckRestrictProductManagement]
     public async Task<IActionResult> Publish(Product product) {
 
         if(!ModelState.IsValid) {
@@ -94,6 +97,7 @@ public class ProductsController : Controller {
 
     [HttpGet]
     [Authorize]
+    [CheckRestrictProductManagement]
     public async Task<IActionResult> Edit(Guid id) {
 
         var product = await _productsHandler.GetProduct(id);
@@ -113,6 +117,7 @@ public class ProductsController : Controller {
 
     [HttpPost]
     [Authorize]
+    [CheckRestrictProductManagement]
     public async Task<IActionResult> Edit(Product model) {
 
         if(!ModelState.IsValid) {
