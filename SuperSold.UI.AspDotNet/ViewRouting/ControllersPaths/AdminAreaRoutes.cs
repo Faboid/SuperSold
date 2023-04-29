@@ -5,6 +5,7 @@ namespace SuperSold.UI.AspDotNet.ViewRouting.ControllersPaths;
 public class AdminAreaRoutes : BaseRoutes {
     public AdminAreaRoutes(IUrlHelper urlHelper) : base(urlHelper, "AdminArea") {}
 
+    public string? Index() => BuildUrlToAction(nameof(Index));
     public string? DeleteProduct() => BuildUrlToAction(nameof(DeleteProduct));
 
     public string? SearchAccountsByUsername() => BuildUrlToAction(nameof(SearchAccountsByUsername));
