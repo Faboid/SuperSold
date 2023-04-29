@@ -15,8 +15,11 @@ public abstract class RequiresClaimsAttribute : Attribute, IAuthorizationFilter 
     public void OnAuthorization(AuthorizationFilterContext context) {
 
         if(!_requiredClaims.All(x => context.HttpContext.User.HasClaim(x.Name, x.Value))) {
-            context.Result = new ForbidResult();
+            context.Result = GetUnauthorizedView();
         }
 
     }
+
+    protected abstract IActionResult GetUnauthorizedView();
+
 }
