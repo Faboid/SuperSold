@@ -6,7 +6,7 @@ using SuperSold.UI.AspDotNet.Secrets;
 
 var builder = WebApplication.CreateBuilder(args);
 var emailAuth = builder.Configuration.GetSection("EmailAuth").Get<EmailAuth>() ?? throw new SecretsConfigurationException("EmailAuth is not configured properly in the user secrets.");
-var connectionString = builder.Configuration.GetConnectionString("MySQL") ?? throw new ConfigurationException("The connection string 'MySql' has not been provided in appsettings.json");
+var connectionString = builder.Configuration.GetSection("ConnectionString").GetValue<string>("MySQL") ?? throw new SecretsConfigurationException("The connection string 'MySQL' has not been provided in appsettings.json");
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
