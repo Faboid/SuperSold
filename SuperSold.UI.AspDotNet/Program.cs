@@ -1,9 +1,12 @@
 using SuperSold.UI.AspDotNet.Constants;
+using SuperSold.UI.AspDotNet.Exceptions;
 using SuperSold.UI.AspDotNet.HostBuilders;
 using SuperSold.UI.AspDotNet.HostedServices;
+using SuperSold.UI.AspDotNet.Secrets;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("MySql") ?? throw new Exception("The connection string 'MySql' has not been provided in appsettings.json");
+var emailAuth = builder.Configuration.GetSection("EmailAuth").Get<EmailAuth>() ?? throw new SecretsConfigurationException("EmailAuth is not configured properly in the user secrets.");
+var connectionString = builder.Configuration.GetConnectionString("MySQL") ?? throw new ConfigurationException("The connection string 'MySql' has not been provided in appsettings.json");
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -14,7 +17,7 @@ builder.Services.AddMySqlDatabase(connectionString);
 builder.Services.AddStaticHtmlResources();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthenticationHelpers();
-builder.Services.AddEmailSupport();
+builder.Services.AddEmailSupport(emailAuth);
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(Cookies.Auth).AddCookie(Cookies.Auth, options => {
     options.Cookie.Name = Cookies.Auth;

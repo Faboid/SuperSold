@@ -1,15 +1,18 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+using SuperSold.UI.AspDotNet.Secrets;
 
 namespace SuperSold.UI.AspDotNet.Services;
 
 public class SmtpClientWrapper : ISmtpClientWrapper, IAsyncDisposable {
 
     private readonly ISmtpClient _client;
+    private readonly EmailAuth _auth;
 
-    public SmtpClientWrapper(ISmtpClient client) {
+    public SmtpClientWrapper(ISmtpClient client, EmailAuth auth) {
         _client = client;
+        _auth = auth;
     }
 
     public async Task SendAsync(MimeMessage email) {
@@ -28,7 +31,7 @@ public class SmtpClientWrapper : ISmtpClientWrapper, IAsyncDisposable {
     }
 
     private async Task ConnectAsync() => await _client.ConnectAsync("sandbox.smtp.mailtrap.io", 2525, false);
-    private async Task AuthenticateAsync() => await _client.AuthenticateAsync(new SaslMechanismLogin("e5b094df837f8c", "5db3a96acedcb4"));
+    private async Task AuthenticateAsync() => await _client.AuthenticateAsync(new SaslMechanismLogin(_auth.Username, _auth.Password));
     private async Task DisconnectAsync() => await _client.DisconnectAsync(true);
     public async ValueTask DisposeAsync() {
         
