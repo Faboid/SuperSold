@@ -28,6 +28,7 @@ builder.Services.AddHostedService(s => {
 });
 
 builder.Services.AddAutoMapper();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
 builder.Services.AddAntiforgery();
 var app = builder.Build();
