@@ -29,7 +29,7 @@
 
         <div class="vertical-container no-overflow">
             <button type="button" id="moveToCart@(id)">Move To Cart</button>
-            <button class="space-top-tiny round-right-down-corner" type="button" id="removeBtn@(id)">Remove</button>
+            <button class="space-top-tiny round-right-down-corner" type="button" id="removeFromWishlistBtn@(id)">Remove</button>
         </div>
         
     </div>
@@ -63,7 +63,7 @@
 
     });
 
-    $("#removeBtn@(id)").click(function () {
+    $("#removeFromWishlistBtn@(id)").click(function () {
 
         console.log("Deleting @(Model.Product.Id) from wishlist");
 
