@@ -24,8 +24,4 @@
     <None Include="wwwroot\html\RollbackEmailTemplate.html" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Handlers\Home\Commands\" />
-  </ItemGroup>
-
 </Project>

@@ -1,11 +1,9 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using SuperSold.Data.DBInteractions;
 using SuperSold.UI.AspDotNet.Extensions;
-using SuperSold.UI.AspDotNet.Models;
+using SuperSold.UI.AspDotNet.Handlers.Wishlist.Commands;
+using SuperSold.UI.AspDotNet.Handlers.Wishlist.Queries;
 using SuperSold.UI.AspDotNet.ViewRouting;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
@@ -13,22 +11,18 @@ namespace SuperSold.UI.AspDotNet.Controllers;
 [Authorize]
 public class WishlistController : Controller {
 
-    private readonly IWishlistHandler _wishlistHandler;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
-    public WishlistController(IWishlistHandler wishlistHandler, IMapper mapper) {
-        _wishlistHandler = wishlistHandler;
-        _mapper = mapper;
+    public WishlistController(IMediator mediator) {
+        _mediator = mediator;
     }
 
     [HttpGet]
     public async Task<IActionResult> IndexPartial(int page = 0) {
 
         var userId = User.GetIdentity();
-        var products = await _wishlistHandler.QueryWishlistedProductsByUserId(userId)
-            .SkipToPage(page, 3)
-            .ProjectTo<ProductWithSavedRelationship>(_mapper.ConfigurationProvider)
-            .ToListAsyncSafe();
+        var query = new GetWishlistedProducts(userId, page, 3);
+        var products = await _mediator.Send(query);
 
         return this.RelationshipListPartialView(PartialViewNames.WishlistRow, products);
     }
@@ -37,7 +31,8 @@ public class WishlistController : Controller {
     public async Task<IActionResult> AddToWishlist(Guid productId) {
 
         var userId = User.GetIdentity();
-        var result = await _wishlistHandler.WishlistProduct(userId, productId);
+        var command = new AddToWishlistCommand(userId, productId);
+        var result = await _mediator.Send(command);
 
         return result.Match<IActionResult>(
             success => StatusCode(StatusCodes.Status201Created),
@@ -50,7 +45,8 @@ public class WishlistController : Controller {
     public async Task<IActionResult> Remove(Guid productId) {
 
         var userId = User.GetIdentity();
-        var result = await _wishlistHandler.RemoveWishlistProduct(userId, productId);
+        var command = new RemoveFromWishlistCommand(userId, productId);
+        var result = await _mediator.Send(command);
         return result.Match<IActionResult>(
             success => Ok(),
             notfound => NotFound()
@@ -62,7 +58,8 @@ public class WishlistController : Controller {
     public async Task<IActionResult> MoveToCart(Guid productId) {
 
         var userId = User.GetIdentity();
-        var result = await _wishlistHandler.MoveToCart(userId, productId);
+        var command = new MoveWishlistedItemToCartCommand(userId, productId);
+        var result = await _mediator.Send(command);
         return result.Match<IActionResult>(
             success => Ok(),
             notfound => NotFound()
