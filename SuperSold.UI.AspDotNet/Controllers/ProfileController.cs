@@ -1,50 +1,34 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
-using OneOf;
-using OneOf.Types;
-using SuperSold.Data.DBInteractions;
-using SuperSold.Data.Extensions;
-using SuperSold.Data.Models;
-using SuperSold.Identification;
-using SuperSold.UI.AspDotNet.Constants;
+﻿using Microsoft.AspNetCore.Mvc;
 using SuperSold.UI.AspDotNet.Extensions;
-using SuperSold.UI.AspDotNet.Models;
-using SuperSold.UI.AspDotNet.Services;
-using SuperSold.UI.AspDotNet.ViewRouting;
+using SuperSold.UI.AspDotNet.Handlers.Profile.Commands;
+using SuperSold.UI.AspDotNet.Handlers.Profile.Queries;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
+
 public class ProfileController : Controller {
 
-    private readonly IAccountsHandler _accountsHandler;
-    private readonly IAuthService _authService;
-    private readonly IAuthenticator _authenticator;
-    private readonly IRollbackHandler _rollbackHandler;
-    private readonly IEmailService _emailService;
-    private readonly IEmailViewsBuilder _emailViewsBuilder;
+    private readonly IMediator _mediator;
 
-    public ProfileController(IAccountsHandler accountsHandler, IAuthenticator authenticator, IAuthService authService, IEmailService emailService, IEmailViewsBuilder emailViewsBuilder, IRollbackHandler rollbackHandler) {
-        _accountsHandler = accountsHandler;
-        _authenticator = authenticator;
-        _authService = authService;
-        _emailService = emailService;
-        _emailViewsBuilder = emailViewsBuilder;
-        _rollbackHandler = rollbackHandler;
+    public ProfileController(IMediator mediator) {
+        _mediator = mediator;
     }
 
     public async Task<IActionResult> Index() {
 
         var userId = User.GetIdentity();
-        var user = await _accountsHandler.GetAccountById(userId);
+        var query = new GetAccountDataQuery(userId);
+        var result = await _mediator.Send(query);
 
-        return user.Match<IActionResult>(
-            user => View(new AccountInfoModel() { Username = user.UserName, Email = user.Email }),
+        return result.Match<IActionResult>(
+            user => View(user),
             notFound => NotFound()
         );
     }
 
     [AcceptVerbs("GET", "POST")]
     public async Task<IActionResult> IsUsernameUnique(string username) {
-        var result = await _accountsHandler.UserNameExists(username);
+        var query = new ValidateUsernameExistenceQuery(username);
+        var result = await _mediator.Send(query);
         return Json(!result);
     }
 
@@ -52,21 +36,13 @@ public class ProfileController : Controller {
     public async Task<IActionResult> RenameAccount(string username, string password) {
 
         var userId = User.GetIdentity();
-        var passwordCheck = await _authenticator.Verify(userId, password);
-
-        if(!passwordCheck.TryPickT0(out var _, out var remainder)) {
-            return remainder.Match<IActionResult>(
-                notfound => NotFound(),
-                wrongpassword => BadRequest("The given password is wrong.")
-            );
-        }
-
-        var result = await _accountsHandler.RenameAccount(userId, username);
-
-        return await result.Match<Task<IActionResult>>(
-            async success => await RefreshAuthCookiesAndReturnOk(username),
-            async notfound => await NotFound().AsTask(),
-            async alredyExists => await BadRequest("The new username is already in use.").AsTask()
+        var command = new RenameAccountCommand(userId, username, password);
+        var result = await _mediator.Send(command);
+        return result.Match<IActionResult>(
+            success => Ok(username),
+            unauthorized => Unauthorized("The given password is wrong."),
+            notfound => NotFound("There has been an error retrieving account information."),
+            alreadyExists => Conflict("The new username is already in use by someone.")
         );
 
     }
@@ -75,38 +51,12 @@ public class ProfileController : Controller {
     public async Task<IActionResult> ChangeEmail(string email, string password) {
 
         var accountId = User.GetIdentity();
-        var passwordCheck = await _authenticator.Verify(accountId, password);
-
-        if(!passwordCheck.TryPickT0(out var _, out var remainder)) {
-            return remainder.Match<IActionResult>(
-                notfound => NotFound(),
-                wrongpassword => BadRequest("The given password is wrong.")
-            );
-        }
-
-        var cached = await _accountsHandler.GetAccountById(accountId);
-        if(cached.TryPickT1(out var _, out var cachedAccount)) {
-            return NotFound();
-        }
-
-        var rollback = new RollbackModel() {
-            IdRollback = Guid.NewGuid(),
-            IdAccount = accountId,
-            Body = cachedAccount.Email,
-            RollbackType = RollbackType.Email,
-            ExpireOn = DateTime.UtcNow.AddDays(3)
-        };
-
-        await _rollbackHandler.CreateRollback(rollback);
-        
-        var pathToRollback = Url.Rollbacks().RollbackEmail(accountId, rollback.IdRollback)!;
-        var emailBody = _emailViewsBuilder.BuildRollbackEmailHtml(email, pathToRollback, rollback.ExpireOn.ToLongDateString());
-        await _emailService.Send(cachedAccount.UserName, cachedAccount.Email, emailBody);
-
-        var result = await _accountsHandler.ChangeEmail(accountId, email);
+        var command = new ChangeEmailCommand(accountId, password, email, Url);
+        var result = await _mediator.Send(command);
         return result.Match<IActionResult>(
-            success => Ok(),
-            notFound => NotFound()
+            success => Ok("The email has been changed successfully."),
+            unauthorized => Unauthorized("The given password is wrong."),
+            notfound => NotFound("There has been an error retrieving account information.")
         );
 
     }
@@ -115,20 +65,12 @@ public class ProfileController : Controller {
     public async Task<IActionResult> ChangePassword(string newPassword, string password) {
 
         var accountId = User.GetIdentity();
-        var passwordCheck = await _authenticator.Verify(accountId, password);
-
-        if(!passwordCheck.TryPickT0(out var _, out var remainder)) {
-            return remainder.Match<IActionResult>(
-                notfound => NotFound(),
-                wrongpassword => BadRequest("The given password is wrong.")
-            );
-        }
-
-        var hashPassword = _authenticator.HashPassword(newPassword);
-        var result = await _accountsHandler.ChangePassword(accountId, hashPassword);
+        var command = new ChangePasswordCommand(accountId, newPassword, password);
+        var result = await _mediator.Send(command);
         return result.Match<IActionResult>(
-            success => Ok(),
-            notfound => NotFound()
+            success => Ok("The password has been changed successfully."),
+            unauthorized => Unauthorized("The given password is wrong."),
+            notfound => NotFound("There has been an error retrieving account information.")
         );
 
     }
@@ -137,30 +79,14 @@ public class ProfileController : Controller {
     public async Task<IActionResult> DeleteAccount(string password) {
 
         var accountId = User.GetIdentity();
-        var passwordCheck = await _authenticator.Verify(accountId, password);
-
-        if(!passwordCheck.TryPickT0(out var _, out var remainder)) {
-            return remainder.Match<IActionResult>(
-                notfound => NotFound(),
-                wrongpassword => BadRequest("The given password is wrong.")
-            );
-        }
-
-        var result = await _accountsHandler.DeleteAccount(accountId);
-
-        return await result.Match<Task<IActionResult>>(
-            async success => {
-                await HttpContext.SignOutAsync(Cookies.Auth);
-                return Ok();
-            },
-            async notfound => await NotFound("There has been an error retrieving the account information for deletion.").AsTask()
+        var command = new DeleteAccountCommand(accountId, password);
+        var result = await _mediator.Send(command);
+        return result.Match<IActionResult>(
+            success => Ok(),
+            unauthorized => Unauthorized("The given password is wrong."),
+            notfound => NotFound("There has been an error retrieving account information.")
         );
 
-    }
-
-    private async Task<IActionResult> RefreshAuthCookiesAndReturnOk(string newname) {
-        await _authService.RefreshAuthCookieWithNewUserName(newname);
-        return Ok();
     }
 
 }

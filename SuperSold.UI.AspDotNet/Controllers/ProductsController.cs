@@ -1,23 +1,19 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SuperSold.Data.DBInteractions;
-using SuperSold.Data.Models;
 using SuperSold.UI.AspDotNet.Attributes;
 using SuperSold.UI.AspDotNet.Extensions;
+using SuperSold.UI.AspDotNet.Handlers.Products.Commands;
+using SuperSold.UI.AspDotNet.Handlers.Products.Queries;
 using SuperSold.UI.AspDotNet.Models;
 using SuperSold.UI.AspDotNet.ViewRouting;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class ProductsController : Controller {
 
-    private readonly IProductsHandler _productsHandler;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
-    public ProductsController(IProductsHandler productsHandler, IMapper mapper) {
-        _productsHandler = productsHandler;
-        _mapper = mapper;
+    public ProductsController(IMediator mediator) {
+        _mediator = mediator;
     }
 
     [HttpGet]
@@ -29,14 +25,9 @@ public class ProductsController : Controller {
     public async Task<IActionResult> MyProductsPartial(int page) {
 
         var userId = User.GetIdentity();
-
-        var listProducts = await _productsHandler
-            .QueryProductsBySellerId(userId)
-            .ProjectTo<Product>(_mapper.ConfigurationProvider)
-            .SkipToPage(page, 10)
-            .ToListAsyncSafe();
-
-        return this.ProductListPartialView(PartialViewNames.OnSaleRow, listProducts);
+        var query = new GetOwnedProductsQuery(userId, page, 10);
+        var products = await _mediator.Send(query);
+        return this.ProductListPartialView(PartialViewNames.OnSaleRow, products);
 
     }
 
@@ -60,7 +51,8 @@ public class ProductsController : Controller {
         product.Id = Guid.NewGuid();
         product.SellerId = sellerId;
 
-        var result = await _productsHandler.CreateProduct(_mapper.Map<ProductModel>(product), user);
+        var command = new PublishProductCommand(user, product);
+        var result = await _mediator.Send(command);
 
         return result.Match<IActionResult>(
             success => Redirect("MyProducts"),
@@ -84,10 +76,11 @@ public class ProductsController : Controller {
         var userId = User.GetIdentity();
 
         if(userId != model.SellerId) {
-            return new UnauthorizedResult();
+            return Unauthorized();
         }
 
-        var result = await _productsHandler.DeleteProduct(model.Id);
+        var command = new DeleteProductCommand(model.Id);
+        var result = await _mediator.Send(command);
         return result.Match<IActionResult>(
             success => Ok(),
             notFound => NotFound()
@@ -100,18 +93,14 @@ public class ProductsController : Controller {
     [CheckRestrictProductManagement]
     public async Task<IActionResult> Edit(Guid id) {
 
-        var product = await _productsHandler.GetProduct(id);
-
-        if(product.TryPickT1(out var notFound, out var model)) {
-            return NotFound();
-        }
-
         var userId = User.GetIdentity();
-        if(model.IdSellerAccount != userId) {
-            return new UnauthorizedResult();
-        }
-
-        return View(_mapper.Map<Product>(model));
+        var query = new GetOwnedProductQuery(userId, id);
+        var result = await _mediator.Send(query);
+        return result.Match<IActionResult>(
+            product => View(product),
+            unauthorized => Unauthorized(),
+            notfound => NotFound()
+        );
 
     }
 
@@ -129,7 +118,8 @@ public class ProductsController : Controller {
             return new UnauthorizedResult();
         }
 
-        var result = await _productsHandler.EditProduct(model.Id, _mapper.Map<ProductModel>(model));
+        var command = new EditProductCommand(model.Id, model);
+        var result = await _mediator.Send(command);
         return result.Match<IActionResult>(
             success => RedirectToAction("MyProducts"),
             notFound => NotFound()
@@ -140,13 +130,12 @@ public class ProductsController : Controller {
     [HttpGet]
     public async Task<IActionResult> Get(Guid id, string itemRowFormat) {
 
-        var result = await _productsHandler.GetProduct(id);
-
-        if(result.TryPickT1(out var notFound, out var product)) {
-            return NotFound();
-        }
-
-        return this.ProductListPartialView(itemRowFormat, _mapper.Map<Product>(product));
+        var query = new GetProductQuery(id);
+        var result = await _mediator.Send(query);
+        return result.Match<IActionResult>(
+            product => this.ProductListPartialView(itemRowFormat, product),
+            notFound => NotFound()
+        );
 
     }
 

@@ -1,9 +1,7 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SuperSold.Data.DBInteractions;
 using SuperSold.UI.AspDotNet.Extensions;
+using SuperSold.UI.AspDotNet.Handlers.Purchase.Queries;
 using SuperSold.UI.AspDotNet.Models;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
@@ -12,25 +10,17 @@ namespace SuperSold.UI.AspDotNet.Controllers;
 [AutoValidateAntiforgeryToken]
 public class PurchaseController : Controller {
 
-    private readonly IProductsHandler _productsHandler;
-    private readonly ICartHandler _cartHandler;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
-    public PurchaseController(ICartHandler cartHandler, IMapper mapper, IProductsHandler productsHandler) {
-        _cartHandler = cartHandler;
-        _mapper = mapper;
-        _productsHandler = productsHandler;
+    public PurchaseController(IMediator mediator) {
+        _mediator = mediator;
     }
 
     public async Task<IActionResult> Index() {
-
         var userId = User.GetIdentity();
-        var list = await _cartHandler
-            .QueryCartedProductsByUserId(userId)
-            .ProjectTo<ProductWithSavedRelationship>(_mapper.ConfigurationProvider)
-            .ToListAsyncSafe();
-
-        return View(list);
+        var query = new GetCartedProductsQuery(userId);
+        var result = await _mediator.Send(query);
+        return View(result);
     }
 
     [HttpPost]
@@ -45,16 +35,14 @@ public class PurchaseController : Controller {
             .Select(ProductWithSavedRelationship.ParseBasicString)
             .ToList();
 
-        var oneofProducts = await objProducts
-            .Select(async x => await _productsHandler.GetProduct(x.guid))
-            .ToListAsync();
+        var query = new GetProductsByIdQuery(objProducts.Select(x => x.ProductId).ToArray());
+        var result = await _mediator.Send(query);
 
-        if(oneofProducts.Any(x => x.IsT1)) {
+        if(result.TryPickT1(out var notfound, out var dbProducts)) {
             return StatusCode(412, "One or more of the products in the cart is not on sale anymore.");
         }
 
-        var dbProducts = oneofProducts.Select(x => x.AsT0).ToList();
-        var updatedPrice = dbProducts.Select(x => objProducts.Single(y => x.IdProduct == y.guid).guantity * x.Price).Sum();
+        var updatedPrice = dbProducts.Select(x => objProducts.Single(y => x.Id == y.ProductId).Quantity * x.Price).Sum();
 
         if(price != updatedPrice) {
             return StatusCode(412, "The price has changed for one or more items. Please refresh the page.");

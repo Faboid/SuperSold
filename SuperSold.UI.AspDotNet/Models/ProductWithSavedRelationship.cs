@@ -20,11 +20,13 @@ public class ProductWithSavedRelationship {
     /// </summary>
     /// <param name="basicString"></param>
     /// <returns></returns>
-    public static (Guid guid, int guantity) ParseBasicString(string basicString) {
+    public static BasicProductRelationship ParseBasicString(string basicString) {
         var endId = basicString.IndexOf(']');
         var guid = new Guid(basicString[1..endId]);
         var quantity = int.Parse(basicString[(endId + 2)..]);
         return new(guid, quantity);
     }
+
+    public record struct BasicProductRelationship(Guid ProductId, int Quantity);
 
 }

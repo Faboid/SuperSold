@@ -1,24 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SuperSold.Data.DBInteractions;
-using SuperSold.Data.Models;
-using SuperSold.UI.AspDotNet.Services;
-using SuperSold.UI.AspDotNet.ViewRouting;
+using SuperSold.UI.AspDotNet.Handlers.Rollbacks.Commands;
+using SuperSold.UI.AspDotNet.Handlers.Rollbacks.Queries;
 
 namespace SuperSold.UI.AspDotNet.Controllers;
 public class RollbacksController : Controller {
 
-    private readonly IRollbackHandler _rollbackHandler;
-    private readonly IAccountsHandler _accountsHandler;
-    private readonly IEmailService _emailService;
-    private readonly IEmailViewsBuilder _emailBuilder;
-    private readonly ILogger<RollbacksController> _logger;
+    private readonly IMediator _mediator;
 
-    public RollbacksController(IRollbackHandler rollbackHandler, IAccountsHandler accountsHandler, IEmailService emailService, IEmailViewsBuilder emailBuilder, ILogger<RollbacksController> logger) {
-        _rollbackHandler = rollbackHandler;
-        _accountsHandler = accountsHandler;
-        _emailService = emailService;
-        _emailBuilder = emailBuilder;
-        _logger = logger;
+    public RollbacksController(IMediator mediator) {
+        _mediator = mediator;
     }
 
     [HttpGet]
@@ -33,46 +24,26 @@ public class RollbacksController : Controller {
             return BadRequest("Must insert valid username.");
         }
 
-        var result = await _accountsHandler.GetAccountByUserName(username);
-        if(result.TryPickT1(out var _, out var account)) {
-            return NotFound("The given username does not exist.");
-        }
+        var command = new CreateForgotPasswordCodeCommand(username, Url);
+        var result = await _mediator.Send(command);
 
-        //create rollback code
-        var rollback = new RollbackModel() {
-            IdRollback = Guid.NewGuid(),
-            IdAccount = account.IdAccount,
-            Body = string.Empty,
-            ExpireOn = DateTime.UtcNow.AddMinutes(20),
-            RollbackType = RollbackType.Password
-        };
-
-        await _rollbackHandler.CreateRollback(rollback);
-
-        //send mail
-        var email = account.Email;
-        var url = Url.Rollbacks().ForgotPassword(rollback.IdAccount, rollback.IdRollback)!;
-        var body = _emailBuilder.BuildForgotPasswordEmailHtml(url, rollback.ExpireOn.ToLongTimeString());
-        await _emailService.Send(username, email, body);
-
-        return StatusCode(209, $"The reset code has been sent to the email linked to this account. The email starts with [{email[..4]}...]");
+        return result.Match<IActionResult>(
+            response => StatusCode(209, $"The reset code has been sent to the email linked to this account. The email starts with [{response.Value.EmailAddress[..4]}...]"),
+            notfound => NotFound()
+        );
 
     }
 
     [HttpGet]
     public async Task<IActionResult> ForgotPassword(Guid userId, Guid token) {
 
-        var rollback = await _rollbackHandler.GetRollback(token, userId, RollbackType.Password);
-        if(!rollback.TryPickT0(out var rollbackModel, out var _)) {
-            return NotFound("The rollback token or user id do not exist.");
-        }
-
-        if(DateTime.UtcNow > rollbackModel.ExpireOn) {
-            await _rollbackHandler.ExpireRollback(token);
-            return Unauthorized("The token has expired");
-        }
-        
-        return View((userId, token));
+        var query = new ValidatePasswordRollbackQuery(userId, token);
+        var result = await _mediator.Send(query);
+        return result.Match<IActionResult>(
+            success => View((userId, token)),
+            expired => Unauthorized("The token has expired"),
+            notfound => NotFound("The rollback token or user id do not exist.")
+        );
 
     }
 
@@ -83,55 +54,27 @@ public class RollbacksController : Controller {
             return BadRequest("The new password and confirm password do not match.");
         }
 
-        var rollbackOption = await _rollbackHandler.GetRollback(token, userId, RollbackType.Password);
-        if(!rollbackOption.TryPickT0(out var rollbackModel, out var _)) {
-            return NotFound("The rollback token or user id do not exist.");
-        }
-
-        if(DateTime.UtcNow > rollbackModel.ExpireOn) {
-            await _rollbackHandler.ExpireRollback(token);
-            return Unauthorized("The token has expired");
-        }
-
-        var result = await _accountsHandler.ChangePassword(userId, newPassword);
-        if(result.TryPickT1(out var _, out var success)) {
-            return NotFound("The user id does not exist.");
-        }
-
-        await _rollbackHandler.ExpireRollback(token);
-        return Ok("The password has been changed successfully.");
+        var command = new RollbackPasswordCommand(userId, token, newPassword);
+        var result = await _mediator.Send(command);
+        return result.Match<IActionResult>(
+            success => Ok("The password has been changed successfully."),
+            expired => Unauthorized("The token has expired"),
+            notfound => NotFound("The rollback token or user id do not exist.")
+        );
 
     }
 
     [HttpPost]
     public async Task<IActionResult> RollbackEmail(Guid userId, Guid token) {
 
-        var rollback = await _rollbackHandler.GetRollback(token, userId, RollbackType.Email);
-        if(!rollback.TryPickT0(out var rollbackModel, out var _)) {
-            return NotFound("The rollback token or user id do not exist.");
-        }
-
-        if(DateTime.UtcNow > rollbackModel.ExpireOn) {
-            await _rollbackHandler.ExpireRollback(token);
-            return Unauthorized("The token has expired");
-        }
-
-        if(string.IsNullOrWhiteSpace(rollbackModel.Body)) {
-            return StatusCode(500, "The previous email is missing from the saved token's body.");
-        }
-
-        var curr = await _accountsHandler.GetAccountById(userId);
-        if(curr.TryPickT1(out var _, out var account)) {
-            return NotFound("The rollback token or user id do not exist.");
-        }
-
-        var result = await _accountsHandler.ChangeEmail(userId, rollbackModel.Body);
-        if(result.TryPickT1(out var _, out var _)) {
-            return NotFound("There has been an error finding the account to rollback the email.");
-        }
-
-        await _rollbackHandler.ExpireRollback(token);
-        return Ok("The email has been rerolled back successfully.");
+        var command = new RollbackEmailCommand(userId, token);
+        var result = await _mediator.Send(command);
+        return result.Match(
+            success => Ok("The email has been rerolled back successfully."),
+            notfound => NotFound("The rollback token or user id do not exist."),
+            expired => Unauthorized("The token has expired"),
+            missingBody => StatusCode(500, "The previous email is missing from the saved token's body.")
+        );
 
     }
 

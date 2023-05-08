@@ -1,9 +1,6 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using SuperSold.Data.DBInteractions;
-using SuperSold.UI.AspDotNet.Extensions;
+using SuperSold.UI.AspDotNet.Handlers.Home.Queries;
 using SuperSold.UI.AspDotNet.Models;
 using SuperSold.UI.AspDotNet.ViewRouting;
 using System.Diagnostics;
@@ -13,13 +10,11 @@ public class HomeController : Controller {
 
     private const int pageLength = 2;
     private readonly ILogger<HomeController> _logger;
-    private readonly IProductsHandler _productsHandler;
-    private readonly IMapper _mapper;
+    private readonly IMediator _mediator;
 
-    public HomeController(ILogger<HomeController> logger, IProductsHandler productsHandler, IMapper mapper) {
+    public HomeController(ILogger<HomeController> logger, IMediator mediator) {
         _logger = logger;
-        _productsHandler = productsHandler;
-        _mapper = mapper;
+        _mediator = mediator;
     }
 
     [HttpGet]
@@ -31,11 +26,8 @@ public class HomeController : Controller {
     [HttpGet]
     public async Task<IActionResult> IndexPartial(int page) {
 
-        var products = await _productsHandler
-            .QueryAllProducts()
-            .SkipToPage(page, pageLength)
-            .ProjectTo<Product>(_mapper.ConfigurationProvider)
-            .ToListAsyncSafe();
+        var query = new GetProductsInPage(page, pageLength);
+        var products = await _mediator.Send(query);
 
         _logger.LogInformation("Loaded {number} items with IndexPartial", products.Count);
         return this.ProductListPartialView(PartialViewNames.HomeSearchRow, products);
@@ -45,16 +37,11 @@ public class HomeController : Controller {
     public async Task<IActionResult> SearchPartial(int page, string search) {
         
         if(string.IsNullOrWhiteSpace(search)) {
-            return RedirectToPage("Index");
+            return RedirectToPage(nameof(Index));
         }
 
-        var searchExpression = $"%{search ?? ""}%";
-        var products = await _productsHandler
-            .QueryAllProducts()
-            .Where(x => EF.Functions.Like(x.Title, searchExpression))
-            .SkipToPage(page, pageLength)
-            .ProjectTo<Product>(_mapper.ConfigurationProvider)
-            .ToListAsyncSafe();
+        var query = new SearchProductsInPage(page, pageLength, search);
+        var products = await _mediator.Send(query);
 
         ViewBag.SearchItem = search;
         _logger.LogInformation("Loaded {number} items with SearchPartial", products.Count);
