@@ -1,0 +1,19 @@
+
+:root,
+:root.dark {
+    --navbar-bg: black;
+    --navbar-text: #FFFAFA;
+    --page-body: #121212;
+    --page-surface: #2D3142;
+    --page-surfaceAlpha20: #FFFAFA11;
+    --page-text: #FFFAFA;
+}
+
+:root.light {
+    --navbar-bg: white;
+    --navbar-text: black;
+    --page-body: white;
+    --page-surface: grey;
+    --page-surfaceAlpha20: grey;
+    --page-text: black;
+}

@@ -6,11 +6,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>@ViewData["Title"] - SuperSold.UI.AspDotNet</title>
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
         <link rel="stylesheet" href="~/css/productRow.css" />
         <link rel="stylesheet" href="~/css/layout.css" />
         <link rel="stylesheet" href="~/SuperSold.UI.AspDotNet.styles.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/themes/dark-theme.css" /> @* todo - extract theme loading to shared partial view or viewcontroller *@
         <script src="~/js/productLoad.js"></script>
         <script src="~/js/animations.js"></script>
         <script src="~/js/events.js"></script>
@@ -18,9 +17,9 @@
     </head>
     <body>
         <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3 nav-body">
                 <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SuperSold</a>
+                    <a class="navbar-brand nav-title" asp-area="" asp-controller="Home" asp-action="Index">SuperSold</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -34,6 +33,12 @@
                                 <a class="nav-link text-dark" href="@Url.Home().Privacy()">Privacy</a>
                             </li>
                         </ul>
+
+                        <select name="theme-select" class="theme-selector" onchange="changeTheme(this.value)">
+                            <option value="dark">Dark</option>
+                            <option value="light">Light</option>
+                        </select>
+
                         <div class="mr-2">
                             @await Component.InvokeAsync("ProfileNavBar")
                         </div>
@@ -41,8 +46,8 @@
                 </div>
             </nav>
         </header>
-        
-        <div class="container">
+
+        <div class="container page-body">
             @await Html.PartialAsync("_NotifyUserPartialView")
 
             <main role="main" class="pb-3">
@@ -60,6 +65,7 @@
         <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
         <script src="~/lib/jquery-validation/dist/additional-methods.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="~/js/themes.js"></script>
         <script src="~/js/site.js" asp-append-version="true"></script>
         @await RenderSectionAsync("Scripts", required: false)
     </body>
