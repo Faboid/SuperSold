@@ -5,47 +5,108 @@
     Layout = "_Layout";
 }
 
-<h1>Login</h1>
-<hr/>
-<div class="container border">
-    <form asp-action="Login">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="UserName" class="control-label"/>
-            <input asp-for="UserName" class="form-control"/>
-            <span asp-validation-for="UserName" class="text-danger"/>
-        </div>
-        <div class="form-group">
-            <label asp-for="Password" class="control-label" />
-            <input asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger" />
-        </div>
-        <div class="form-group form-check">
-            <label class="form-check-label">
-                <input class="form-check-input" asp-for="RememberMe"/> @Html.DisplayNameFor(x => x.RememberMe)
-            </label>
-        </div>
+<style>
 
-        @if(ViewBag.Message is not null) {
-            <div class="border-round text-danger">
-                @ViewBag.Message
+    .main-container {
+        top:25%;
+    }
+
+    .login-button {
+        width: 20rem;
+    }
+
+</style>
+
+<div class="main-container force-center-page default-container">
+    <div class="margin-auto">
+
+        <h1 class="text-center">Login</h1>
+
+        <form action="#" id="loginForm">
+
+            <div class="vertical-container form-container">
+
+                <div class="form-item">
+                    <label for="username" class="form-item-label">Username</label>
+                    <input type="text" name="username" class="form-item-input" />
+                </div>
+
+                <div class="form-item">
+                    <label for="password" class="form-item-label">Password</label>
+                    <input type="password" name="password" class="form-item-input" />
+                </div>
+
+                <div class="form-item">
+                    <label class="form-item-label label-checkmark" for="rememberMe">
+                        <input type="checkbox" name="rememberMe" class="checkbox" />
+                        <span class="checkbox-description">Remember Me</span>
+                    </label>
+                </div>
+
+                <div class="form-item margin-auto">
+                    <input type="submit" value="Login" class="form-submit-btn" id="submitLoginForm" />
+                </div>
+
             </div>
-        }
 
-        <div class="form-group">
-            <input type="submit" value="Login" class="btn btn-primary"/>
+        </form>
+
+        <br/>
+
+        <div>
+            <a class="forgot-password-link" href="@Url.Rollbacks().ForgotPasswordRequest()">Forgot password?</a>
         </div>
 
-    </form>
-
-    <div>
-        <a href="@Url.Rollbacks().ForgotPasswordRequest()">Forgot your password?</a>
     </div>
-
 </div>
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+<script type="text/javascript">
+
+    $("#submitLoginForm").click(function() {
+
+        $("#loginForm").validate({
+            rules: {
+                username: {
+                    required: true
+                },
+                password: {
+                    required: true
+                }
+            },
+            messages: {
+                username: "Must provide an username.",
+                password: "Must provide your password."
+            },
+            submitHandler: function(form) { submitLogin(form); }
+        });
+
+    });
+
+    function submitLogin(form) {
+
+        var data = $(form).serialize();
+        data = data.substring(0, data.length - 3) + data.substring(data.length - 3).replace("on", "true");
+
+        $.ajax({
+            url: '@(Url.Authentication().Login())',
+            type: 'POST',
+            data: data,
+            cache: false
+        }).done(function(data) {
+            console.log("logged in.");
+            window.location = '@Url.Home().Index()';
+        }).fail(function(error) {
+
+            if(error.status == 404) {
+                notifyUser("You have inserted the wrong credentials.");
+            } else {
+                notifyUser("There has been an error trying to log in.");
+            }
+
+            console.error(error);
+
+        });
+
     }
-}
+    
+</script>
