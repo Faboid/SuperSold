@@ -9,9 +9,10 @@ html {
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+        color: var(--text-color);
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -21,9 +22,192 @@ html {
 html {
   position: relative;
   min-height: 100%;
+  border-color:var(--border-color);
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background: var(--primary-background-color);
+    color: var(--text-color);
 }
 
+footer,
+footer div,
+footer a {
+    background: var(--footer-background-color);
+    color: var(--footer-text-color);
+    border-color: var(--border-color);
+}
+
+nav,
+nav div,
+nav a {
+    background: var(--navbar-background-color);
+    color: var(--navbar-text-color);
+    border-color: var(--border-color);
+}
+
+a {
+    text-decoration: none;
+    color: var(--link-text-color);
+}
+
+a:hover {
+    color: var(--link-text-hover-color);
+    text-decoration:underline;
+}
+
+input {
+    background: var(--input-background-color);
+    color: var(--input-text-color);
+}
+
+button,
+input[type=submit],
+input[type=button],
+.button {
+    display: inline-block;
+    text-decoration: none;
+    padding: 0.2rem 1.5rem;
+    background: var(--button-background-color);
+    color: var(--button-text-color);
+}
+
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+.button:hover {
+    background-color: var(--button-hover-color);
+}
+
+button:active,
+input[type="submit"]:active,
+input[type="button"]:active,
+.button:active {
+    background-color: var(--button-click-color);
+}
+
+button:focus,
+input[type="submit"]:focus,
+input[type="button"]:focus,
+.button:focus {
+    outline: none;
+    box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.3);
+}
+
+.checkbox,
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance:none;
+    background: var(--checkbox-background-color);
+    color: var(--input-text-color);
+    margin-right: 5px;
+    height:16px;
+    width:16px;
+    border-radius: 3px;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    margin-top:auto;
+    margin-bottom:auto;
+    transition: transform 0.8s ease, border-radius 0.8s ease;
+}
+
+.checkbox:hover,
+input[type="checkbox"]:hover {
+    border-color: var(--text-color);
+}
+
+.checkbox:checked,
+input[type="checkbox"]:checked {
+    animation: checkboxAnimation 0.7s ease forwards;
+    border-radius: 50%;
+    background: transparent;
+    border: 2.5px solid var(--checkbox-checked-color);
+}
+
+@keyframes checkboxAnimation {
+    0% {
+        transform: scale(1);
+    }
+    30% {
+        transform: rotate(45deg) scale(0.2);
+    }
+    80% {
+        transform: scale(1.2) rotate(120deg);
+        border-radius: 25%;
+        background: transparent;
+        border: 2.5px solid var(--checkbox-checked-color);
+    }
+    100% {
+        transform: scale(1) rotate(-45deg);
+    }
+}
+
+.theme-selector {
+    background: var(--secondary-background-color);
+    color: var(--text-color);
+}
+
+.nav-body {
+    border-bottom: 2px black;
+    background: var(--navbar-background-color);
+    color: var(--navbar-text-color);
+}
+
+.nav-title {
+    color: var(--navbar-text-color);
+}
+
+.nav-headers {
+
+}
+
+.page-body {
+}
+
+.form-container {
+    padding: 0.5rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--secondary-background-color);
+    box-shadow: 2px 2px 5px 5px black;
+}
+
+.form-item {
+    margin: 0.5rem;
+    padding: 0.2rem;
+    display:flex;
+    flex-direction:column;
+}
+
+.form-item-label {
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.label-checkmark {
+    display:flex;
+    flex-direction:row;
+
+}
+
+.checkbox-description {
+    padding-left: 5px;
+}
+
+.form-item-input {
+    margin:0px;
+    padding: 0.2rem;
+    border-radius:5px;
+}
+
+.form-submit-btn {
+    padding: 5px 30px;
+    border-radius: 2px;
+    box-shadow: var(--default-shadow);
+}
+
+.forgot-password-link {
+    display:flex;
+    justify-content:center;
+}

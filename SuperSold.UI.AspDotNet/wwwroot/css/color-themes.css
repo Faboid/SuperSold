@@ -1,19 +1,58 @@
 
 :root,
 :root.dark {
-    --navbar-bg: black;
-    --navbar-text: #FFFAFA;
-    --page-body: #121212;
-    --page-surface: #2D3142;
-    --page-surfaceAlpha20: #FFFAFA11;
-    --page-text: #FFFAFA;
+    --primary-background-color: #222222;
+    --secondary-background-color: #333333;
+    --border-color: #444444;
+    --navbar-background-color: #111111;
+    --navbar-text-color: white;
+    --footer-background-color: #111111;
+    --footer-text-color: white;
+    --text-color: #F8F8F8;
+
+    --default-border: 0.5px solid gray;
+    --default-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+
+    --input-background-color: #474748;
+    --input-text-color: white;
+
+    --button-background-color: #474748;
+    --button-hover-color: gray;
+    --button-click-color: white;
+    --button-text-color: white;
+
+    --checkbox-background-color:#474748;
+    --checkbox-checked-color: #559CAD;
+
+    --link-text-color: rgb(97, 152, 205);
+    --link-text-hover-color: rgb(110, 165, 220);
 }
 
+:root,
 :root.light {
-    --navbar-bg: white;
-    --navbar-text: black;
-    --page-body: white;
-    --page-surface: grey;
-    --page-surfaceAlpha20: grey;
-    --page-text: black;
+  --primary-background-color: #F8F8F8;
+  --secondary-background-color: #ECECEC;
+  --border-color: #DADADA;
+  --navbar-background-color: #FFFFFF;
+  --navbar-text-color: #333333;
+  --footer-background-color: #FFFFFF;
+  --footer-text-color: #333333;
+  --text-color: #333333;
+
+  --default-border: 0.5px solid #AAAAAA;
+  --default-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  --input-background-color: #FFFFFF;
+  --input-text-color: #333333;
+
+  --button-background-color: #FFFFFF;
+  --button-hover-color: #EAEAEA;
+  --button-click-color: #DDDDDD;
+  --button-text-color: #333333;
+
+  --checkbox-background-color: #FFFFFF;
+  --checkbox-checked-color: blue;
+
+  --link-text-color: #0000CD;
+  --link-text-hover-color: blue;
 }
