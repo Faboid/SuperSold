@@ -17,9 +17,9 @@
     --input-text-color: white;
 
     --button-background-color: #474748;
-    --button-hover-color: gray;
-    --button-click-color: white;
-    --button-text-color: white;
+    --button-hover-color: #5a5a5a;
+    --button-click-color: #888888;
+    --button-text-color: #ffffff;
 
     --checkbox-background-color:#474748;
     --checkbox-checked-color: #559CAD;
