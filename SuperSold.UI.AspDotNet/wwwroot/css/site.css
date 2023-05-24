@@ -177,20 +177,15 @@ input[type="checkbox"]:checked {
     display: flex;
     padding: 5px 10px;
     height: 100%;
-    color: white;
+    color: var(--navbar-text-color);
     align-items: center;
-/*    border-left: 1px transparent;
-    border-right: 1px transparent;*/
 }
 
 .nav-title:hover,
 .nav-header:hover {
     text-decoration: none;
-    color: white;
+    color: var(--navbar-text-color);
     background: var(--navbar-header-highlight);
-    /*background: linear-gradient(to right, var(--navbar-header-highlight) 0%, transparent 20%, transparent 80%, var(--navbar-header-highlight) 100%), linear-gradient(to bottom, var(--navbar-header-highlight) 0%, transparent 15%, transparent 85%, var(--navbar-header-highlight) 100%);*/
-/*    border-left: 1px solid var(--navbar-border-color);
-    border-right: 1px solid var(--navbar-border-color);*/
 }
 
 .page-body {
