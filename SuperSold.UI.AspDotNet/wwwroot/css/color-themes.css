@@ -32,13 +32,16 @@
     --link-text-hover-color: rgb(110, 165, 220);
 }
 
-:root,
 :root.light {
   --primary-background-color: #F8F8F8;
   --secondary-background-color: #ECECEC;
   --border-color: #DADADA;
+
   --navbar-background-color: #FFFFFF;
   --navbar-text-color: #333333;
+  --navbar-header-highlight: #DFDFDF;
+  --navbar-border-color: white;
+
   --footer-background-color: #FFFFFF;
   --footer-text-color: #333333;
   --text-color: #333333;
