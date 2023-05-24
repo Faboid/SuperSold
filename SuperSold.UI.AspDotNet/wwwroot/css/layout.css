@@ -29,6 +29,10 @@
     width: stretch;
 }
 
+.fill-height {
+    height: 100%;
+}
+
 .text-align-center {
     text-align: center;
 }

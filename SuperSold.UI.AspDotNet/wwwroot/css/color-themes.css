@@ -4,9 +4,13 @@
     --primary-background-color: #222222;
     --secondary-background-color: #333333;
     --border-color: #444444;
-    --navbar-background-color: #111111;
+
+    --navbar-background-color: #151515;
     --navbar-text-color: white;
-    --footer-background-color: #111111;
+    --navbar-header-highlight: black;
+    --navbar-border-color: white;
+
+    --footer-background-color: #151515;
     --footer-text-color: white;
     --text-color: #F8F8F8;
 
