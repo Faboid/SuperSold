@@ -20,6 +20,16 @@
     flex-direction: column;
 }
 
+.absolute-top {
+    position: absolute;
+    top: 0;
+}
+
+.center-horizontal {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .stretch-size {
     height: stretch;
     width: stretch;
@@ -39,6 +49,14 @@
 
 .space-children {
     justify-content: space-between;
+}
+
+.justify-content-center {
+    justify-content:center;
+}
+
+.justify-content-left {
+    justify-content: flex-end;
 }
 
 .no-overflow {
