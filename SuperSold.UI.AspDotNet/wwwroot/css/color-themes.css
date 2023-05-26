@@ -3,6 +3,9 @@
 :root.dark {
     --primary-background-color: #222222;
     --secondary-background-color: #333333;
+    --danger-background-color: #CC0000;
+    --danger-secondary-background-color: #DD0000;
+    --danger-text-color: white;
     --border-color: #444444;
 
     --navbar-background-color: #151515;
@@ -20,46 +23,69 @@
     --input-background-color: #474748;
     --input-text-color: white;
 
+    --danger-input-background-color: #DD0000;
+    --danger-text-color: white;
+
     --button-background-color: #474748;
     --button-hover-color: #5a5a5a;
     --button-click-color: #888888;
     --button-text-color: #ffffff;
 
+    --danger-button-background-color: #DD0000;
+    --danger-button-hover-color: #BB0000;
+    --danger-button-click-color: #AA0000;
+    --danger-button-text-color: white;
+
     --checkbox-background-color:#474748;
     --checkbox-checked-color: #559CAD;
+
+    --danger-checkbox-background-color: #220000;
+    --danger-checkbox-checked-color: black;
 
     --link-text-color: rgb(97, 152, 205);
     --link-text-hover-color: rgb(110, 165, 220);
 }
 
 :root.light {
-  --primary-background-color: #F8F8F8;
-  --secondary-background-color: #ECECEC;
-  --border-color: #DADADA;
+    --primary-background-color: #F8F8F8;
+    --secondary-background-color: #ECECEC;
+    --danger-background-color: #CC0000;
+    --danger-secondary-background-color: #BB0000;
+    --danger-text-color: black;
 
-  --navbar-background-color: #FFFFFF;
-  --navbar-text-color: #333333;
-  --navbar-header-highlight: #DFDFDF;
-  --navbar-border-color: white;
+    --border-color: #DADADA;
 
-  --footer-background-color: #FFFFFF;
-  --footer-text-color: #333333;
-  --text-color: #333333;
+    --navbar-background-color: #FFFFFF;
+    --navbar-text-color: #333333;
+    --navbar-header-highlight: #DFDFDF;
+    --navbar-border-color: white;
 
-  --default-border: 0.5px solid #AAAAAA;
-  --default-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --footer-background-color: #FFFFFF;
+    --footer-text-color: #333333;
+    --text-color: #333333;
 
-  --input-background-color: #FFFFFF;
-  --input-text-color: #333333;
+    --default-border: 0.5px solid #AAAAAA;
+    --default-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
-  --button-background-color: #FFFFFF;
-  --button-hover-color: #EAEAEA;
-  --button-click-color: #DDDDDD;
-  --button-text-color: #333333;
+    --input-background-color: #FFFFFF;
+    --input-text-color: #333333;
 
-  --checkbox-background-color: #FFFFFF;
-  --checkbox-checked-color: blue;
+    --danger-input-background-color: #DD0000;
+    --danger-text-color: #222222;
 
-  --link-text-color: #0000CD;
-  --link-text-hover-color: blue;
+    --button-background-color: #FFFFFF;
+    --button-hover-color: #EAEAEA;
+    --button-click-color: #DDDDDD;
+    --button-text-color: #333333;
+
+    --danger-button-background-color: #DD0000;
+    --danger-button-hover-color: #BB0000;
+    --danger-button-click-color: #AA0000;
+    --danger-button-text-color: black;
+
+    --checkbox-background-color: #FFFFFF;
+    --checkbox-checked-color: blue;
+
+    --link-text-color: #0000CD;
+    --link-text-hover-color: blue;
 }

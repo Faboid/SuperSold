@@ -261,10 +261,13 @@ input[type="checkbox"].checkbox-multilined {
     padding-left: 5px;
 }
 
-.form-item-input {
+.form-item-input,
+input[type="text"],
+input[type="password"] {
     margin:0px;
     padding: 0.2rem;
     border-radius:5px;
+    text-align:center;
 }
 
 .form-submit-btn {
@@ -276,4 +279,40 @@ input[type="checkbox"].checkbox-multilined {
 .forgot-password-link {
     display:flex;
     justify-content:center;
+}
+
+.accent-danger {
+    background-color: var(--danger-background-color);
+    color: var(--danger-text-color);
+    font-weight:bold;
+}
+
+.danger-button {
+    background-color: var(--danger-button-background-color);
+    color: var(--danger-button-text-color);
+    font-weight: bold;
+}
+
+.danger-button:hover {
+    background-color: var(--danger-button-hover-color);
+}
+
+.danger-button:active {
+    background-color: var(--danger-button-click-color);
+}
+
+.danger-input {
+    background-color: var(--danger-input-background-color);
+    color: var(--danger-text-color);
+}
+
+.danger.checkbox,
+input[type="checkbox"].danger-checkbox {
+    background-color: var(--danger-checkbox-background-color);
+}
+
+.danger.checkbox:checked,
+input[type="checkbox"].danger-checkbox {
+    background-color: transparent;
+    border-color: var(--danger-checkbox-checked-color);
 }

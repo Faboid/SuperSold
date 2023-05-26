@@ -1,6 +1,15 @@
 ﻿@using SuperSold.UI.AspDotNet.ViewRouting;
 @model string
 
+<style>
+
+    .form-container {
+        width: 250px;
+        margin: 2rem;
+    }
+
+</style>
+
 <div>
 
     <div>
@@ -9,22 +18,22 @@
         <button type="button" id="updateUsernameBtn">Update</button>
     </div>
 
-    <div class="hide" id="usernameEditorContainer">
+    <div class="form-container hide" id="usernameEditorContainer">
 
         <form action="#" id="usernameForm">
 
-            <div class="form-group">
-                <label for="username">New Username: </label>
-                <input type="text" name="username" id="usernameInputText" class="form-control" />
+            <div class="form-item">
+                <label for="username" class="form-item-label">New Username: </label>
+                <input type="text" name="username" id="usernameInputText" class="form-item-input" />
             </div>
 
-            <div class="form-group">
-                <label for="password">Password: </label>
-                <input type="password" name="password" class="form-control" />
+            <div class="form-item">
+                <label for="password" class="form-item-label">Password: </label>
+                <input type="password" name="password" class="form-item-input" />
             </div>
 
-            <div class="form-group">
-                <button type="submit" id="userNameUpdateSubmitBtn">Confirm Update</button>
+            <div class="form-item">
+                <button type="submit" id="userNameUpdateSubmitBtn" class="form-submit-btn">Confirm Update</button>
             </div>
 
         </form>
