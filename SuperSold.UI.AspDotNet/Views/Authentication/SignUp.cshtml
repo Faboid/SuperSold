@@ -11,11 +11,6 @@
         top: 40%;
     }
 
-    .checkbox,
-    input[type="checkbox"] {
-        margin-top: 0.25rem;
-    }
-
     .checkbox-description {
         width:250px;
     }
@@ -53,7 +48,7 @@
 
                 <div class="form-item">
                     <label class="form-item-label label-checkmark" for="acceptTerms">
-                        <input type="checkbox" name="acceptTerms" class="checkbox"/>
+                        <input type="checkbox" name="acceptTerms" class="checkbox checkbox-multilined"/>
                         <span class="checkbox-description">
                             I agree with the <a href="@Url.Home().TermsAndConditions()">terms and conditions</a>,
                             <a href="@Url.Home().Privacy()">privacy agreement</a>, and

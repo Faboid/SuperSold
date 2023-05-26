@@ -120,6 +120,7 @@ input[type="checkbox"] {
     margin-right: 5px;
     height:16px;
     width:16px;
+    aspect-ratio: 1 / 1;
     border-radius: 3px;
     border: 1px solid var(--border-color);
     cursor: pointer;
@@ -139,6 +140,11 @@ input[type="checkbox"]:checked {
     border-radius: 50%;
     background: transparent;
     border: 2.5px solid var(--checkbox-checked-color);
+}
+
+.checkbox-multilined,
+input[type="checkbox"].checkbox-multilined {
+    margin-top: 0.25rem;
 }
 
 @keyframes checkboxAnimation {
