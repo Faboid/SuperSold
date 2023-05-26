@@ -21,7 +21,7 @@
 
     </div>
 
-    <div class="bg-body-secondary productContainer" id="cartProductsContainer">
+    <div class="form-container productContainer" id="cartProductsContainer">
 
         @await Html.ScrollablePartialView(Url.Cart().IndexPartial()!, customId: cartViewId)
 
@@ -36,7 +36,7 @@
 
     <h2><b>Wishlist</b></h2>
 
-    <div class="bg-body-secondary productContainer" id="wishlistProductsContainer">
+    <div class="form-container productContainer" id="wishlistProductsContainer">
 
         @await Html.ScrollablePartialView(Url.Wishlist().IndexPartial()!, customId: wishlistViewId)
 
