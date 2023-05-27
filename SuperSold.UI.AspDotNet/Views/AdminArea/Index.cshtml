@@ -1,97 +1,105 @@
 ﻿@using SuperSold.UI.AspDotNet.ViewRouting;
 
 <style>
+
     .form-container {
-        border-radius: 50px;
-        border:solid 1px black;
-        padding:2rem;
+        min-width: 20vw;
+        width: auto;
+        max-width: 70vw;
     }
+
 </style>
 
 <h1>Set up search parameters</h1>
 
 <!--Search Parameters-->
-<div class="form-container bg-secondary-subtle">
 
-    <h2>Search products:</h2>
-    <form action="@Url.AdminArea().SearchProducts()">
+<div class="default-container">
+    <div class="margin-auto">
+        <div class="form-container">
 
-        <div>
-            <label for="searchTitle">Search Title:</label>
-            <input type="text" name="searchTitle" class="form-control" />
+            <h2 class="text-center">Search products:</h2>
+            <form action="@Url.AdminArea().SearchProducts()">
+
+                <div class="form-item">
+                    <label for="searchTitle" class="form-item-label">Search Title:</label>
+                    <input type="text" name="searchTitle" class="form-item-input" />
+                </div>
+
+                <div class="form-item">
+                    <label for="minPrice" class="form-item-label">Min Price:</label>
+                    <input type="number" name="minPrice" class="form-item-input" />
+                </div>
+
+                <div class="form-item">
+                    <label for="maxPrice" class="form-item-label">Max Price:</label>
+                    <input type="number" name="maxPrice" class="form-item-input" />
+                </div>
+
+                <div class="form-item">
+                    <input type="submit" value="Search Matching Products" class="form-submit-btn" />
+                </div>
+
+            </form>
+
         </div>
 
-        <div>
-            <label for="minPrice">Min Price:</label>
-            <input type="number" name="minPrice" class="form-control" />
+        <br />
+        <br />
+
+        <div class="form-container">
+
+            <h2 class="text-center">Search users:</h2>
+
+            <form action="@Url.AdminArea().SearchAccountsByUsername()" method="get">
+
+                <div class="form-item">
+                    <label for="username" class="form-item-label">Username: </label>
+                    <input type="text" name="username" class="form-item-input" />
+                </div>
+
+                <div class="form-item">
+                    <input type="submit" class="form-submit-btn" value="Search By Username" />
+                </div>
+
+            </form>
+
         </div>
 
-        <div>
-            <label for="maxPrice">Max Price:</label>
-            <input type="number" name="maxPrice" class="form-control" />
+        <br />
+
+        <div class="form-container">
+
+            <h2 class="text-center">Search specific user details:</h2>
+
+            <form action="@Url.AdminArea().SearchAccountByUsername()" method="get">
+
+                <div class="form-item">
+                    <label for="username" class="form-item-label">Username: </label>
+                    <input type="text" name="username" class="form-item-input" />
+                </div>
+
+                <div class="form-item">
+                    <input type="submit" value="Search User" class="form-submit-btn"/>
+                </div>
+
+            </form>
+
+            <br />
+
+            <form action="@Url.AdminArea().SearchAccountById()" method="get">
+
+                <div class="form-item">
+                    <label for="accountId" class="form-item-label">Id: </label>
+                    <input type="text" name="accountId" class="form-item-input" />
+                </div>
+
+                <div class="form-item">
+                    <input type="submit" class="form-submit-btn" value="Search User" />
+                </div>
+
+            </form>
+
         </div>
-
-        <div>
-            <input type="submit" value="Search Matching Products" />
-        </div>
-
-    </form>
-
-</div>
-
-<br />
-<br />
-
-<div class="form-container bg-secondary-subtle">
-
-    <h2>Search users:</h2>
-    <form action="@Url.AdminArea().SearchAccountsByUsername()" method="get">
-
-        <div>
-            <label for="username">Username: </label>
-            <input type="text" name="username" class="form-control" />
-        </div>
-
-        <div>
-            <input type="submit" value="Search By Username" />
-        </div>
-
-    </form>
-
-</div>
-
-<br/>
-
-<div class="form-container bg-secondary-subtle">
-
-    <h2>Search specific user(retrieves their published products as well):</h2>
-
-    <form action="@Url.AdminArea().SearchAccountByUsername()" method="get">
-
-        <div>
-            <label for="username">Username: </label>
-            <input type="text" name="username" class="form-control" />
-        </div>
-        
-        <div>
-            <input type="submit" value="Search User" />
-        </div>
-
-    </form>
-
-    <br/>
-
-    <form action="@Url.AdminArea().SearchAccountById()" method="get">
-        
-        <div>
-            <label for="accountId">Id: </label>
-            <input type="text" name="accountId" class="form-control" />
-        </div>
-
-        <div>
-            <input type="submit" value="Search User" />
-        </div>
-
-    </form>
-
+    </div>
 </div>
