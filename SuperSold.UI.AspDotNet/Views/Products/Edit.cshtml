@@ -1,56 +1,117 @@
-﻿@model SuperSold.UI.AspDotNet.Models.Product
+﻿@using SuperSold.UI.AspDotNet.ViewRouting;
+@model SuperSold.UI.AspDotNet.Models.Product
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<style type="text/css">
 
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <input type="hidden" asp-for="Id" class="form-control" />
-                <span asp-validation-for="Id" class="text-danger"></span>
+    .form-container {
+        min-width: 25rem;
+        width: 30vw;
+    }
+
+</style>
+
+<div class="default-container">
+    <div class="margin-auto">
+
+        <h1 class="text-center">Edit</h1>
+        <h4 class="text-center">Product</h4>
+
+        <form action="#" id="editForm">
+
+            <div class="vertical-container form-container">
+
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input type="hidden" name="sellerId" value="@Model.SellerId" />
+
+                <div class="form-item">
+                    <label class="form-item-label" for="userImgUrl">Image</label>
+                    <input type="text" class="form-item-input" name="userImgUrl" value="@Model.UserImgUrl"/>
+                </div>
+
+                <div class="form-item">
+                    <label class="form-item-label" for="title">Title</label>
+                    <input type="text" class="form-item-input" name="title" value="@Model.Title"/>
+                </div>
+
+                <div class="form-item">
+                    <label class="form-item-label" for="description">Description</label>
+                    <textarea class="form-item-input" name="description">@Model.Description</textarea>
+                </div>
+
+                <div class="form-item">
+                    <label class="form-item-label" for="price">Price</label>
+                    <input type="text" class="form-item-input" name="price" value="@Model.Price"/>
+                </div>
+
+                <div class="form-item margin-auto">
+                    <input type="submit" value="Edit" class="form-submit-btn" id="submitEditForm" />
+                </div>
+
             </div>
-            <div class="form-group">
-                <input type="hidden" asp-for="SellerId" class="form-control" />
-                <span asp-validation-for="SellerId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UserImgUrl" class="control-label"></label>
-                <input asp-for="UserImgUrl" class="form-control" />
-                <span asp-validation-for="UserImgUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
+
         </form>
+
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a href="@Url.Products().MyProducts()">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<script type="text/javascript">
+
+    $("#submitEditForm").click(function () {
+
+        $("#editForm").validate({
+            rules: {
+                title: {
+                    required: true,
+                    minlength: 8,
+                    maxlength: 50
+                },
+                description: {
+                    required: true,
+                    minlength: 10,
+                    maxlength: 2000
+                },
+                price: {
+                    required: true,
+                    number: true,
+                    min: 0
+                }
+            },
+            messages: {
+                price: {
+                    min: "Please enter a positive number"
+                }
+            },
+            submitHandler: function (form) { submitProduct(form); }
+        });
+
+    });
+
+    function submitProduct(form) {
+
+        var data = $(form).serialize();
+
+        $.ajax({
+            url: '@(Url.Products().Edit())',
+            type: 'POST',
+            data: data,
+            cache: false
+        }).done(function (data) {
+            console.log("Edited product successfully.");
+            notifyUser("Edited successfully.");
+            window.location = '@Url.Products().MyProducts()';
+        }).fail(function (error) {
+            console.error(error);
+            notifyUser("There has been an error trying to create your product.");
+        });
+
+    }
+
+</script>
