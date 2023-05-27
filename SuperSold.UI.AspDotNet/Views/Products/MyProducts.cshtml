@@ -10,8 +10,14 @@
         <h1><b>MyProducts</b></h1>
     </div>
     <div class="mr-2">
-        <a asp-action="Publish" class="btn btn-primary">Publish New</a>
+        <form action="@Url.Products().Publish()">
+            <input type="submit" class="button" value="Publish New"/> 
+        </form>
     </div>
 </div>
 
-@await Html.ScrollablePartialView(Url.Products().MyProductsPartial()!)
+<br/>
+
+<div class="form-container">
+    @await Html.ScrollablePartialView(Url.Products().MyProductsPartial()!)
+</div>
