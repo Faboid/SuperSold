@@ -46,6 +46,10 @@
 
     --link-text-color: rgb(97, 152, 205);
     --link-text-hover-color: rgb(110, 165, 220);
+
+    --scrollbar-background-color: transparent;
+    --scrollbar-thumb-color: #474748;
+    --scrollbar-thumb-hover-color: #575758;
 }
 
 :root.light {
@@ -92,4 +96,8 @@
 
     --link-text-color: #0000CD;
     --link-text-hover-color: blue;
+
+    --scrollbar-background-color: transparent;
+    --scrollbar-thumb-color: #999999;
+    --scrollbar-thumb-hover-color: #777777;
 }

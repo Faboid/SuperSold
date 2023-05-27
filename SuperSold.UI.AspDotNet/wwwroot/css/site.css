@@ -36,6 +36,24 @@ body {
     height:100%;
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+    margin-top:var(--nav-height);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollbar-background-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 15px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover-color);
+}
+
 footer {
     position: absolute;
     bottom: 0;
