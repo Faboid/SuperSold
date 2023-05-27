@@ -3,7 +3,6 @@
 <style>
 
     .confirm-overlay {
-        position:absolute;
         height:20rem;
         width:40rem;
     }
@@ -11,29 +10,31 @@
 </style>
 
 <div>
-    <button class="" type="button" id="deleteAccountBtn">Delete Account</button>
+    <button class="button danger-button" type="button" id="deleteAccountBtn">Delete Account</button>
 </div>
 
-<div class="hide confirm-overlay" id="confirmOverlay">
+<div class="form-container hide confirm-overlay accent-danger" id="confirmOverlay">
 
-    <h3>There's no turning back.</h3>
+    <h3 class="text-center">There's no turning back.</h3>
     <form action="#" id="confirmDeleteAccountForm">
 
-        <div>
-            <label for="password">Write password: </label>
-            <input type="password" name="password" class="form-control"/>
+        <div class="form-item">
+            <label for="password" class="form-item-label">Write password: </label>
+            <input type="password" name="password" class="form-item-input danger-input" />
         </div>
 
-        <div>
-            <label for="confirm">
-                I understand that this operation will be irreversible and instantaneous. 
-                The account and all info related to it(published products, etc..)will be permanently deleted.
+        <div class="form-item">
+            <label for="confirm" class="form-item-label label-checkmark">
+                <input class="checkbox checkbox-multilined danger-checkbox" type="checkbox" name="confirm" />
+                <span class="checkbox-description">
+                    I understand that this operation will be irreversible and instantaneous.
+                    The account and all info related to it(published products, etc..)will be permanently deleted.
+                </span>
             </label>
-            <input class="form-check-input" type="checkbox" name="confirm"/>
         </div>
 
-        <div>
-            <button type="submit" id="submitDeleteAccountConfirmBtn">Confirm Delete Account</button>
+        <div class="form-item">
+            <button type="submit" id="submitDeleteAccountConfirmBtn" class="form-submit-btn danger-button">Confirm Delete Account</button>
         </div>
 
     </form>
@@ -42,7 +43,7 @@
 <script type="text/javascript">
 
     $("#deleteAccountBtn").click(function () {
-        $("#confirmOverlay").toggle();
+        $("#confirmOverlay").slideToggle();
     });
 
     $("#submitDeleteAccountConfirmBtn").click(function() {
