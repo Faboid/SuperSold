@@ -6,45 +6,109 @@
     ViewData["Title"] = "Publish";
 }
 
-<h1>Publish</h1>
+<style>
+    .form-container {
+        width: 30vw;
+    }
+</style>
 
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Publish">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserImgUrl" class="control-label"></label>
-                <input asp-for="UserImgUrl" class="form-control" />
-                <span asp-validation-for="UserImgUrl" class="text-danger"></span>
+<div class="default-container">
+    <div class="margin-auto">
+
+        <h1 class="text-center">Publish</h1>
+        <h4 class="text-center">Product</h4>
+
+        <form action="#" id="publishForm">
+
+            <div class="vertical-container form-container">
+
+                <div class="form-item">
+                    <label class="form-item-label" for="userImgUrl">Image</label>
+                    <input type="text" class="form-item-input" name="userImgUrl"/>
+                </div>
+
+                <div class="form-item">
+                    <label class="form-item-label" for="title">Title</label>
+                    <input type="text" class="form-item-input" name="title"/>
+                </div>
+
+                <div class="form-item">
+                    <label class="form-item-label" for="description">Description</label>
+                    <textarea class="form-item-input" name="description"></textarea>
+                </div>
+
+                <div class="form-item">
+                    <label class="form-item-label" for="price">Price</label>
+                    <input type="text" class="form-item-input" name="price"/>
+                </div>
+
+                <div class="form-item margin-auto">
+                    <input type="submit" value="Publish" class="form-submit-btn" id="submitPublishForm" />
+                </div>
+
             </div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+
         </form>
+
+
     </div>
 </div>
 
 <div>
-    <a href="@Url.Products().MyProducts()">Back to MyProducts</a>
+    <a class="text-center" href="@Url.Products().MyProducts()">Back to MyProducts</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<script type="text/javascript">
+
+    $("#submitPublishForm").click(function () {
+
+        $("#publishForm").validate({
+            rules: {
+                title: {
+                    required: true,
+                    minlength: 8,
+                    maxlength: 50
+                },
+                description: {
+                    required: true,
+                    minlength: 10,
+                    maxlength: 2000
+                },
+                price: {
+                    required: true,
+                    number: true,
+                    min: 0
+                }
+            },
+            messages: {
+                price: {
+                    min: "Please enter a positive number"
+                }
+            },
+            submitHandler: function (form) { submitLogin(form); }
+        });
+
+    });
+
+    function submitLogin(form) {
+
+        var data = $(form).serialize();
+
+        $.ajax({
+            url: '@(Url.Products().Publish())',
+            type: 'POST',
+            data: data,
+            cache: false
+        }).done(function (data) {
+            console.log("created new product");
+            notifyUser("Created successfully.");
+            window.location = '@Url.Products().MyProducts()';
+        }).fail(function (error) {
+            console.error(error);
+            notifyUser("There has been an error trying to create your product.");
+        });
+
+    }
+
+
+</script>

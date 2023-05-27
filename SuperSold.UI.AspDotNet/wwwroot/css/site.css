@@ -269,11 +269,14 @@ input[type="checkbox"].checkbox-multilined {
 
 .form-item-input,
 input[type="text"],
-input[type="password"] {
+input[type="password"],
+textarea {
     margin:0px;
     padding: 0.2rem;
     border-radius:5px;
     text-align:center;
+    background: var(--input-background-color);
+    color: var(--input-text-color);
 }
 
 .form-submit-btn {
