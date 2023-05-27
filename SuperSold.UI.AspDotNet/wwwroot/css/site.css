@@ -170,6 +170,12 @@ input[type="checkbox"].checkbox-multilined {
     color: var(--text-color);
 }
 
+.error {
+    color: var(--error-text-color);
+    text-align: center;
+    font-weight: 600;
+}
+
 .nav-area {
     display: flex;
     flex-direction: row;
