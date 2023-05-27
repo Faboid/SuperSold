@@ -58,7 +58,7 @@
 </div>
 
 <div>
-    <a class="text-center" href="@Url.Products().MyProducts()">Back to MyProducts</a>
+    <a href="@Url.Products().MyProducts()">Back to MyProducts</a>
 </div>
 
 <script type="text/javascript">
@@ -88,12 +88,12 @@
                     min: "Please enter a positive number"
                 }
             },
-            submitHandler: function (form) { submitLogin(form); }
+            submitHandler: function (form) { submitProduct(form); }
         });
 
     });
 
-    function submitLogin(form) {
+    function submitProduct(form) {
 
         var data = $(form).serialize();
 
