@@ -8,7 +8,7 @@ public class AuthenticationRoutes : BaseRoutes
     public AuthenticationRoutes(IUrlHelper urlHelper) : base(urlHelper, "Authentication") { }
 
     public string? SignUp() => BuildUrlToAction("SignUp");
-    public string? Login() => BuildUrlToAction("Login");
+    public string? Login() => BuildAbsoluteUrlToAction("Login");
     public string? Logout() => BuildUrlToAction("Logout");
 
 }

@@ -39,29 +39,33 @@
 
     $("#addToCart@(id)").click(function () {
 
-            $.ajax({
-                url: '@(Url.Cart().AddToCart())',
-                type: 'POST',
-                headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
-                data: { "productId": "@(Model.Id)" },
-                cache: false,
-            }).done(function (data) {
-                console.log("added product to cart @(Model.Id)");
-                pullUp($("#@(id).item-row"));
-                notifyUser("Added product to cart!");
-            }).fail(function (error) {
-                
-                if(error.status == 409) {
-                    console.log("Tried to add product in cart, but it's already there.");
-                    notifyUser("The product @(Model.Title) is already in the cart.");
-                    return;
-                }
-                
-                console.error("failed to delete @(Model.Id). Reason:");
-                console.error(error);
-                notifyUser("There has been an error trying to add @(Model.Title) to the cart.");
-            });
+        if(!@(User!.Identity!.IsAuthenticated.ToString().ToLower())) {
+            redirectTo("@(Url.Authentication().Login())");
+            return;
+        }
 
+        $.ajax({
+            url: '@(Url.Cart().AddToCart())',
+            type: 'POST',
+            headers: { "@(tokenset.HeaderName)": "@(tokenset.RequestToken)" },
+            data: { "productId": "@(Model.Id)" },
+            cache: false,
+        }).done(function (data) {
+            console.log("added product to cart @(Model.Id)");
+            pullUp($("#@(id).item-row"));
+            notifyUser("Added product to cart!");
+        }).fail(function (error) {
+                
+            if(error.status == 409) {
+                console.log("Tried to add product in cart, but it's already there.");
+                notifyUser("The product @(Model.Title) is already in the cart.");
+                return;
+            }
+                
+            console.error("failed to delete @(Model.Id). Reason:");
+            console.error(error);
+            notifyUser("There has been an error trying to add @(Model.Title) to the cart.");
+        });
 
     });
 

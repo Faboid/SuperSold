@@ -17,3 +17,7 @@ function notifyUser(message) {
     notifyContainer.setAttribute("data-visibility", "visible");
 
 }
+
+function redirectTo(url) {
+    window.location.href = url;
+}
